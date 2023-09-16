@@ -11,15 +11,17 @@
   },
   "dependencies": {
     "@react-native-google-signin/google-signin": "^10.0.1",
+    "@react-native/metro-config": "^0.72.11",
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
     "@reduxjs/toolkit": "1.9.5",
     "absolute-path": "^0.0.0",
+    "force": "^0.0.3",
     "react": "18.2.0",
-    "react-devtools": "^2.1.7",
     "react-native": "^0.72.4",
     "react-native-fbsdk": "^3.0.0",
+    "react-native-svg": "^13.13.0",
     "react-redux": "8.1.1"
   },
   "devDependencies": {
