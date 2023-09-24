@@ -1,33 +1,10 @@
 {
-    "extends": "@tsconfig/react-native/tsconfig.json",
-    "compilerOptions": {
-        "allowJs": true,
-        "target": "esnext",
-        "moduleResolution": "node",
-        "jsx": "react-native",
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "strict": true,
-        "noImplicitAny": false,
-        "noImplicitThis": false,
-        "noImplicitReturns": false,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noFallthroughCasesInSwitch": true,
-        "module": "commonjs",
-        "outDir": "./dist",
-        "baseUrl": "./",
-        "paths": {
-            "~/*": [
-                "src/*"
-            ]
-        }
-    },
-    "exclude": [
-        "node_modules",
-        "babel.config.js",
-        "metro.config.js",
-        "jest.config.js"
-    ]
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }
