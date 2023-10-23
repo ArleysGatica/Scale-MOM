@@ -4,14 +4,14 @@ import { StyleSheet } from 'react-native';
 const style = StyleSheet.create({
     containerLogin: {
         backgroundColor: '#FFFFFF',
-        height: '100%',
+        height: '100%', 
     },
 
     Container: {
         display: "flex",
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100%',
+        height: '55%',
         width: "100%",
     },
 
@@ -97,17 +97,19 @@ const style = StyleSheet.create({
 
     passwordContainer: {
         width: '80%',
-        height: '6%',
+        height: 45,
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
-        marginTop: 10,
+        marginTop: 5,
         marginBottom: 10,
-        backgroundColor: 'rgb(255, 255, 255)',
+        backgroundColor: 'red ',
         borderColor: 'rgba(0, 0, 0, 0.29)',
         borderRadius: 4,
         borderWidth: 1,
         color: 'black',
+        justifyContent: 'center',
+        paddingLeft: 10,
     },
 
     passwordInput: {

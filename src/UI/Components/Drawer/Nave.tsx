@@ -38,11 +38,11 @@ const NavigationView = ({ closeDrawer, id, name, image, }: NavigationViewProps &
     };
 
     const data: DataProps[] = [
-        { id: "1", name: "Home", image: require('../../Assets/home.png') },
-        { id: "2", name: "Profile", image: require('../../Assets/avatar.png') },
-        { id: "3", name: "Historial", image: require('../../Assets/historial.png') },
-        { id: "4", name: "Analitica", image: require('../../Assets/estadisticas.png') },
-        { id: "5", name: "Log Out", image: require('../../Assets/Out.png') },
+        { id: "1", name: "Home", image: require('../../../Assets/home.png') },
+        { id: "2", name: "Profile", image: require('../../../Assets/avatar.png') },
+        { id: "3", name: "Historial", image: require('../../../Assets/historial.png') },
+        { id: "4", name: "Analitica", image: require('../../../Assets/estadisticas.png') },
+        { id: "5", name: "Log Out", image: require('../../../Assets/Out.png') },
     ];
 
     return (
@@ -56,7 +56,7 @@ const NavigationView = ({ closeDrawer, id, name, image, }: NavigationViewProps &
                 borderBottomWidth: 0.8,
                 borderStyle: 'solid',
             }}>
-                <Image source={require('../../Assets/LogoappLogo.png')}
+                <Image source={require('../../../Assets/LogoappLogo.png')}
                     style={{
                         width: 45,
                         height: 45,
@@ -71,7 +71,8 @@ const NavigationView = ({ closeDrawer, id, name, image, }: NavigationViewProps &
             <View style={styles.dropdownContainer}>
                 <TouchableOpacity style={styles.dropdownHeader} onPress={toggleDropdown}>
                     <Text>{selectedValue || 'Patients'}</Text>
-                    <Image source={require('../../Assets/arrow.png')} style={{ width: 20, height: 20 }} />
+                    <Image source={require('../../../Assets/arrow.png')}
+                        style={{ width: 20, height: 20 }} />
                 </TouchableOpacity>
                 {isDropdownOpen && (
                     <ScrollView

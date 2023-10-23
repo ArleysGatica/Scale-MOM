@@ -1,21 +1,10 @@
 import React, { useState } from 'react';
-import { Text, View, TextInput, Image, Button, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighlight, Alert, ActivityIndicator, Pressable } from 'react-native';
-import style from './Style.Login';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import CustomBottomTabNavigator from '../ButtonTab/Tab';
+import { Text, View, TextInput, Image, Button, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighlight, Alert, ActivityIndicator } from 'react-native';
+import style from './StyleRegister';
 
-type HomeScreenProps = {
-    navigation?: NativeStackNavigationProp<RootStackParamList, 'Recovery' | 'Login' | 'CustomBottomTabNavigator'>;
-};
+export function Register() {
 
-type RootStackParamList = {
-    Recovery: undefined;
-    Login: undefined;
-    CustomBottomTabNavigator: undefined;
-};
-
-export function Login({ navigation }: HomeScreenProps) {
-
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +14,11 @@ export function Login({ navigation }: HomeScreenProps) {
     const [isLowercaseValid, setIsLowercaseValid] = useState(false);
     const [isSpecialCharValid, setIsSpecialCharValid] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    const validateName = (text: string) => {
+        const nameRegex = /^[a-zA-Z]+$/;
+        return nameRegex.test(text);
+    };
 
     const validateEmail = (email: string) => {
         const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
@@ -45,13 +39,17 @@ export function Login({ navigation }: HomeScreenProps) {
     };
 
     const handleTextChange = (text: string, field: string) => {
-        if (field === 'email') {
+      
+        if ('Name' === field) {
+            setName(text);
+        } else if ('email' === field) {
             setEmail(text);
             setIsValidEmail(validateEmail(text));
-        } else if (field === 'password') {
+        } else if ('password' === field) {
             setPassword(text);
             setIsValidPassword(validatePassword(text));
         }
+
     };
 
     const togglePasswordVisibility = () => {
@@ -77,9 +75,17 @@ export function Login({ navigation }: HomeScreenProps) {
 
     return (
         <SafeAreaView style={style.containerLogin}>
-            <View style={style.Container}>
+            {/* <View style={style.Container}>
                 <Image source={require('../../Assets/LogoappLogo.png')} style={style.Logo} />
-                <Text style={style.txtSegund}>Welcome Back</Text>
+                <Text style={style.txtSegund}>Create Account</Text>
+                <View style={style.passwordContainer}>
+                    <TextInput
+                        style={style.passwordInput}
+                        placeholderTextColor="gray"
+                        placeholder="Name"
+                        onChangeText={(text) => handleTextChange(text, 'Name')}
+                    />
+                </View>
                 <View style={style.passwordContainer}>
                     <TextInput
                         style={style.passwordInput}
@@ -109,8 +115,6 @@ export function Login({ navigation }: HomeScreenProps) {
                     </TouchableHighlight>
                 </View>
                 {!isValidPassword && <Text style={style.errorText}>Please enter a valid password.</Text>}
-                <Text style={style.txtForgot}>Forgot your Password?</Text>
-
                 <SafeAreaView style={style.containerBTN}>
                     <TouchableHighlight
                         style={[
@@ -124,17 +128,11 @@ export function Login({ navigation }: HomeScreenProps) {
                         {isLoading ? (
                             <ActivityIndicator color="white" />
                         ) : (
-
-                            <Text style={style.buttonText}>Login</Text>
-
+                            <Text style={style.buttonText}>Sing Up</Text>
                         )}
                     </TouchableHighlight>
                 </SafeAreaView>
-                <Pressable onPress={() => navigation?.navigate('CustomBottomTabNavigator')}>
-
-
-                    <Text style={style.TextConection}>Or connect using</Text>
-                </Pressable>
+                <Text style={style.TextConection}>Or connect using</Text>
                 <SafeAreaView style={style.containerNetwork}>
                     <View style={style.containerNetworkSub}>
                         <Image source={require('../../Assets/google.png')} style={style.network} />
@@ -144,9 +142,9 @@ export function Login({ navigation }: HomeScreenProps) {
                     </View>
                 </SafeAreaView>
                 <Text style={style.TextConection}>
-                    Don't have an account? <Text style={{ color: 'rgb(18, 19, 48)', textDecorationLine: 'underline' }}>Sign Up</Text>
+                    Don't have an account? <Text style={{ color: 'rgb(18, 19, 48)', textDecorationLine: 'underline' }}>Login</Text>
                 </Text>
-            </View>
+            </View> */}
         </SafeAreaView>
     );
 }

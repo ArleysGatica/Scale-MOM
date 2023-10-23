@@ -4,11 +4,10 @@ import style from './StyleLogout';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type HomeScreenProps = {
-    navigation?: NativeStackNavigationProp<RootStackParamList, 'Register' | 'Login'>;
+    navigation?: NativeStackNavigationProp<RootStackParamList, 'Login'>;
 };
 
 type RootStackParamList = {
-    Register: undefined;
     Login: undefined;
 };
 
@@ -18,7 +17,7 @@ export function Logout({ navigation }: HomeScreenProps) {
 
         <SafeAreaView style={{ backgroundColor: '#FFFFFF', height: '100%' }} >
             <View style={style.Container}>
-                <Image source={require('../../../src/Assets/LogoappLogo.png')}
+                <Image source={require('../../../Assets/LogoappLogo.png')}
                     style={style.Logo}
                 />
                 <Text style={style.Caption}>Scale MoM App</Text>
@@ -29,11 +28,6 @@ export function Logout({ navigation }: HomeScreenProps) {
                     <TouchableHighlight style={style.buttonLogin}>
                         <Pressable onPress={() => navigation?.navigate('Login')}>
                             <Text style={style.buttonTextLogin}>Login</Text>
-                        </Pressable>
-                    </TouchableHighlight>
-                    <TouchableHighlight style={style.buttonSing}>
-                        <Pressable onPress={() => navigation?.navigate('Register')}>
-                            <Text style={style.buttonText}>Sing Up</Text>
                         </Pressable>
                     </TouchableHighlight>
                 </SafeAreaView>

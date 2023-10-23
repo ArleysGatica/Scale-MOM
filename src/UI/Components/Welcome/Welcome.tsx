@@ -22,7 +22,7 @@ export function Welcome({ navigation }: HomeScreenProps) {
                         Welcome to
                     </Text>
 
-                    <Image source={require('../../../src/Assets/LogoappLogo.png')}
+                    <Image source={require('../../../Assets/LogoappLogo.png')}
                         style={estilos.Logo}
                     />
                     <Text style={estilos.Caption}>Scale MoM</Text>
@@ -30,7 +30,7 @@ export function Welcome({ navigation }: HomeScreenProps) {
                 </SafeAreaView>
                 <View style={estilos.Button}>
                     <Pressable onPress={() => navigation.navigate('Logout')}>
-                        <Image source={require('../../../src/Assets/Done.png')} />
+                        <Image source={require('../../../Assets/Done.png')} />
                     </Pressable>
 
                 </View>
