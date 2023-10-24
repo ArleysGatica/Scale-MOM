@@ -72,3 +72,78 @@ export type InputsSelects = {
     HemorragiaObstétrica?: string;
     EscalaGlasgow?: string;
 }
+
+export interface IDoctor {
+    id?: string;
+    username?: string;
+    password?: string;
+    idMinsa?: string;
+}
+
+export interface IPacient {
+    id?: string;
+    username?: string;
+    password?: string;
+    dni: String;
+    peso: String;
+    resultado: String;
+    edad: Number;
+}
+
+export interface ILogin {
+    username: string;
+    password: string;
+}
+
+export type status = "idle" | "loading" | "succeeded" | "failed";
+
+export interface IGeneral {
+    id?: string;
+    // idDoctor?: string;
+    // idPaciente?: string;
+    // createdAt?: string;
+    // updatedAt?: string;
+    // status?: string;
+    firstGroup?: IFirstGroup;
+    secondGroup?: ISecondGroup;
+    threeGroup?: IThreeGroup;
+    fourGroup?: IFourGroup;
+    fiveGroup?: IFiveGroup;
+    inputsGeneral?: InputsGeneral;
+    inputsSelects?: InputsSelects;
+}
+
+export interface IGeneralState {
+    adduserUse: boolean;
+    userUse: Array<any>;
+    dataGeneral: Array<IGeneral>;
+    status: status;
+    error?: string | undefined;
+}
+
+
+// extraReducers: (builder) => {
+//     builder
+//         .addCase(fetchDoctorByIdAsync.pending, (state) => {
+//             state.status = "loading";
+//         })
+//         .addCase(fetchDoctorByIdAsync.fulfilled, (state, action) => {
+//             state.status = "succeeded";
+//             state.dataGeneral = action.payload;
+//         })
+//         .addCase(fetchDoctorByIdAsync.rejected, (state, action) => {
+//             state.status = "failed";
+//             state.error = action.error.message;
+//         })
+//         .addCase(addDoctor.pending, (state) => {
+//             state.status = "loading";
+//         })
+//         .addCase(addDoctor.fulfilled, (state, action) => {
+//             state.status = "succeeded";
+//             state.dataGeneral = action.payload;
+//         })
+//         .addCase(addDoctor.rejected, (state, action) => {
+//             state.status = "failed";
+//             state.error = action.error.message;
+//         });
+// },
