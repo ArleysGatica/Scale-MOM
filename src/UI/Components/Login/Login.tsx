@@ -12,7 +12,6 @@ export function Login({ navigation }: LoginFormProps) {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    // const navigation = useNavigation();
 
     const handleLogin = () => {
         if (username === 'admin' && password === 'admin') {
