@@ -29,7 +29,6 @@ const defaultValues: InputsGeneral = {
 
 const MyForm = () => {
 
-    // const [CardiacPressure, setCardiacPressure] = useState<number | any>({ name: 'presion cardiaca', value: 0, category: 'CardioVascular' });
     //firtsGroup
     const [formData, setFormData] = useState<IFirstGroup>({});
     const [CardiacPressure, setCardiacPressure] = useState<number | undefined>(0);
@@ -927,17 +926,46 @@ const MyForm = () => {
 
     return (
         <>
-            <FormularyPart
-                fields={fields}
-                formData={formData}
-                handleInputChange={handleInputChange}
-                fieldsSecondGroup={fieldsSecondGroup}
-                formDataSecondGroup={formDataSecondGroup}
-                handleInputChangeSecondGroup={handleInputChangeSecondGroup}
-                HolaMundo={HolaMundo}
-                miArray={miArray}
-            />
+            <SafeAreaView>
+                {
+                    fields.map((field, index) => {
+                        return (
+                            <View key={field.name} style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                width: '100%',
+                                height: '10%',
+                                justifyContent: 'center',
+                                flexWrap: 'wrap',
+                            }}                                >
+                                <Text>{field.name}</Text>
+                                <TextInput
+                                    style={{
+                                        height: 45,
+                                        width: 100,
+                                        padding: 15,
+                                        marginTop: 10,
+                                        marginBottom: 10,
+                                        backgroundColor: 'rgb(255, 255, 255)',
+                                        borderColor: 'rgb(0, 0, 0)',
+                                        borderRadius: 4,
+                                        borderWidth: 1,
+                                        color: 'black',
+                                    }}
+                                    onChangeText={text => setFormData({ ...formData, [field.name]: text })}
+                                    value={formData[field.name]?.toString()}
+                                />
+                            </View>
+                        )
+                    }
+                    )}
 
+
+
+
+
+
+            </SafeAreaView>
         </>
     )
 }

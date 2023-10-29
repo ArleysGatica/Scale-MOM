@@ -80,14 +80,15 @@ export interface IDoctor {
     idMinsa?: string;
 }
 
-export interface IPacient {
+export interface IPatient {
     id?: string;
     username?: string;
-    password?: string;
-    dni: String;
-    peso: String;
-    resultado: String;
-    edad: Number;
+    dni?: String;
+    nameEncargado?: String;
+    telefonoEncargado?: Number;
+    telefono?: Number;
+    resultado?: String;
+    edad?: Number;
 }
 
 export interface ILogin {

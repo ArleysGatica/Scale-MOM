@@ -12,6 +12,8 @@ import { store } from './src/app/store';
 
 import MyForm from './src/Helpers/Generalform/form';
 import FormularyPart from './src/UI/Page/Formulary';
+import RegisterPatient from './src/UI/Page/RegisterPatient/patient';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +23,8 @@ const screenOptions = {
 
 function AppStack() {
     return (
-        <Stack.Navigator screenOptions={screenOptions} initialRouteName="FormularyPart">
+        <Stack.Navigator screenOptions={screenOptions} initialRouteName="DoctorCreationForm">
+            <Stack.Screen options={{ headerShown: false }} name="RegisterPatient" component={RegisterPatient} />
             <Stack.Screen options={{ headerShown: false }} name="FormularyPart" component={FormularyPart} />
             <Stack.Screen options={{ headerShown: false }} name="Welcome" component={Welcome} />
             <Stack.Screen options={{ headerShown: false }} name="CustomBottomTabNavigator" component={CustomBottomTabNavigator} />
