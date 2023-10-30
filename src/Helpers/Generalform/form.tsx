@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { IFirstGroup, ISecondGroup, IThreeGroup, IFourGroup, IFiveGroup, InputsGeneral, InputsSelects } from '../../types/types'; 
-    
+import { IFirstGroup, ISecondGroup, IThreeGroup, IFourGroup, IFiveGroup, InputsGeneral, InputsSelects } from '../../types/types';
+import {  View,  Image,  TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighlight, Alert, ActivityIndicator, Pressable } from 'react-native';
+
+import { Appbar, Text, TextInput, Button, } from 'react-native-paper';
+import FormularyPart from '../../UI/Page/Formulary';
+
 const defaultValues: InputsGeneral = {
     Temperatura: 0,
     PH: 0,
@@ -35,10 +39,9 @@ const MyForm = () => {
 
     //secondGroup
     const [formDataSecondGroup, setFormDataSecondGroup] = useState<ISecondGroup>({});
-    const [albumina, setAlbumina] = useState<number | undefined>(0);
+    const [albumina, setAlbumina] = useState<number | undefined>(0.0);
     const [presiónColoidosmótica, setPresiónColoidosmótica] = useState<number | undefined>(0);
     const [IndiceBriones, setIndiceBriones] = useState<number | undefined>(0);
-
 
     const [formDataGeneral, setFormDataGeneral] = useState<InputsGeneral>(defaultValues);
     const [ValueAcidoUrico, setValueAcidoUrico] = useState<number | undefined>(0);//acido urico
@@ -47,7 +50,7 @@ const MyForm = () => {
     const [ValueLactato, setValueLactato] = useState<number | undefined>(0);//lactato
     const [ValueProteinuria, setValueProteinuria] = useState<number | undefined>(0);//proteinuria
     const [ValueDeficitBase, setValueDeficitBase] = useState<number | undefined>(0);//deficit base
-    const [ValueFrecuenciaRespiratoria, setValueFrecuenciaRespiratoria] = useState<number | undefined>(0);//frecuencia respiratoria
+    const [ValueFrecuenciaRespiratoria, setValueFrecuenciaRespiratoria] = useState<number | undefined>(0);
     const [ValueIndiceKirby, setValueIndiceKirby] = useState<number | undefined>(0);//indice kirby
     const [ValueSaturación, setValueSaturación] = useState<number | undefined>(0);//saturación
     const [ValueLeucocitos, setValueLeucocitos] = useState<number | undefined>(0);//leucocitos
@@ -64,12 +67,19 @@ const MyForm = () => {
 
     //firt group
 
+    const fields: { name: keyof IFirstGroup; stateKey: string; readOnly: boolean }[] = [
+        { name: 'FC', stateKey: 'cardiacPressure', readOnly: false },
+        { name: 'TASistolica', stateKey: 'valueTASistolica', readOnly: false },
+        { name: 'TADiastolica', stateKey: 'valueTADiastolica', readOnly: false },
+        { name: 'Tam', stateKey: 'tam', readOnly: true },
+        { name: 'Indicedechoque', stateKey: 'indicedechoque', readOnly: true },
+    ];
+
     useEffect(() => {
         calculateResults();
     }, [formData.FC, formData.TASistolica, formData.TADiastolica, formData.Indicedechoque]);
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
+    const handleInputChange = (name: keyof IFirstGroup, value: any) => {
         const numericValue = parseFloat(value) || undefined;
 
         setFormData({
@@ -77,43 +87,49 @@ const MyForm = () => {
             [name]: numericValue,
         });
 
-        if (name === 'FC') {
-            const fcValue = numericValue || 0;
-            if (fcValue > 99 && fcValue <= 119) {
-                setCardiacPressure(1);
-            } else if (fcValue >= 120 && fcValue <= 139) {
-                setCardiacPressure(2);
-            } else if (fcValue >= 140 || fcValue <= 40) {
-                setCardiacPressure(3);
-            } else {
-                setCardiacPressure(0);
-            }
-        }
+        const field = fields.find((field) => field.name === name);
 
-        if (name === 'TASistolica') {
-            const TASistolica = numericValue || 0;
-            if (TASistolica >= 101 && TASistolica <= 139) {
-                setValueTASistolica(0);
-            } else if ((TASistolica >= 140 && TASistolica <= 179) || (TASistolica >= 91 && TASistolica <= 100)) {
-                setValueTASistolica(1);
-            } else if ((TASistolica > 140 && TASistolica <= 90) || TASistolica === 81 || TASistolica >= 81) {
-                setValueTASistolica(2);
-            } else if (TASistolica <= 80) {
-                setValueTASistolica(3);
-            }
-        }
+        if (!field) {
 
-        if (name === 'TADiastolica') {
-            const TADiastolica = numericValue || 0;
-            if (TADiastolica >= 61 && TADiastolica <= 89) {
-                setValueTADiastolica(0);
-            } else if ((TADiastolica >= 90 && TADiastolica <= 109) || (TADiastolica >= 51 && TADiastolica <= 60)) {
-                setValueTADiastolica(1);
-            } else if ((TADiastolica > 110 && TADiastolica <= 50) || TADiastolica === 41 || TADiastolica >= 41) {
-                setValueTADiastolica(2);
-            } else if (TADiastolica <= 40) {
-                setValueTADiastolica(3);
+            if (name === 'FC') {
+                const fcValue = numericValue || 0;
+                if (fcValue > 99 && fcValue <= 119) {
+                    setCardiacPressure(1);
+                } else if (fcValue >= 120 && fcValue <= 139) {
+                    setCardiacPressure(2);
+                } else if (fcValue >= 140 || fcValue <= 40) {
+                    setCardiacPressure(3);
+                } else {
+                    setCardiacPressure(0);
+                }
             }
+
+            if (name === 'TASistolica') {
+                const TASistolica = numericValue || 0;
+                if (TASistolica >= 101 && TASistolica <= 139) {
+                    setValueTASistolica(0);
+                } else if ((TASistolica >= 140 && TASistolica <= 179) || (TASistolica >= 91 && TASistolica <= 100)) {
+                    setValueTASistolica(1);
+                } else if ((TASistolica > 140 && TASistolica <= 90) || TASistolica === 81 || TASistolica >= 81) {
+                    setValueTASistolica(2);
+                } else if (TASistolica <= 80) {
+                    setValueTASistolica(3);
+                }
+            }
+
+            if (name === 'TADiastolica') {
+                const TADiastolica = numericValue || 0;
+                if (TADiastolica >= 61 && TADiastolica <= 89) {
+                    setValueTADiastolica(0);
+                } else if ((TADiastolica >= 90 && TADiastolica <= 109) || (TADiastolica >= 51 && TADiastolica <= 60)) {
+                    setValueTADiastolica(1);
+                } else if ((TADiastolica > 110 && TADiastolica <= 50) || TADiastolica === 41 || TADiastolica >= 41) {
+                    setValueTADiastolica(2);
+                } else if (TADiastolica <= 40) {
+                    setValueTADiastolica(3);
+                }
+            }
+
         }
     };
 
@@ -131,7 +147,6 @@ const MyForm = () => {
         const shockIndex = formData.Indicedechoque || 0;
         if (shockIndex >= 0.7 && shockIndex <= 0.89) {
             setShockIndex(0);
-            console.log(ShockIndex, 'leve');
         } else if (shockIndex >= 0.9 && shockIndex <= 0.99) {
             setShockIndex(1);
         } else if (shockIndex > 1 && shockIndex <= 1.69) {
@@ -142,24 +157,37 @@ const MyForm = () => {
     };
 
     //segundo grupo
-    const handleInputChangeSecondGroup = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
+
+    const fieldsSecondGroup: { name: keyof ISecondGroup; stateKey: string; readOnly: boolean }[] = [
+        { name: 'Albumina', stateKey: 'albumina', readOnly: false },
+        { name: 'GlobulinaSérica', stateKey: 'globulinaSérica', readOnly: false },
+        { name: 'PresiónColoidosmótica', stateKey: 'presiónColoidosmótica', readOnly: true },
+        { name: 'Indicebriones', stateKey: 'indicebriones', readOnly: true },
+    ];
+
+    const handleInputChangeSecondGroup = (name: keyof ISecondGroup, value: any) => {
         const numericValue = parseFloat(value) || undefined;
 
         setFormDataSecondGroup({
             ...formDataSecondGroup,
             [name]: numericValue,
         });
-        if (name === 'Albumina') {
-            const ALBUMINA = numericValue || 0;
-            if (ALBUMINA >= 3.1) {
-                setAlbumina(0);
-            } else if (ALBUMINA >= 2.6 && ALBUMINA <= 3) {
-                setAlbumina(1);
-            } else if (ALBUMINA >= 2.1 && ALBUMINA <= 2.5) {
-                setAlbumina(2);
-            } else if (ALBUMINA <= 2) {
-                setAlbumina(3);
+
+        const fieldSecund = fieldsSecondGroup.find((field) => field.name === name);
+
+        if (!fieldSecund) {
+
+            if (name === 'Albumina') {
+                const ALBUMINA = numericValue || 0;
+                if (ALBUMINA >= 3.1) {
+                    setAlbumina(0);
+                } else if (ALBUMINA >= 2.6 && ALBUMINA <= 3) {
+                    setAlbumina(1);
+                } else if (ALBUMINA >= 2.1 && ALBUMINA <= 2.5) {
+                    setAlbumina(2);
+                } else if (ALBUMINA <= 2) {
+                    setAlbumina(3);
+                }
             }
         }
     }
@@ -210,8 +238,13 @@ const MyForm = () => {
     const [formDataThreeGroup, setFormDataThreeGroup] = useState<IThreeGroup>({});
     const [creatinina, setCreatinina] = useState<number | undefined>(0);
 
-    const handleInputChangeThreeGroup = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
+    const fieldsThreeGroup: { name: keyof IThreeGroup; stateKey: string; readOnly: boolean }[] = [
+        { name: 'Creatinina', stateKey: 'creatinina', readOnly: false },
+        { name: 'Edad', stateKey: 'edad', readOnly: false },
+        { name: 'TasadefiltraciónGlomerular', stateKey: 'tasadefiltraciónGlomerular', readOnly: true },
+    ];
+
+    const handleInputChangeThreeGroup = (name: keyof IThreeGroup, value: string) => {
         const numericValue = parseFloat(value) || undefined;
 
         setFormDataThreeGroup({
@@ -219,22 +252,26 @@ const MyForm = () => {
             [name]: numericValue,
         });
 
-        if (name === 'Creatinina') {
-            const creatininaValue = numericValue || 0;
-            if (creatininaValue >= 0.4 && creatininaValue <= 0.89) {
-                setCreatinina(0);
+        const fieldThree = fieldsThreeGroup.find((field) => field.name === name);
 
-            } else if (creatininaValue >= 0.9 && creatininaValue <= 1.35) {
-                setCreatinina(1);
+        if (!fieldThree) {
+            if (name === 'Creatinina') {
+                const creatininaValue = numericValue || 0;
+                if (creatininaValue >= 0.4 && creatininaValue <= 0.89) {
+                    setCreatinina(0);
 
-            } else if (creatininaValue >= 1.36 && creatininaValue <= 2.7) {
-                setCreatinina(2);
-            } else if (creatininaValue >= 2.8) {
-                setCreatinina(3);
+                } else if (creatininaValue >= 0.9 && creatininaValue <= 1.35) {
+                    setCreatinina(1);
+
+                } else if (creatininaValue >= 1.36 && creatininaValue <= 2.7) {
+                    setCreatinina(2);
+                } else if (creatininaValue >= 2.8) {
+                    setCreatinina(3);
+                }
             }
-        }
 
-    };
+        };
+    }
 
     const calculateResultsThreeGroup = () => {
         if (formDataThreeGroup.Creatinina && formDataThreeGroup.Edad) {
@@ -683,10 +720,263 @@ const MyForm = () => {
         formDataGeneral['K+'], ValueK
     ]);
 
+    //Tolerancia
+    const [ToleraValue, setToleraValue] = useState<InputsSelects>({});
+    const [puntosTolerancia, setPuntos] = useState<number | undefined>(undefined);
+
+    const opcionesToleranciaVíaOral: { [key: string]: number } = {
+        'Tolera': 0,
+        'Intolerancia 3-4 días': 1,
+        'Intolerancia ≥5 días': 2,
+        'Sangrado del tubo digestivo': 3,
+    };
+
+    const handleSelectChange = (selectedOption: string) => {
+        const puntosAsignados = opcionesToleranciaVíaOral[selectedOption];
+
+        setToleraValue({
+            ...ToleraValue,
+            ToleranciaVíaOral: selectedOption,
+        });
+        setPuntos(puntosAsignados);
+    };
+
+    //estalaglasgow
+    const [formDataScale, setFormDataScale] = useState<InputsSelects>({});
+    const [puntoScale, setPuntoScale] = useState<number | undefined>(undefined);
+
+    const opcionesEscalaGlasgow: { [key: string]: number } = {
+        '15': 0,
+        '14': 1,
+        '13-9': 2,
+        '≤8': 3,
+    };
+
+    const handleSelectChangeScale = (selectedOption: string) => {
+        const puntosAsignados = opcionesEscalaGlasgow[selectedOption];
+
+        setFormDataScale({
+            ...formDataScale,
+            EscalaGlasgow: selectedOption,
+        });
+        setPuntoScale(puntosAsignados);
+    };
+
+    const [formDataHemorragia, setFormDataHemorragia] = useState<InputsSelects>({});
+    const [puntosHemorragia, setPuntosHemorragia] = useState<number | undefined>(undefined);
+
+    const opcionesHemorragiaObstétrica: { [key: string]: number } = {
+        'Grado I': 0,
+        'Grado II': 1,
+        'Grado III': 2,
+        'Grado IV': 3,
+    };
+
+    const handleSelectChangeHemorragia = (selectedOption: string) => {
+        const puntosAsignados = opcionesHemorragiaObstétrica[selectedOption];
+
+        setFormDataHemorragia({
+            ...formDataHemorragia,
+            HemorragiaObstétrica: selectedOption,
+        });
+        setPuntosHemorragia(puntosAsignados);
+    };
+
+    const [categoryGeneral, setCategoryGeneral] = useState({
+        CardioVascular: {
+            PH: ValuePH, TASistolica: ValueTASistolica, TADiastolica: ValueTADiastolica, Temperatura: ValueTemperatura, Lactato: ValueLactato, Indicedechoque: IndiceBriones,
+        },
+        Renal: {
+            AcidoUrico: ValueAcidoUrico, Proteinuria: ValueProteinuria, Creatinina: creatinina, DeficitBase: ValueDeficitBase, Diuresis: diuresisValue, TasadefiltraciónGlomerular: formDataThreeGroup.TasadefiltraciónGlomerular,
+        },
+        Respiratorio: {
+            FrecuenciaRespiratoria: ValueFrecuenciaRespiratoria, IndiceKirby: ValueIndiceKirby, Saturación: ValueSaturación,
+        },
+        Hematologico: {
+            Leucocitos: ValueLeucocitos, Hemoglobina: ValueHemoglobina, Plaquetas: ValuePlaquetas, DimeroD: ValueDimeroD, Fibrinogeno: ValueFibrinogeno, IRN: ValueIRN,
+        },
+
+        Hepaticos: {
+            Transaminasas: ValueTransaminasas, LDH: ValueLDH, BilirrubinasTotales: ValueBilirrubinasTotales, PresiónColoidosmótica: presiónColoidosmótica, Albumina: albumina, GlobulinaSérica: formDataSecondGroup.GlobulinaSérica, IndiceBriones: IndiceBriones,
+        },
+        Neurologico: {
+            EscalaGlasgow: puntoScale
+        },
+
+        Uterino: {
+            HemorragiaObstétrica: puntosHemorragia
+        },
+
+        GastroIntestital: {
+            ToleranciaVíaOral: puntosTolerancia, Glucosa: ValueGlucosa, NA: ValueNA, K: ValueK,
+        },
+    });
+
+    function esObjetoVacio(obj: any) {
+        return Object.keys(obj).length === 0;
+    }
+
+    function encontrarValorMasAlto(objeto: any): number | undefined {
+        let valores = Object.values(objeto);
+
+        if (esObjetoVacio(objeto)) {
+            return undefined;
+        }
+
+        let valorMasAlto = (valores[0] as number);
+
+        for (let i = 1; i < valores.length; i++) {
+            if ((valores[i] as number) > valorMasAlto) {
+                (valorMasAlto as number) = (valores[i] as number);
+            }
+        }
+
+        return valorMasAlto as number;
+    }
+
+    const miArray = {
+        PH: 10,
+        TASistolica: 20,
+        TADiastolica: 30,
+        Temperatura: 40,
+        Lactato: 50,
+        Indicedechoque: 60,
+    };
+
+    const resultado = encontrarValorMasAlto(categoryGeneral.CardioVascular);
+    const resultado2 = encontrarValorMasAlto(categoryGeneral.Renal);
+    const resultado3 = encontrarValorMasAlto(categoryGeneral.Respiratorio);
+    const resultado4 = encontrarValorMasAlto(categoryGeneral.Hematologico);
+    const resultado5 = encontrarValorMasAlto(categoryGeneral.Hepaticos);
+    const resultado6 = encontrarValorMasAlto(categoryGeneral.Neurologico);
+    const resultado7 = encontrarValorMasAlto(categoryGeneral.Uterino);
+    const resultado8 = encontrarValorMasAlto(categoryGeneral.GastroIntestital);
+    console.log(resultado);
+
+    useEffect(() => {
+
+        setCategoryGeneral({
+            CardioVascular: {
+                PH: ValuePH, TASistolica: ValueTASistolica, TADiastolica: ValueTADiastolica, Temperatura: ValueTemperatura, Lactato: ValueLactato, Indicedechoque: IndiceBriones,
+            },
+            Renal: {
+                AcidoUrico: ValueAcidoUrico, Proteinuria: ValueProteinuria, Creatinina: creatinina, DeficitBase: ValueDeficitBase, Diuresis: diuresisValue, TasadefiltraciónGlomerular: formDataThreeGroup.TasadefiltraciónGlomerular,
+            },
+            Respiratorio: {
+                FrecuenciaRespiratoria: ValueFrecuenciaRespiratoria, IndiceKirby: ValueIndiceKirby, Saturación: ValueSaturación,
+            },
+            Hematologico: {
+                Leucocitos: ValueLeucocitos, Hemoglobina: ValueHemoglobina, Plaquetas: ValuePlaquetas, DimeroD: ValueDimeroD, Fibrinogeno: ValueFibrinogeno, IRN: ValueIRN,
+            },
+
+            Hepaticos: {
+                Transaminasas: ValueTransaminasas, LDH: ValueLDH, BilirrubinasTotales: ValueBilirrubinasTotales, PresiónColoidosmótica: presiónColoidosmótica, Albumina: albumina, GlobulinaSérica: formDataSecondGroup.GlobulinaSérica, IndiceBriones: IndiceBriones,
+            },
+            Neurologico: {
+                EscalaGlasgow: puntoScale
+            },
+
+            Uterino: {
+                HemorragiaObstétrica: puntosHemorragia
+            },
+            GastroIntestital: {
+                ToleranciaVíaOral: puntosTolerancia, Glucosa: ValueGlucosa, NA: ValueNA, K: ValueK,
+            },
+
+        });
+
+    }, [ValuePH,
+        ValueTASistolica,
+        ValueTADiastolica,
+        ValueTemperatura,
+        ValueLactato,
+        IndiceBriones,
+        ValueAcidoUrico,
+        ValueProteinuria,
+        creatinina,
+        ValueDeficitBase,
+        diuresisValue,
+        formDataThreeGroup.TasadefiltraciónGlomerular,
+        ValueFrecuenciaRespiratoria,
+        ValueIndiceKirby,
+        ValueSaturación,
+        ValueLeucocitos,
+        ValueHemoglobina,
+        ValuePlaquetas,
+        ValueDimeroD,
+        ValueFibrinogeno,
+        ValueIRN,
+        ValueTransaminasas,
+        ValueLDH,
+        ValueBilirrubinasTotales,
+        presiónColoidosmótica,
+        albumina,
+        formDataSecondGroup.GlobulinaSérica,
+        IndiceBriones,
+        puntoScale,
+        puntosHemorragia,
+        puntosTolerancia,
+        ValueGlucosa,
+        ValueNA,
+        ValueK
+    ])
+
+
     return (
         <>
+            <Appbar.Header>
+                <Appbar.BackAction onPress={() => { }} />
+                <Text style={{ fontSize: 25 }}>
+                    Salir
+                </Text>
+            </Appbar.Header>
+            <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+            >
+                {
+                    fields.map((field, index) => {
+                        return (
+                            <View key={field.name} style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                width: '100%',
+                                height: 80,
+                                justifyContent: 'center',
+                                flexWrap: 'wrap',
+                                gap: 10,
+                                columnGap: 10,
+                                rowGap: 10,
+
+                            }}                                >
+                                <Text
+                                    style={{ width: 75, textAlign: 'center', fontSize: 15, }}
+                                >{field.name}</Text>
+                                <TextInput
+                                    style={{
+                                        width: 200, height: 50,
+                                        marginBottom: 10,
+                                        backgroundColor: 'rgb(255, 255, 255)',
+                                        borderColor: 'rgba(0, 0, 0, 0.29)',
+                                        borderRadius: 4,
+                                        borderWidth: 1,
+                                        color: 'black',
+                                    }}
+                                    onChangeText={text => setFormData({ ...formData, [field.name]: text })}
+                                    value={formData[field.name]?.toString()}
+                                />
+                            </View>
+                        )
+                    }
+                    )}
+
+
+
+
+
+
+            </SafeAreaView>
         </>
-    );
+    )
 }
 
 export default MyForm;
+

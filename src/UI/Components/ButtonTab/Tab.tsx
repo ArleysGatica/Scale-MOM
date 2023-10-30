@@ -4,7 +4,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import AppDrawer from '../Drawer/Drawer';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TouchableOpacity } from 'react-native';
-import { Welcome } from '../Welcome/Welcome';
 
 type HomeScreenProps = {
     navigation: NativeStackNavigationProp<RootStackParamList, 'Welcome'>;
@@ -20,7 +19,7 @@ const CustomBottomTabNavigator = ({ navigation }: HomeScreenProps) => {
     return (
         <Tab.Navigator
             screenOptions={{
-                tabBarActiveTintColor: 'red',
+                tabBarActiveTintColor: '#000',
             }}
             safeAreaInsets={{ bottom: 0 }}
         >

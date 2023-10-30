@@ -5,11 +5,11 @@ import estilos from './StyleWelcome';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type HomeScreenProps = {
-    navigation: NativeStackNavigationProp<RootStackParamList, 'Logout'>;
+    navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
 };
 
 type RootStackParamList = {
-    Logout: undefined;
+    Login: undefined;
 };
 
 export function Welcome({ navigation }: HomeScreenProps) {
@@ -19,7 +19,7 @@ export function Welcome({ navigation }: HomeScreenProps) {
             <View style={estilos.Container}>
                 <SafeAreaView style={estilos.containerChild}>
                     <Text style={estilos.Title}>
-                        Welcome to
+                        Bienvenido a
                     </Text>
 
                     <Image source={require('../../../Assets/LogoappLogo.png')}
@@ -29,7 +29,7 @@ export function Welcome({ navigation }: HomeScreenProps) {
 
                 </SafeAreaView>
                 <View style={estilos.Button}>
-                    <Pressable onPress={() => navigation.navigate('Logout')}>
+                    <Pressable onPress={() => navigation.navigate('Login')}>
                         <Image source={require('../../../Assets/Done.png')} />
                     </Pressable>
 

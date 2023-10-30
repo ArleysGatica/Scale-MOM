@@ -1,83 +1,75 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, FlatList, Button, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image, Pressable, TouchableOpacity, Button } from 'react-native';
+import {  Text, TextInput,  } from 'react-native-paper';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
-interface Paciente {
-    id: string;
-    nombre: string;
-}
 
-interface Medico {
-    id: string;
-    nombre: string;
-    activo: boolean;
-}
+type HomeScreenProps = {
+    navigation?: NativeStackNavigationProp<RootStackParamList, 'Welcome'>;
+};
 
-const pacientesData: Paciente[] = [
-    { id: '1', nombre: 'Paciente 1' },
-    { id: '2', nombre: 'Paciente 2' },
-    { id: '3', nombre: 'Paciente 3' },
-];
+type RootStackParamList = {
+    Welcome?: undefined;
+};
 
-const medicosData: Medico[] = [
-    { id: '1', nombre: 'Médico 1', activo: true },
-    { id: '2', nombre: 'Médico 2', activo: false },
-];
+export default function PruebaHome({ navigation }: HomeScreenProps) {
 
-export default function PruebaHome() {
-    const [searchText, setSearchText] = useState<string>('');
-    const [filteredPacientes, setFilteredPacientes] = useState<Paciente[]>([]);
-    const [medicoActivo, setMedicoActivo] = useState<Medico | null>(null);
 
-    const handleSearch = () => {
-        const filtered = pacientesData.filter((paciente) =>
-            paciente.nombre.toLowerCase().includes(searchText.toLowerCase())
-        );
-        setFilteredPacientes(filtered);
-    };
-
-    const handleSetActiveMedico = (medico: Medico) => {
-        setMedicoActivo(medico);
-    };
-
+ 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Inicio para Médicos</Text>
+         
+            <Text
+                style={{
+                    width: '100%',
+                    textAlign: 'center',
+                    fontSize: 30,
+                    fontWeight: 'bold',
+                    marginBottom: 20,
+                    color: '#000'
+                }}
 
-            {/* Búsqueda de Pacientes */}
-            <TextInput
-                placeholder="Buscar Paciente"
-                style={styles.input}
-                value={searchText}
-                onChangeText={(text) => setSearchText(text)}
-            />
-            <Button title="Buscar" onPress={handleSearch} />
+                variant="displayMedium">
+                Bienvenido Doctor{"\n"}
 
-            {/* Lista de Pacientes */}
-            <FlatList
-                data={filteredPacientes}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => <Text style={styles.item}>{item.nombre}</Text>}
-                style={styles.list}
-            />
+                Juan Perez
+            </Text>
 
-            {/* Médico Activo */}
-            {medicoActivo ? (
-                <View>
-                    <Text style={styles.subtitle}>Médico Activo:</Text>
-                    <Text style={styles.activeMedico}>{medicoActivo.nombre}</Text>
+            <View 
+                style={{
+                    width: '100%',
+                    height: 'auto',
+                    // flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    // marginBottom: 20,
+                    gap: 20,
+                }}>
+
+                <View
+                    style={styles.box}>
+                    <Image source={require('../../../Assets/RegistroPacient.png')}
+                        style={{ width: 70, height: 70, resizeMode: 'cover', }} />
+                    <Text
+                        style={{
+                            width: '35%',
+                            fontSize: 20,
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Crear Pacientes
+                    </Text>
                 </View>
-            ) : (
-                <Text>No hay médico activo en este momento.</Text>
-            )}
 
-            {/* Lista de Médicos */}
-            <Text style={styles.subtitle}>Lista de Médicos:</Text>
-            {medicosData.map((medico) => (
-                <View key={medico.id} style={styles.medicoItem}>
-                    <Text style={styles.medicoName}>{medico.nombre}</Text>
-                    <Button title="Activar" onPress={() => handleSetActiveMedico(medico)} />
+                <View
+                    style={styles.box}>
+                    <Image source={require('../../../Assets/RegistroPacient.png')}
+                        style={{ width: 70, height: 70, resizeMode: 'cover', }} />
+               
                 </View>
-            ))}
+                <Pressable onPress={() => navigation?.navigate!('Welcome')}>
+                    <Image source={require('../../../Assets/Done.png')} />
+                </Pressable>
+            </View>
         </View>
     );
 }
@@ -125,5 +117,30 @@ const styles = StyleSheet.create({
     },
     medicoName: {
         marginRight: 10,
+    },
+    paragraph: {
+        padding: 16,
+        fontSize: 19,
+        textAlign: "center",
+    },
+
+    box: {
+        width: '100%',
+        height: 90,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        // Estilos de sombra para iOS
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        // Estilos de sombra para Android
+        elevation: 2,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingLeft: 10,
+        paddingRight: 10,
+        columnGap: 18,
+        justifyContent: 'center',
     },
 });
