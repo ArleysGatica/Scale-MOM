@@ -13,6 +13,14 @@ import { store } from './src/app/store';
 import MyForm from './src/Helpers/Generalform/form';
 import FormularyPart from './src/UI/Page/Formulary';
 import RegisterPatient from './src/UI/Page/RegisterPatient/patient';
+import TemporalHome from './src/UI/Page/Home/Home';
+
+//Paper
+import { PaperProvider } from 'react-native-paper';
+import { Provider as StoreProvider } from 'react-redux';
+import MyComponent from './src/UI/Components/CreateDr';
+
+
 
 
 const Stack = createNativeStackNavigator();
@@ -23,15 +31,16 @@ const screenOptions = {
 
 function AppStack() {
     return (
-        <Stack.Navigator screenOptions={screenOptions} initialRouteName="Login">
+        <Stack.Navigator screenOptions={screenOptions} initialRouteName="MyForm">
             <Stack.Screen options={{ headerShown: false }} name="RegisterPatient" component={RegisterPatient} />
+            <Stack.Screen options={{ headerShown: false }} name="MyComponent" component={MyComponent} />
             <Stack.Screen options={{ headerShown: false }} name="FormularyPart" component={FormularyPart} />
             <Stack.Screen options={{ headerShown: false }} name="Welcome" component={Welcome} />
             <Stack.Screen options={{ headerShown: false }} name="CustomBottomTabNavigator" component={CustomBottomTabNavigator} />
-            <Stack.Screen options={{ headerShown: false }} name="Logout" component={Logout} />
             <Stack.Screen options={{ headerShown: false }} name="Login" component={Login} />
-            <Stack.Screen options={{ headerShown: false }} name="Register" component={Register} />
+            <Stack.Screen options={{ headerShown: false }} name="MyForm" component={MyForm} />
             <Stack.Screen options={{ headerShown: false }} name="DoctorCreationForm" component={DoctorCreationForm} />
+            <Stack.Screen options={{ headerShown: true}} name="TemporalHome" component={TemporalHome} />
         </Stack.Navigator>
     )
 }
@@ -45,8 +54,10 @@ function RootNatigator() {
 }
 export default function Router() {
     return (
-        <Provider store={store}>
-            <RootNatigator />
-        </Provider>
+        <StoreProvider store={store}>
+            <PaperProvider>
+                <RootNatigator />
+            </PaperProvider>
+        </StoreProvider >
     );
 }

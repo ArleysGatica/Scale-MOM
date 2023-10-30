@@ -31,6 +31,11 @@ export function Login({ navigation }: LoginFormProps) {
         }
     };
 
+    const handleLogout = () => {
+        navigation?.navigate('Login');
+        Alert.alert('Logout');
+    }
+
     return (
         <SafeAreaView style={style.containerLogin}>
             <View style={style.Container}>
@@ -44,7 +49,7 @@ export function Login({ navigation }: LoginFormProps) {
                     <TextInput
                         style={style.passwordInput}
                         placeholderTextColor="gray"
-                        placeholder="Name"
+                        placeholder="Nombre de usuario"
                         onChangeText={(text) => setUsername(text)}
                     />
                 </View>
@@ -53,8 +58,9 @@ export function Login({ navigation }: LoginFormProps) {
                     <TextInput
                         style={style.passwordInput}
                         placeholderTextColor="gray"
-                        placeholder="username"
+                        placeholder="Contraseña"
                         onChangeText={(text) => setPassword(text)}
+                        secureTextEntry={true}
                     />
                 </View>
             </View>

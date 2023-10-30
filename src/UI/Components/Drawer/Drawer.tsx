@@ -40,20 +40,22 @@ const styles = StyleSheet.create({
     headerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'blue',
+        backgroundColor: '#e0dcdc',
         paddingTop: 36,
+        paddingBottom: 12,
+        paddingLeft: 12,
     },
     menuButton: {
         padding: 10,
     },
     menuText: {
         fontSize: 24,
-        color: 'white',
+        color: 'Black',
     },
     title: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: 'white',
+        color: '#000',
         marginLeft: 10,
     },
 
@@ -66,7 +68,7 @@ const styles = StyleSheet.create({
 
     },
     navigationContainer: {
-        backgroundColor: '#ecf0f1',
+        // backgroundColor: '#ecf0f1',
     },
     paragraph: {
         padding: 16,

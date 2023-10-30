@@ -21,6 +21,7 @@ const style = StyleSheet.create({
         paddingBottom: 50,
         color: '#000000',
         top: 25,
+        width: '75%',
     },
 
     Logo: {
@@ -221,6 +222,28 @@ const style = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         marginTop: 10,
+    },
+
+
+
+
+
+    Header: {
+        flex: 1,
+        paddingTop: 40,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        backgroundColor: 'red',
+        width: '100%',
+        height: 10,
+    },
+
+    sidebar: {
+        margin: 10,
+        borderRadius: 10,
+        width: 100,
+        height: 100,
+        resizeMode: 'cover',
     },
 
 
