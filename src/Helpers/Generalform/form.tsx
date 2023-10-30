@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { IFirstGroup, ISecondGroup, IThreeGroup, IFourGroup, IFiveGroup, InputsGeneral, InputsSelects } from '../../types/types';
-import { Text, View, TextInput, Image, Button, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighlight, Alert, ActivityIndicator, Pressable } from 'react-native';
+import {  View,  Image,  TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighlight, Alert, ActivityIndicator, Pressable } from 'react-native';
 
+import { Appbar, Text, TextInput, Button, } from 'react-native-paper';
 import FormularyPart from '../../UI/Page/Formulary';
 
 const defaultValues: InputsGeneral = {
@@ -920,13 +921,17 @@ const MyForm = () => {
         ValueK
     ])
 
-    console.log(fields);
-
-    const HolaMundo = 'Hola Mundo'
 
     return (
         <>
-            <SafeAreaView>
+            <Appbar.Header>
+                <Appbar.BackAction onPress={() => { }} />
+                <Text style={{ fontSize: 25 }}>
+                    Salir
+                </Text>
+            </Appbar.Header>
+            <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+            >
                 {
                     fields.map((field, index) => {
                         return (
@@ -934,20 +939,23 @@ const MyForm = () => {
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 width: '100%',
-                                height: '10%',
+                                height: 80,
                                 justifyContent: 'center',
                                 flexWrap: 'wrap',
+                                gap: 10,
+                                columnGap: 10,
+                                rowGap: 10,
+
                             }}                                >
-                                <Text>{field.name}</Text>
+                                <Text
+                                    style={{ width: 75, textAlign: 'center', fontSize: 15, }}
+                                >{field.name}</Text>
                                 <TextInput
                                     style={{
-                                        height: 45,
-                                        width: 100,
-                                        padding: 15,
-                                        marginTop: 10,
+                                        width: 200, height: 50,
                                         marginBottom: 10,
                                         backgroundColor: 'rgb(255, 255, 255)',
-                                        borderColor: 'rgb(0, 0, 0)',
+                                        borderColor: 'rgba(0, 0, 0, 0.29)',
                                         borderRadius: 4,
                                         borderWidth: 1,
                                         color: 'black',

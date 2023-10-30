@@ -12,21 +12,13 @@ interface DataProps {
     image?: any;
 }
 
-interface DropdownOption {
-    label: string;
-    value: string;
-}
 
 const NavigationView = ({ closeDrawer, id, name, image, }: NavigationViewProps & DataProps) => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
-    const optionsData: DropdownOption[] = [
-        { label: 'History', value: 'History' },
-        { label: 'Example', value: 'Example' },
-        { label: 'Register', value: 'Register' },
-    ];
+
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -39,7 +31,7 @@ const NavigationView = ({ closeDrawer, id, name, image, }: NavigationViewProps &
 
     const data: DataProps[] = [
         { id: "1", name: "Home", image: require('../../../Assets/home.png') },
-        { id: "2", name: "Profile", image: require('../../../Assets/avatar.png') },
+        // { id: "2", name: "Profile", image: require('../../../Assets/avatar.png') },
         { id: "3", name: "Historial", image: require('../../../Assets/historial.png') },
         { id: "4", name: "Analitica", image: require('../../../Assets/estadisticas.png') },
         { id: "5", name: "Log Out", image: require('../../../Assets/Out.png') },
@@ -65,34 +57,6 @@ const NavigationView = ({ closeDrawer, id, name, image, }: NavigationViewProps &
                     }} />
                 <Text style={styles.paragraph}>Home !!</Text>
             </View>
-
-                <Text style={styles.paragraph}>Welcome Dr. Juan Diaz</Text>
-                <Text style={styles.paragraph}>Specialty: Cardiologist</Text>
-            <View style={styles.dropdownContainer}>
-                <TouchableOpacity style={styles.dropdownHeader} onPress={toggleDropdown}>
-                    <Text>{selectedValue || 'Patients'}</Text>
-                    <Image source={require('../../../Assets/arrow.png')}
-                        style={{ width: 20, height: 20 }} />
-                </TouchableOpacity>
-                {isDropdownOpen && (
-                    <ScrollView
-                        style={styles.dropdownOptions}
-                        contentContainerStyle={styles.dropdownOptionsContent}
-                    >
-                        {optionsData.map((option) => (
-                            <TouchableOpacity
-                                key={option.value}
-                                style={styles.option}
-                                onPress={() => handleSelectOption(option.value)}
-                            >
-                                <Text>{option.label}</Text>
-
-                            </TouchableOpacity>
-                        ))}
-                    </ScrollView>
-                )}
-            </View>
-
             <FlatList
                 data={data}
                 keyExtractor={(item) => item.id || ''}
