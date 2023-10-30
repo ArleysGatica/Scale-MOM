@@ -23,7 +23,7 @@ const screenOptions = {
 
 function AppStack() {
     return (
-        <Stack.Navigator screenOptions={screenOptions} initialRouteName="DoctorCreationForm">
+        <Stack.Navigator screenOptions={screenOptions} initialRouteName="Login">
             <Stack.Screen options={{ headerShown: false }} name="RegisterPatient" component={RegisterPatient} />
             <Stack.Screen options={{ headerShown: false }} name="FormularyPart" component={FormularyPart} />
             <Stack.Screen options={{ headerShown: false }} name="Welcome" component={Welcome} />

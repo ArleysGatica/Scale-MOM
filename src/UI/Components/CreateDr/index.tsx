@@ -6,6 +6,7 @@ type Doctor = {
     username?: string;
     password?: string;
     idMinsa?: string;
+    userType?:number;
 };
 
 interface IAdminUser {
@@ -30,8 +31,8 @@ const DoctorCreationForm: React.FC<Props> = ({ onCreateDoctor }) => {
     ];
 
     const createDoctorHandler = () => {
-        const response = fetchCreateDoctor(createDoctor);
-        onCreateDoctor && onCreateDoctor(createDoctor);
+        const response = fetchCreateDoctor({...createDoctor, userType: 2});
+        onCreateDoctor && onCreateDoctor({...createDoctor, userType: 2});
         Alert.alert('Doctor creado');
         console.log(response);
     }

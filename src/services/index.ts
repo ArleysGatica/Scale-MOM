@@ -1,4 +1,4 @@
-import { IDoctor, IPatient } from "../types/types"
+import { IDoctor, ILogin, IPatient } from "../types/types"
 import axios from "axios";
 
 interface IResponse {
@@ -15,7 +15,7 @@ interface IAdminUser{
 }
 
 export const ConexionFetch = async ({ url, method, body, controller }: IResponse) => {
-    const baseURL = 'http://192.168.1.20:3000/api';
+    const baseURL = 'http://192.168.1.5:3000/api';
     const requestURL = url ? `${baseURL}/${controller}/${url}` : `${baseURL}/${controller}`;
 
     try {
@@ -49,7 +49,11 @@ export const fetchDoctorById = async (id: string) => {
 }
 
 export const fetchCreateDoctor = async (doctor: IDoctor) => {
-    return await ConexionFetch({ body: doctor, method: 'POST', controller: "doctors" })
+    return await ConexionFetch({ body: doctor, method: 'POST', controller: "user" })
+}
+
+export const login = async (user: ILogin) => {
+    return await ConexionFetch({ body: user, method: 'POST', controller: "login" })
 }
 
 export const fetchDeleteDoctor = async (id: string) => {
@@ -58,7 +62,7 @@ export const fetchDeleteDoctor = async (id: string) => {
 
 //Patients
 export const fetchCreatePatient = async (paciente: IPatient) => {
-    return await ConexionFetch({ body: paciente, method: 'POST', controller: "paciente" })
+    return await ConexionFetch({ body: paciente, method: 'POST', controller: "user" })
 }
 
 export const fetchDeletePatient = async (id: string) => {

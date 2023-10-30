@@ -78,6 +78,7 @@ export interface IDoctor {
     username?: string;
     password?: string;
     idMinsa?: string;
+    userType?:number;
 }
 
 export interface IPatient {
@@ -89,6 +90,7 @@ export interface IPatient {
     telefono?: Number;
     resultado?: String;
     edad?: Number;
+    userType?:number;
 }
 
 export interface ILogin {

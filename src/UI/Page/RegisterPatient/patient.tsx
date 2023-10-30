@@ -18,7 +18,7 @@ const RegisterPatient = () => {
     ];
 
     const createPatientHandler = async () => {
-        const response = await fetchCreatePatient(registerData);
+        const response = await fetchCreatePatient({...registerData, userType:0});
         console.log(response);
     }
 

@@ -3,6 +3,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../types/types';
 import { Text, View, TextInput, Image, Button, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighlight, Alert, ActivityIndicator, Pressable } from 'react-native';
 import style from './Style.Login';
+import { login } from '../../../services';
 
 type LoginFormProps = {
     navigation?: NativeStackNavigationProp<RootStackParamList, 'DoctorCreationForm' | 'Login' | 'CustomBottomTabNavigator'>;
@@ -13,11 +14,16 @@ export function Login({ navigation }: LoginFormProps) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        if (username === 'admin' && password === 'admin') {
+    const handleLogin = async () => {
+
+        const response = await login({username, password});
+
+        if (response.userType === 1) {
             navigation?.navigate('DoctorCreationForm');
             Alert.alert('Entrar como admin');
-        } else if (username === 'doctor' && password === 'doctor') {
+        }
+        
+        if (response.userType === 2) {
             navigation?.navigate('CustomBottomTabNavigator');
             Alert.alert('Entrar como doctor');
         } else {
