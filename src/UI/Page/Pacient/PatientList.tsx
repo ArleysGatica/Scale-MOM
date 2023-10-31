@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Avatar, Card, IconButton } from 'react-native-paper';
 
-const MyComponent = () => (
+const ListPatient = () => (
     <Card.Title
         title="Card Title"
         subtitle="Card Subtitle"
@@ -10,4 +10,4 @@ const MyComponent = () => (
     />
 );
 
-export default MyComponent;
+export default ListPatient;
