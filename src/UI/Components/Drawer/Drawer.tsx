@@ -2,8 +2,16 @@ import React, { useRef, useState } from 'react'
 import { Button, DrawerLayoutAndroid, Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import NavigationView from './Nave';
 import PruebaHome from '../../Page/Profile/Prueba';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-const AppDrawer = () => {
+type HomeScreenProps = {
+    navigation: NativeStackNavigationProp<RootStackParamList, 'RegisterPatient'>;
+};
+
+type RootStackParamList = {
+    RegisterPatient: undefined;
+};
+const AppDrawer = ({ navigation }: HomeScreenProps) => {
 
     const drawer = useRef<DrawerLayoutAndroid>(null);
 
@@ -30,7 +38,7 @@ const AppDrawer = () => {
             </View>
             <View style={styles.container}>
 
-                <PruebaHome />
+                <PruebaHome navigation={navigation} />
             </View>
 
         </DrawerLayoutAndroid>
