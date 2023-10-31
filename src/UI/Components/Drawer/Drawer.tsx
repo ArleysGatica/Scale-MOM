@@ -10,6 +10,7 @@ type HomeScreenProps = {
 
 type RootStackParamList = {
     RegisterPatient: undefined;
+    ListPatient: undefined;
 };
 const AppDrawer = ({ navigation }: HomeScreenProps) => {
 

@@ -20,6 +20,9 @@ import { PaperProvider } from 'react-native-paper';
 import { Provider as StoreProvider } from 'react-redux';
 import MyComponent from './src/UI/Components/CreateDr';
 import ListPatient from './src/UI/Page/Pacient/PatientList';
+import Pacient from './src/UI/Page/Pacient/pacientView';
+import ListDoctor from './src/UI/Page/Doctor/doctorList';
+import DoctorProfile from './src/UI/Page/Doctor/doctorView';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +36,11 @@ function AppStack() {
             <Stack.Screen options={{ headerShown: false }} name="RegisterPatient" component={RegisterPatient} />
             <Stack.Screen options={{ headerShown: false }} name="MyComponent" component={MyComponent} />
             <Stack.Screen options={{ headerShown: false }} name="ListPatient" component={ListPatient} />
+            <Stack.Screen options={{ headerShown: false }} name="ProfilePatient" component={Pacient} />
+            
+            <Stack.Screen options={{ headerShown: false }} name="ListDoctor" component={ListDoctor} />
+            <Stack.Screen options={{ headerShown: false }} name="DoctorProfile" component={DoctorProfile} />
+
             <Stack.Screen options={{ headerShown: false }} name="Welcome" component={Welcome} />
             <Stack.Screen options={{ headerShown: false }} name="CustomBottomTabNavigator" component={CustomBottomTabNavigator} />
             <Stack.Screen options={{ headerShown: false }} name="Login" component={Login} />

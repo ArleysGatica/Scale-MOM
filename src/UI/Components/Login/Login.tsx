@@ -6,7 +6,7 @@ import style from './Style.Login';
 import { login } from '../../../services';
 
 type LoginFormProps = {
-    navigation?: NativeStackNavigationProp<RootStackParamList, 'DoctorCreationForm' | 'Login' | 'CustomBottomTabNavigator'>;
+    navigation?: NativeStackNavigationProp<RootStackParamList, 'DoctorCreationForm' | 'Login' | 'CustomBottomTabNavigator' | 'ListDoctor'>;
 };
 
 export function Login({ navigation }: LoginFormProps) {
@@ -19,8 +19,10 @@ export function Login({ navigation }: LoginFormProps) {
         const response = await login({username, password});
 
         if (response.userType === 1) {
-            navigation?.navigate('DoctorCreationForm');
             Alert.alert('Entrar como admin');
+
+            return navigation?.navigate('ListDoctor');
+            
         }
         
         if (response.userType === 2) {
