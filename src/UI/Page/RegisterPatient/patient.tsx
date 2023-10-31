@@ -5,10 +5,24 @@ import { IPatient } from '../../../types/types';
 import { fetchCreatePatient } from '../../../services';
 
 import { Appbar, Text, TextInput, Button, } from 'react-native-paper';
+import { useRoute } from '@react-navigation/native';
+
+interface IParams {
+    id:string;
+}
 
 const RegisterPatient = () => {
 
     const [registerData, setregisterData] = useState<IPatient>({});
+
+    const route = useRoute();
+
+    useEffect(() => {
+        const id = (route.params as IParams).id;
+
+        if (id) console.log("Edit"); 
+        if (!id) console.log("Edit"); 
+    }, []);
 
     const objData: { name: keyof IPatient, label: string, type: string }[] = [
         { name: 'username', label: 'Nombre', type: 'text' },
