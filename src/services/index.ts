@@ -15,7 +15,7 @@ interface IAdminUser{
 }
 
 export const ConexionFetch = async ({ url, method, body, controller }: IResponse) => {
-    const baseURL = 'http://192.168.1.20:3000/api';
+    const baseURL = 'http://192.168.1.24:3000/api';
     const requestURL = url ? `${baseURL}/${controller}/${url}` : `${baseURL}/${controller}`;
 
     try {
@@ -26,6 +26,11 @@ export const ConexionFetch = async ({ url, method, body, controller }: IResponse
 
         if (method === 'POST') {
             const response = await axios.post(requestURL, body);
+            return response.data;
+        }
+
+        if (method === 'PUT') {
+            const response = await axios.put(requestURL, body);
             return response.data;
         }
 
@@ -60,6 +65,10 @@ export const fetchDeleteDoctor = async (id: string) => {
     return await ConexionFetch({ url: id, method: 'DELETE', controller: "doctors" })
 }
 
+export const fetchUpdateDoctors = async (id: string, doctor: IDoctor) => {
+    return await ConexionFetch({ url: id, body: doctor, method: 'PUT', controller: "user" })
+}
+
 //Patients
 export const fetchCreatePatient = async (paciente: IPatient) => {
     return await ConexionFetch({ body: paciente, method: 'POST', controller: "user" })
@@ -70,11 +79,15 @@ export const fetchDeletePatient = async (id: string) => {
 }
 
 export const fetchUpdatePatient = async (id: string, paciente: IPatient) => {
-    return await ConexionFetch({ url: id, body: paciente, method: 'POST', controller: "paciente" })
+    return await ConexionFetch({ url: id, body: paciente, method: 'PUT', controller: "user" })
 }
 
 export const fetchGetPatient = async () => {
     return await ConexionFetch({ method: 'GET', controller: "paciente" })
+}
+
+export const fetchGetDoctors = async () => {
+    return await ConexionFetch({ method: 'GET', controller: "doctors" })
 }
 
 export const fetchPatientById = async (id: string) => {
@@ -82,7 +95,7 @@ export const fetchPatientById = async (id: string) => {
 }
 
 //UsersAdmin
-export const fetchAdminUserById = async (id: string) => {
+export const getUserById = async (id: string) => {
     return await ConexionFetch({ url: id, method: 'GET', controller: "user" })
 }
 

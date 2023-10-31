@@ -10,6 +10,7 @@ type HomeScreenProps = {
 
 type RootStackParamList = {
     RegisterPatient: undefined;
+    ListPatient: undefined;
 };
 
 export default function PruebaHome({ navigation }: HomeScreenProps) {
@@ -42,6 +43,16 @@ export default function PruebaHome({ navigation }: HomeScreenProps) {
                     // marginBottom: 20,
                     gap: 20,
                 }}>
+                <Pressable onPress={() => navigation.navigate!('ListPatient')}>
+                    <Text
+                    style={{
+                        width: '35%',
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                    }}>
+                        Lista de pacientes
+                    </Text>
+                </Pressable>
 
                 <View
                     style={styles.box}>

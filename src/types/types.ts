@@ -7,6 +7,7 @@ export type RootStackParamList = {
     DashboardScreen: undefined;
     CustomBottomTabNavigator: undefined;
     HomeScreen: undefined;
+    ListDoctor: undefined;
 };
 
 export interface IFirstGroup {

@@ -5,9 +5,9 @@ interface IParams {
     id:string;
 }
 
-const Pacient = () => {
+const DoctorProfile = () => {
     const route = useRoute();
-
+    
     const id = (route.params as IParams).id;
 
     const navigation = useNavigation();
@@ -18,17 +18,20 @@ const Pacient = () => {
                 style={styles.box}>
                 <Image source={require('../../../Assets/RegistroPacient.png')}
                     style={{ width: 70, height: 70, resizeMode: 'cover', }} />
+
+                
                 <Text
                     style={{
                         width: '35%',
                         fontSize: 20,
                         fontWeight: 'bold',
                     }}
+                    onPress={() => { navigation.navigate('DoctorCreationForm' as never)}}
                 >
-                    Crear Pacientes
+                    Crear Doctor
                 </Text>
                 {/*@ts-ignore */}
-                <Text onPress={() => { navigation.navigate('RegisterPatient' , { id:id  });}} >
+                <Text onPress={() => { navigation.navigate('DoctorCreationForm' , { id:id  })}} >
                     Editar
                 </Text>
                 <Text>
@@ -67,4 +70,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Pacient;
+export default DoctorProfile;

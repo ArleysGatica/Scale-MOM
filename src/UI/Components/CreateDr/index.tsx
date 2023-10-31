@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Alert } from 'react-native';
-import { fetchAdminUserById, fetchCreateDoctor } from '../../../services';
+import { getUserById, fetchCreateDoctor, fetchUpdatePatient, fetchUpdateDoctors } from '../../../services';
 import { Appbar, Text, TextInput, Button, } from 'react-native-paper';
+import { useRoute } from '@react-navigation/native';
+
 type Doctor = {
     username?: string;
     password?: string;
@@ -15,6 +17,10 @@ interface IAdminUser {
     password?: string;
 }
 
+interface IParams {
+    id:string;
+}
+
 type Props = {
     onCreateDoctor?: (doctor: Doctor) => void;
 };
@@ -24,21 +30,39 @@ const DoctorCreationForm: React.FC<Props> = ({ onCreateDoctor }) => {
     const [createDoctor, setCreateDoctor] = useState<Doctor>({});
     const [userAdmin, setUserAdmin] = useState<IAdminUser>({});
 
+    const route = useRoute();
+    const id = (route.params as IParams)?.id || '';
+
+    useEffect(() => {
+
+        if (id) {
+            getUserById(id).then((resultado) => {
+                setCreateDoctor({username:resultado.username, idMinsa:resultado.idMinsa})
+                
+            })
+        }; 
+        if (!id) console.log("Create"); 
+    }, []);
+    
+
     const objData: { name: keyof Doctor, label: string, type: string }[] = [
         { name: 'username', label: 'Nombre', type: 'text' },
         { name: 'password', label: 'Contraseña', type: 'text' },
         { name: 'idMinsa', label: 'IdMinsa', type: 'text' },
     ];
 
-    const createDoctorHandler = () => {
-        const response = fetchCreateDoctor({...createDoctor, userType: 2});
-        onCreateDoctor && onCreateDoctor({...createDoctor, userType: 2});
-        Alert.alert('Doctor creado');
-        console.log(response);
+    const createDoctorHandler = async () => {
+        id
+          ? await fetchUpdateDoctors(id, {
+              username: createDoctor.username,
+              idMinsa: createDoctor.idMinsa,
+            })
+          : await fetchCreateDoctor({...createDoctor, userType: 2});
+       
     }
 
-    const getUserById = async () => {
-        const response = await fetchAdminUserById('653d87fcc6fb2046d9477c2b');
+    const getUserByIdAC = async () => {
+        const response = await getUserById('653d87fcc6fb2046d9477c2b');
         console.log(response);
     }
 
@@ -63,41 +87,60 @@ const DoctorCreationForm: React.FC<Props> = ({ onCreateDoctor }) => {
                     }}
 
                     variant="displayMedium">
-                    Registro de Doctor
+                    {id ? "Editar Doctor" : "Crear Doctor"}
                 </Text>
-                {
-                    objData.map((item, index) => {
+                <View>
+                    {objData.map((item, index) => {
                         return (
-                            <View key={index}
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    width: '100%',
-                                    height: 80,
-                                    justifyContent: 'center',
-                                    flexWrap: 'wrap',
-                                    gap: 10,
-                                    columnGap: 10,
-                                    rowGap: 10,
+                            id ?  item.name === "password" ? <></> : <View key={index}
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                width: '100%',
+                                height: 80,
+                                justifyContent: 'center',
+                                flexWrap: 'wrap',
+                                gap: 10,
+                                columnGap: 10,
+                                rowGap: 10,
 
-                                }}>
-                                <TextInput
-                                    style={{ width: 200, height: 50, backgroundColor: 'white' }}
-                                    label={item.label}
-                                    onChangeText={text => setCreateDoctor({ ...createDoctor, [item.name]: text })}
-                                    value={createDoctor[item.name]?.toString()}
-                                />
-                            </View>
+                            }}>
+                            <TextInput
+                                style={{ width: 200, height: 50, backgroundColor: 'white' }}
+                                label={item.label}
+                                onChangeText={text => setCreateDoctor({ ...createDoctor, [item.name]: text })}
+                                value={createDoctor[item.name]?.toString()}
+                            />
+                        </View> : <View key={index}
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                width: '100%',
+                                height: 80,
+                                justifyContent: 'center',
+                                flexWrap: 'wrap',
+                                gap: 10,
+                                columnGap: 10,
+                                rowGap: 10,
+
+                            }}>
+                            <TextInput
+                                style={{ width: 200, height: 50, backgroundColor: 'white' }}
+                                label={item.label}
+                                onChangeText={text => setCreateDoctor({ ...createDoctor, [item.name]: text })}
+                                value={createDoctor[item.name]?.toString()}
+                            />
+                        </View>
                         )
-                    })
-                }
+                    })}
+                </View>
                 <Button
                     icon="check"
                     mode="contained"
                     onPress={createDoctorHandler}
                     style={{ width: 200, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
                 >
-                    Registrado
+                    {id ? "Editar" : "Registrar"}
                 </Button>
                 {/* <Button
                     onPress={createDoctorHandler}

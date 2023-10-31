@@ -2,13 +2,32 @@ import { View,  TouchableOpacity, SafeAreaView, StyleSheet, Alert,  Pressable, S
 
 import React, { useState, useEffect } from 'react';
 import { IPatient } from '../../../types/types';
-import { fetchCreatePatient } from '../../../services';
+import { fetchCreatePatient, fetchUpdatePatient, getUserById } from '../../../services';
 
 import { Appbar, Text, TextInput, Button, } from 'react-native-paper';
+import { useRoute } from '@react-navigation/native';
+
+interface IParams {
+    id:string;
+}
 
 const RegisterPatient = () => {
 
-    const [registerData, setregisterData] = useState<IPatient>({});
+    const [registerData, setRegisterData] = useState<IPatient>({});
+
+    const route = useRoute();
+    const id = (route.params as IParams)?.id || '';
+
+    useEffect(() => {
+
+        if (id) {
+            getUserById(id).then((resultado) => {
+                setRegisterData({username:resultado.username, dni:resultado.dni, nameEncargado:resultado.nameEncargado, telefonoEncargado:resultado.telefonoEncargado, telefono:resultado.telefono, edad:resultado.edad})
+                
+            })
+        }; 
+        if (!id) console.log("Create"); 
+    }, []);
 
     const objData: { name: keyof IPatient, label: string, type: string }[] = [
         { name: 'username', label: 'Nombre', type: 'text' },
@@ -19,17 +38,18 @@ const RegisterPatient = () => {
         { name: 'edad', label: 'Edad', type: 'number' },
     ];
 
+
     const createPatientHandler = async () => {
-        const response = await fetchCreatePatient({ ...registerData, userType: 0 });
-        console.log(response);
+        id ? await fetchUpdatePatient(id, registerData) : await fetchCreatePatient({ ...registerData, userType: 0 });
+        
     }
 
     const handleTextChange = (fieldName: keyof IPatient, text: string) => {
         if (fieldName === 'edad' || fieldName === 'telefono' || fieldName === 'telefonoEncargado') {
             const numericText = text.replace(/[^0-9]/g, '');
-            setregisterData({ ...registerData, [fieldName]: numericText });
+            setRegisterData({ ...registerData, [fieldName]: numericText });
         } else {
-            setregisterData({ ...registerData, [fieldName]: text });
+            setRegisterData({ ...registerData, [fieldName]: text });
         }
     };
 
@@ -52,7 +72,7 @@ const RegisterPatient = () => {
                         }}
 
                         variant="displayMedium">
-                        Registro de Pacientes
+                        { id ? "Editar paciente" : "Registro de Pacientes" }
                     </Text>
                     {
                         objData.map((item, index) => {
@@ -96,7 +116,7 @@ const RegisterPatient = () => {
                             mode="contained"
                             style={{ width: 200, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
                         >
-                            Registrado
+                            { id ? "Editar" : "Registrar"}
                         </Button>
                     </View>
                 </ScrollView>
