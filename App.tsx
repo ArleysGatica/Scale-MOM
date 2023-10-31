@@ -20,9 +20,6 @@ import { PaperProvider } from 'react-native-paper';
 import { Provider as StoreProvider } from 'react-redux';
 import MyComponent from './src/UI/Components/CreateDr';
 
-
-
-
 const Stack = createNativeStackNavigator();
 
 const screenOptions = {
@@ -31,7 +28,7 @@ const screenOptions = {
 
 function AppStack() {
     return (
-        <Stack.Navigator screenOptions={screenOptions} initialRouteName="MyForm">
+        <Stack.Navigator screenOptions={screenOptions} initialRouteName="Welcome">
             <Stack.Screen options={{ headerShown: false }} name="RegisterPatient" component={RegisterPatient} />
             <Stack.Screen options={{ headerShown: false }} name="MyComponent" component={MyComponent} />
             <Stack.Screen options={{ headerShown: false }} name="FormularyPart" component={FormularyPart} />
