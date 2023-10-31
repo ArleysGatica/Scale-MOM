@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { IFirstGroup, ISecondGroup, IThreeGroup, IFourGroup, IFiveGroup, InputsGeneral, InputsSelects } from '../../types/types';
 import { View, Image, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighlight, Alert, ActivityIndicator, Pressable, ScrollView } from 'react-native';
 
 import { Appbar, Text, TextInput, Button, } from 'react-native-paper';
-import FormularyPart from '../../UI/Page/Formulary';
+
+import { Picker } from '@react-native-picker/picker';
 
 interface ICardioVascular {
     TASistolica?: number;
@@ -759,7 +760,7 @@ const MyForm = () => {
     const handleInputChangeGastroIntestinal = (name: string, value: string, selectedValue: number) => {
         const numericValue = parseFloat(value) || undefined;
         setSelectedValueViaOral(selectedValue);
-        setUterino(prevData => ({
+        setGastroIntestinal(prevData => ({
             ...prevData,
             [name]: numericValue,
         }));
@@ -809,35 +810,35 @@ const MyForm = () => {
         }
     }
 
-    // const [categoryGeneral, setCategoryGeneral] = useState({
-    //     CardioVascular: {
-    //         PH: cardioData.PH, TASistolica: cardioData.TASistolica, TADiastolica: cardioData.ValueTADiastolica, Temperatura: cardioData.Temperatura, Lactato: cardioData.Lactato, Indicedechoque: cardioData.ShockIndex,
-    //     },
-    //     Renal: {
-    //         AcidoUrico: renalData.AcidoUrico, Proteinuria: renalData.Proteinuria, Creatinina: renalData.Creatinina, DeficitBase: renalData.DeficitBase, Diuresis: renalData.Diuresis, TasadefiltraciónGlomerular: renalData.TasadefiltraciónGlomerular,
-    //     },
-    //     Respiratorio: {
-    //         FrecuenciaRespiratoria: respiratorio.FrecuenciaRespiratoria, IndiceKirby: respiratorio.IndiceKirby, Saturación: respiratorio.Saturación,
-    //     },
-    //     Hematologico: {
-    //         Leucocitos: hematologico.Leucocitos, Hemoglobina: hematologico.Hemoglobina, Plaquetas: hematologico.Plaquetas, DimeroD: hematologico.DimeroD, Fibrinogeno: hematologico.Fibrinogeno, IRN: hematologico.IRN,
-    //     },
+    const [categoryGeneral, setCategoryGeneral] = useState({
+        CardioVascular: {
+            PH: cardioData.PH, TASistolica: cardioData.TASistolica, TADiastolica: cardioData.ValueTADiastolica, Temperatura: cardioData.Temperatura, Lactato: cardioData.Lactato, Indicedechoque: cardioData.ShockIndex,
+        },
+        Renal: {
+            AcidoUrico: renalData.AcidoUrico, Proteinuria: renalData.Proteinuria, Creatinina: renalData.Creatinina, DeficitBase: renalData.DeficitBase, Diuresis: renalData.Diuresis, TasadefiltraciónGlomerular: renalData.TasadefiltraciónGlomerular,
+        },
+        Respiratorio: {
+            FrecuenciaRespiratoria: respiratorio.FrecuenciaRespiratoria, IndiceKirby: respiratorio.IndiceKirby, Saturación: respiratorio.Saturación,
+        },
+        Hematologico: {
+            Leucocitos: hematologico.Leucocitos, Hemoglobina: hematologico.Hemoglobina, Plaquetas: hematologico.Plaquetas, DimeroD: hematologico.DimeroD, Fibrinogeno: hematologico.Fibrinogeno, IRN: hematologico.IRN,
+        },
 
-    //     Hepaticos: {
-    //         Transaminasas: hepatico.Transaminasas, LDH: hepatico.LDH, BilirrubinasTotales: hepatico.BilirrubinasTotales, PresiónColoidosmótica: hepatico.PresiónColoidosmótica, Albumina: hepatico.Albumina, GlobulinaSérica: hepatico.GlobulinaSérica, IndiceBriones: hepatico.IndiceBriones,
-    //     },
-    //     Neurologico: {
-    //         EscalaGlasgow: puntoScale
-    //     },
+        Hepaticos: {
+            Transaminasas: hepatico.Transaminasas, LDH: hepatico.LDH, BilirrubinasTotales: hepatico.BilirrubinasTotales, PresiónColoidosmótica: hepatico.PresiónColoidosmótica, Albumina: hepatico.Albumina, GlobulinaSérica: hepatico.GlobulinaSérica, IndiceBriones: hepatico.IndiceBriones,
+        },
+        Neurologico: {
+            EscalaGlasgow: neurologico.EscalaGlasgow
+        },
 
-    //     Uterino: {
-    //         HemorragiaObstétrica: puntosHemorragia
-    //     },
+        Uterino: {
+            HemorragiaObstétrica: uterino.HemorragiaObstétrica, PerdidaVolumenSangre: uterino.PerdidaVolumenSangre
+        },
 
-    //     GastroIntestital: {
-    //         ToleranciaVíaOral: puntosTolerancia, Glucosa: ValueGlucosa, NA: ValueNA, K: ValueK,
-    //     },
-    // });
+        GastroIntestital: {
+            ToleranciaVíaOral: gastroIntestinal.ToleranciaVíaOral, Glucosa: gastroIntestinal.Glucosa, NA: gastroIntestinal.NA, K: gastroIntestinal.K,
+        },
+    });
 
     function esObjetoVacio(obj: any) {
         return Object.keys(obj).length === 0;
@@ -870,7 +871,7 @@ const MyForm = () => {
         Indicedechoque: 60,
     };
 
-    const resultado = encontrarValorMasAlto(cardioData);
+    const resultado = encontrarValorMasAlto(categoryGeneral.CardioVascular);
     // const resultado2 = encontrarValorMasAlto(categoryGeneral.Renal);
     // const resultado3 = encontrarValorMasAlto(categoryGeneral.Respiratorio);
     // const resultado4 = encontrarValorMasAlto(categoryGeneral.Hematologico);
@@ -878,75 +879,81 @@ const MyForm = () => {
     // const resultado6 = encontrarValorMasAlto(categoryGeneral.Neurologico);
     // const resultado7 = encontrarValorMasAlto(categoryGeneral.Uterino);
     // const resultado8 = encontrarValorMasAlto(categoryGeneral.GastroIntestital);
-    // console.log(resultado);
+    console.log(resultado);
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     setCategoryGeneral({
-    //         CardioVascular: {
-    //             PH: ValuePH, TASistolica: ValueTASistolica, TADiastolica: ValueTADiastolica, Temperatura: ValueTemperatura, Lactato: ValueLactato, Indicedechoque: IndiceBriones,
-    //         },
-    //         Renal: {
-    //             AcidoUrico: ValueAcidoUrico, Proteinuria: ValueProteinuria, Creatinina: creatinina, DeficitBase: ValueDeficitBase, Diuresis: diuresisValue, TasadefiltraciónGlomerular: formDataThreeGroup.TasadefiltraciónGlomerular,
-    //         },
-    //         Respiratorio: {
-    //             FrecuenciaRespiratoria: ValueFrecuenciaRespiratoria, IndiceKirby: ValueIndiceKirby, Saturación: ValueSaturación,
-    //         },
-    //         Hematologico: {
-    //             Leucocitos: ValueLeucocitos, Hemoglobina: ValueHemoglobina, Plaquetas: ValuePlaquetas, DimeroD: ValueDimeroD, Fibrinogeno: ValueFibrinogeno, IRN: ValueIRN,
-    //         },
+        setCategoryGeneral({
+            CardioVascular: {
+                PH: cardioData.PH, TASistolica: cardioData.TASistolica, TADiastolica: cardioData.ValueTADiastolica, Temperatura: cardioData.Temperatura, Lactato: cardioData.Lactato, Indicedechoque: cardioData.ShockIndex,
+            },
+            Renal: {
+                AcidoUrico: renalData.AcidoUrico, Proteinuria: renalData.Proteinuria, Creatinina: renalData.Creatinina, DeficitBase: renalData.DeficitBase, Diuresis: renalData.Diuresis, TasadefiltraciónGlomerular: renalData.TasadefiltraciónGlomerular,
+            },
+            Respiratorio: {
+                FrecuenciaRespiratoria: respiratorio.FrecuenciaRespiratoria, IndiceKirby: respiratorio.IndiceKirby, Saturación: respiratorio.Saturación,
+            },
+            Hematologico: {
+                Leucocitos: hematologico.Leucocitos, Hemoglobina: hematologico.Hemoglobina, Plaquetas: hematologico.Plaquetas, DimeroD: hematologico.DimeroD, Fibrinogeno: hematologico.Fibrinogeno, IRN: hematologico.IRN,
+            },
 
-    //         Hepaticos: {
-    //             Transaminasas: ValueTransaminasas, LDH: ValueLDH, BilirrubinasTotales: ValueBilirrubinasTotales, PresiónColoidosmótica: presiónColoidosmótica, Albumina: albumina, GlobulinaSérica: formDataSecondGroup.GlobulinaSérica, IndiceBriones: IndiceBriones,
-    //         },
-    //         Neurologico: {
-    //             EscalaGlasgow: puntoScale
-    //         },
+            Hepaticos: {
+                Transaminasas: hepatico.Transaminasas, LDH: hepatico.LDH, BilirrubinasTotales: hepatico.BilirrubinasTotales, PresiónColoidosmótica: hepatico.PresiónColoidosmótica, Albumina: hepatico.Albumina, GlobulinaSérica: hepatico.GlobulinaSérica, IndiceBriones: hepatico.IndiceBriones,
+            },
+            Neurologico: {
+                EscalaGlasgow: neurologico.EscalaGlasgow
+            },
 
-    //         Uterino: {
-    //             HemorragiaObstétrica: puntosHemorragia
-    //         },
-    //         GastroIntestital: {
-    //             ToleranciaVíaOral: puntosTolerancia, Glucosa: ValueGlucosa, NA: ValueNA, K: ValueK,
-    //         },
+            Uterino: {
+                HemorragiaObstétrica: uterino.HemorragiaObstétrica, PerdidaVolumenSangre: uterino.PerdidaVolumenSangre
+            },
 
-    //     });
+            GastroIntestital: {
+                ToleranciaVíaOral: gastroIntestinal.ToleranciaVíaOral, Glucosa: gastroIntestinal.Glucosa, NA: gastroIntestinal.NA, K: gastroIntestinal.K,
+            },
 
-    // }, [ValuePH,
-    //     ValueTASistolica,
-    //     ValueTADiastolica,
-    //     ValueTemperatura,
-    //     ValueLactato,
-    //     IndiceBriones,
-    //     ValueAcidoUrico,
-    //     ValueProteinuria,
-    //     creatinina,
-    //     ValueDeficitBase,
-    //     diuresisValue,
-    //     formDataThreeGroup.TasadefiltraciónGlomerular,
-    //     ValueFrecuenciaRespiratoria,
-    //     ValueIndiceKirby,
-    //     ValueSaturación,
-    //     ValueLeucocitos,
-    //     ValueHemoglobina,
-    //     ValuePlaquetas,
-    //     ValueDimeroD,
-    //     ValueFibrinogeno,
-    //     ValueIRN,
-    //     ValueTransaminasas,
-    //     ValueLDH,
-    //     ValueBilirrubinasTotales,
-    //     presiónColoidosmótica,
-    //     albumina,
-    //     formDataSecondGroup.GlobulinaSérica,
-    //     IndiceBriones,
-    //     puntoScale,
-    //     puntosHemorragia,
-    //     puntosTolerancia,
-    //     ValueGlucosa,
-    //     ValueNA,
-    //     ValueK
-    // ])
+        });
+
+    }, [cardioData.PH,
+    cardioData.TASistolica,
+    cardioData.ValueTADiastolica,
+    cardioData.Temperatura,
+    cardioData.Lactato,
+    cardioData.ShockIndex,
+    renalData.AcidoUrico,
+    renalData.Proteinuria,
+    renalData.Creatinina,
+    renalData.DeficitBase,
+    renalData.Diuresis,
+    renalData.TasadefiltraciónGlomerular,
+    respiratorio.FrecuenciaRespiratoria,
+    respiratorio.IndiceKirby,
+    respiratorio.Saturación,
+    hematologico.Leucocitos,
+    hematologico.Hemoglobina,
+    hematologico.Plaquetas,
+    hematologico.DimeroD,
+    hematologico.Fibrinogeno,
+    hematologico.IRN,
+    hepatico.Transaminasas,
+    hepatico.LDH,
+    hepatico.BilirrubinasTotales,
+    hepatico.PresiónColoidosmótica,
+    hepatico.Albumina,
+    hepatico.GlobulinaSérica,
+    hepatico.IndiceBriones,
+    neurologico.EscalaGlasgow,
+    uterino.HemorragiaObstétrica,
+    uterino.PerdidaVolumenSangre,
+    gastroIntestinal.ToleranciaVíaOral,
+    gastroIntestinal.Glucosa,
+    gastroIntestinal.NA,
+    gastroIntestinal.K,
+    ])
+
+    const [selectedValue, setSelectedValue] = useState('15');
+
+
 
     return (
         <>
@@ -1059,7 +1066,7 @@ const MyForm = () => {
                             }}
                             >
                                 <Text
-                                    style={{ width: 66, textAlign: 'center', fontSize: 15,  }}
+                                    style={{ width: 66, textAlign: 'center', fontSize: 15, }}
                                 >{field.name}
                                 </Text>
                                 <TextInput
@@ -1123,20 +1130,112 @@ const MyForm = () => {
                         )
                     })
                 }
-          
+                <View style={styles.containerDrop}>
+                    <Text style={styles.label}> Escala de Glasgow</Text>
+                    <Picker
+                        selectedValue={selectedValue}
+                        onValueChange={(itemValue, itemIndex) =>
+                            setSelectedValue(itemValue)
+                        }
+                        style={styles.picker}
+                    >
+                        {Object.keys(GlasgowOptions).map((key) => (
+                            <Picker.Item
+                                key={key}
+                                label={key}
+                                value={key}
+                            />
+                        ))}
+                    </Picker>
+
+                    <View style={styles.inner}>
+                        <Text style={styles.header}>GastroIntestinal</Text>
+                    </View>
+                    {
+                        Object.entries(gastroIntestinal).map(([key, value]) => {
+                            return (
+                                <View key={key} style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    width: '100%',
+                                    height: 80,
+                                    justifyContent: 'center',
+                                    flexWrap: 'wrap',
+                                    gap: 10,
+                                    columnGap: 10,
+                                    rowGap: 10,
+
+                                }}
+                                >
+                                    {key === 'ToleranciaVíaOral' ? (
+                                        <Picker
+                                            selectedValue={ToleranciaVíaOralOptions}
+                                            onValueChange={(itemValue, itemIndex) =>
+                                                handleInputChangeGastroIntestinal(key, itemValue.toString(), selectedValue as any)
+                                            }
+                                        >
+                                            {/*@ts-ignore   */}
+                                            {Object.keys(ToleranciaVíaOralOptions).map((key) => (
+                                                <Picker.Item
+                                                    key={key}
+                                                    label={key}
+                                                    value={key}
+                                                />
+                                            ))}
+                                        </Picker>
+                                    ) : (
+                                        <>
+                                            <Text
+                                                style={{ width: 66, textAlign: 'center', fontSize: 15, }}
+                                            >{key}
+                                            </Text>
+                                            <TextInput
+                                                style={{
+                                                    width: 200, height: 50,
+                                                    marginBottom: 10,
+                                                    backgroundColor: 'rgb(255, 255, 255)',
+                                                    borderColor: 'rgba(0, 0, 0, 0.29)',
+                                                    borderRadius: 4,
+                                                    borderWidth: 1,
+                                                    color: 'black',
+                                                }}
+                                                keyboardType='numeric'
+                                                onChangeText={(text) => handleInputChangeGastroIntestinal(key, text, selectedValue as any)}
+                                                value={value?.toString() || ''}
+                                            />
+                                        </>
+
+                                    )
+
+                                    }
+
+
+                                </View>
+                            )
+
+
+
+                        })
+                    }
+                    {/* <Text style={styles.selectedText}>Valor seleccionado: {selectedValue}</Text>
+                    <Text style={styles.selectedText}>Clasificación: {selectedValue} - Valor: {GlasgowOptions[selectedValue as keyof typeof GlasgowOptions]}</Text> */}
+
+                </View>
+
                 <TouchableOpacity style={styles.button} onPress={handleCalculate}>
                     <Text>Calcular</Text>
                 </TouchableOpacity>
 
-                  {/* <View style={{ width: '100%', alignItems: 'center', top: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
+                {/* <View style={{ width: '100%', alignItems: 'center', top: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={{ fontSize: 20 }}>Cardiovascular</Text>
                     <Text style={{ fontSize: 20 }}>Renal</Text> fieldsRespiratorio
-               
+               fieldsGastroIntestinal
                 <View style={styles.resultContainer}>
                     <Text>Tam: {cardioData.Tam?.toString() || ''}</Text>
                     <Text>Indicedechoque: {cardioData.Indicedechoque?.toString() || ''}</Text>
                 </View>
                 </View> */}
+
             </ScrollView>
         </>
     )
@@ -1182,6 +1281,28 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+
+
+    containerDrop: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+    },
+    label: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    picker: {
+        height: 50,
+        width: 200,
+        marginBottom: 20,
+    },
+    selectedText: {
+        fontSize: 16,
+        marginBottom: 10,
     },
 
 });
