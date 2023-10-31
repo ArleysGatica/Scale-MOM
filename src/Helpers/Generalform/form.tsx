@@ -5,6 +5,7 @@ import { View, Image, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighl
 import { Appbar, Text, TextInput, Button, } from 'react-native-paper';
 
 import { Picker } from '@react-native-picker/picker';
+import useValorMasAlto from '../../hook/useHighestNumber';
 
 interface ICardioVascular {
     TASistolica?: number;
@@ -47,10 +48,14 @@ interface IRenal {
 const fieldsRenal = [
     { name: 'Creatinina', label: 'Creatinina:' },
     { name: 'AcidoUrico', label: 'AcidoUrico:' },
-    { name: 'Diuresis', label: 'Diuresis:' },
+    // { name: 'Diuresis', label: 'Diuresis:' },
     { name: 'Proteinuria', label: 'Proteinuria:' },
     { name: 'TasadefiltraciónGlomerular', label: 'TasadefiltraciónGlomerular:' },
     { name: 'DeficitBase', label: 'DeficitBase:' },
+    { name: 'Orina', label: 'Orina:' },
+    { name: 'horas', label: 'horas:' },
+    { name: 'Peso', label: 'Peso:' },
+    { name: 'edad', label: 'edad:' },
 ];
 
 interface IRespiratorio {
@@ -80,7 +85,7 @@ const fieldsHematologico = [
     { name: 'Plaquetas', label: 'Plaquetas:' },
     { name: 'Fibrinogeno', label: 'Fibrinogeno:' },
     { name: 'DimeroD', label: 'DimeroD:' },
-    { name: 'IRN', label: 'IRN:' },
+    // { name: 'IRN', label: 'IRN:' },
 ];
 
 interface IHepatico {
@@ -100,11 +105,11 @@ const fieldsHepatico = [
     { name: 'PresiónColoidosmótica', label: 'PresiónColoidosmótica:' },
     { name: 'Albumina', label: 'Albumina:' },
     { name: 'GlobulinaSérica', label: 'GlobulinaSérica:' },
-    { name: 'IndiceBriones', label: 'IndiceBriones:' },
+    // { name: 'IndiceBriones', label: 'IndiceBriones:' },
 ];
 
 interface INeurologico {
-    EscalaGlasgow: { [key: string]: number };
+    EscalaGlasgow?: number;
 }
 
 const fieldsNeurologico = [
@@ -112,8 +117,8 @@ const fieldsNeurologico = [
 ];
 
 interface IUterino {
-    HemorragiaObstétrica?: { [key: string]: number }
-    PerdidaVolumenSangre?: { [key: string]: number }
+    HemorragiaObstétrica?: number;
+    PerdidaVolumenSangre?: number;
 }
 
 const fieldsUterino = [
@@ -122,7 +127,7 @@ const fieldsUterino = [
 ];
 
 interface IGastroIntestital {
-    ToleranciaVíaOral?: { [key: string]: number };
+    ToleranciaVíaOral?: number;
     Glucosa?: number;
     NA?: number;
     K?: number;
@@ -205,10 +210,8 @@ const MyForm = () => {
     };
 
     const [neurologico, setNeurologico] = useState<INeurologico>({
-        EscalaGlasgow: GlasgowOptions,
+        EscalaGlasgow: 0,
     });
-
-    const [selectedValueINeurologico, setSelectedValueINeurologico] = useState<number | null>(null);
 
     const HemorragiaOptions = {
         'Grado I': 0,
@@ -226,12 +229,9 @@ const MyForm = () => {
 
     //septimo grupo
     const [uterino, setUterino] = useState<IUterino>({
-        HemorragiaObstétrica: HemorragiaOptions,
-        PerdidaVolumenSangre: BloodsOptions,
+        HemorragiaObstétrica: 0,
+        PerdidaVolumenSangre: 0,
     });
-
-    const [selectedValueHemorragia, setSelectedValueHemorragia] = useState<number | null>(null);
-    const [selectedValueBloods, setSelectedValueBloods] = useState<number | null>(null);
 
     const ToleranciaVíaOralOptions = {
         'Tolera': 0,
@@ -242,13 +242,11 @@ const MyForm = () => {
 
     //octavo grupo
     const [gastroIntestinal, setGastroIntestinal] = useState<IGastroIntestital>({
-        ToleranciaVíaOral: ToleranciaVíaOralOptions,
+        ToleranciaVíaOral: 0,
         Glucosa: undefined,
         NA: undefined,
         K: undefined,
     });
-
-    const [selectedViaOral, setSelectedValueViaOral] = useState<number | null>(null);
 
     const handleInputChange = (name: string, value: string) => {
         const numericValue = parseFloat(value) || undefined;
@@ -258,6 +256,7 @@ const MyForm = () => {
             [name]: numericValue,
         }));
     };
+
 
     const handleCalculate = () => {
         const calculateCardiacPressure = (fcValue: number | undefined): number => {
@@ -335,6 +334,36 @@ const MyForm = () => {
                 setCardioData(prevData => ({ ...prevData, ShockIndex: 3 }));
             }
         }
+
+        let resultadoRenal = encontrarValorMasAlto(handleCalculateRenal());
+        let resultRespiratorio = encontrarValorMasAlto(handleCalculateRespiratorio()) || 0;
+        let resultH = encontrarValorMasAlto(handleCalculateHematologico()) || 0;
+        let resultHepatico = encontrarValorMasAlto(handleCalculateHepatico()) || 0;
+        let resultG = encontrarValorMasAlto(handleCalculateGastroIntestinal()) || 0;
+
+        let ResultSuma = (resultadoRenal as number) + resultRespiratorio + resultH + resultHepatico + resultG;
+
+        console.log(ResultSuma);
+
+        const handleCalculateResult = () => {
+            if (ResultSuma >= 0 && ResultSuma <= 3) {
+
+                return `MML ${ResultSuma} BAJO RIESGO`
+            } else if (ResultSuma >= 4 && ResultSuma <= 7) {
+                return `MMM ${ResultSuma} RIESGO Intermedio`
+            } else if (ResultSuma >= 8 && ResultSuma <= 11) {
+                return `MMS ${ResultSuma} RIESGO ALTO`
+            } else if (ResultSuma >= 12 && ResultSuma <= 24) {
+                return `MME ${ResultSuma} RIESGO MUY ALTO`
+            }
+
+        }
+
+        let R = handleCalculateResult();
+        
+        console.log(R);
+        
+
     };
 
     const handleInputChangeRenal = (name: string, value: string) => {
@@ -349,38 +378,40 @@ const MyForm = () => {
 
     const handleCalculateRenal = () => {
 
-        const calculateCreatinina = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue >= 0.4 && fcValue <= 0.89) {
+        const calculateCreatinina = (): number => {
+            let creatinina = renalData.Creatinina || 0;
+            if (creatinina) {
+                if (creatinina >= 0.4 && creatinina <= 0.89) {
                     return 0;
-                } else if (fcValue >= 0.9 && fcValue <= 1.35) {
+                } else if (creatinina >= 0.9 && creatinina <= 1.35) {
                     return 1;
-                } else if (fcValue >= 1.36 || fcValue <= 2.7) {
+                } else if (creatinina >= 1.36 || creatinina <= 2.7) {
                     return 2;
-                } else if (fcValue >= 2.8) {
+                } else if (creatinina >= 2.8) {
                     return 3;
                 }
             }
             return 0;
         };
 
-        const calculateAcidoUrico = (fcValue: number | undefined): number => {
+        const calculateAcidoUrico = (): number => {
+            let acidoUrico = renalData.AcidoUrico || 0;
 
-            if (fcValue) {
-                if (fcValue <= 5.9) {
+            if (acidoUrico) {
+                if (acidoUrico <= 5.9) {
                     return 0;
-                } else if (fcValue >= 6 && fcValue <= 7.9) {
+                } else if (acidoUrico >= 6 && acidoUrico <= 7.9) {
                     return 1;
-                } else if (fcValue >= 8 && fcValue <= 8.9) {
+                } else if (acidoUrico >= 8 && acidoUrico <= 8.9) {
                     return 2;
-                } else if (fcValue >= 9) {
+                } else if (acidoUrico >= 9) {
                     return 3;
                 }
             }
             return 0;
         }
 
-        const calculateDiuresis = (fcValue: number | undefined): number => {
+        const calculateDiuresis = (): number => {
 
             if (renalData.Orina && renalData.horas && renalData.Peso) {
                 const diuresis = (renalData.Orina / renalData.horas / renalData.Peso).toFixed(2);
@@ -389,36 +420,37 @@ const MyForm = () => {
                     Diuresis: parseFloat(diuresis),
                 });
             }
-
-            if (fcValue) {
-                if (fcValue >= 0.51) {
+            let diuresis = renalData.Diuresis || 0;
+            if (diuresis) {
+                if (diuresis >= 0.51) {
                     return 0;
-                } else if (fcValue >= 0.31 && fcValue <= 0.5) {
+                } else if (diuresis >= 0.31 && diuresis <= 0.5) {
                     return 1;
-                } else if (fcValue <= 0.3) {
+                } else if (diuresis <= 0.3) {
                     return 2;
                 }
             }
             return 0;
         }
 
-        const calculateProteinuria = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue <= 299) {
+        const calculateProteinuria = (): number => {
+            let proteinuria = renalData.Proteinuria || 0;
+            if (proteinuria) {
+                if (proteinuria <= 299) {
                     return 0;
-                } else if (fcValue >= 300 && fcValue <= 499) {
+                } else if (proteinuria >= 300 && proteinuria <= 499) {
                     return 1;
-                } else if (fcValue >= 500 && fcValue <= 3499) {
+                } else if (proteinuria >= 500 && proteinuria <= 3499) {
                     return 2;
-                } else if (fcValue >= 3500) {
+                } else if (proteinuria >= 3500) {
                     return 3;
                 }
             }
             return 0;
         }
 
-        const calculateTasadefiltraciónGlomerular = (fcValue: number | undefined): number => {
-
+        const calculateTasadefiltraciónGlomerular = (): number => {
+            let tasadefiltraciónGlomerular = renalData.TasadefiltraciónGlomerular || 0;
             if (renalData.Creatinina && renalData.edad) {
                 const f = 0.7;
                 const TFG = 142 * Math.pow(Number(renalData.Creatinina) / f, -0.241) * Math.pow(Number(renalData.Creatinina) / f, -1.200) * Math.pow(0.9938, renalData.edad) * 1.012;
@@ -429,34 +461,37 @@ const MyForm = () => {
                 });
             }
 
-            if (fcValue) {
-                if (fcValue >= 61 && fcValue <= 110) {
+            if (tasadefiltraciónGlomerular) {
+                if (tasadefiltraciónGlomerular >= 61 && tasadefiltraciónGlomerular <= 110) {
                     return 0;
-                } else if (fcValue >= 31 && fcValue <= 60) {
+                } else if (tasadefiltraciónGlomerular >= 31 && tasadefiltraciónGlomerular <= 60) {
                     return 1;
-                } else if (fcValue >= 16 && fcValue <= 30) {
+                } else if (tasadefiltraciónGlomerular >= 16 && tasadefiltraciónGlomerular <= 30) {
                     return 2;
-                } else if (fcValue <= 15) {
+                } else if (tasadefiltraciónGlomerular <= 15) {
                     return 3;
                 }
             }
             return 0;
         }
 
-        const calculateDeficitBase = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue <= 1.9) {
+        const calculateDeficitBase = (): number => {
+            let deficitBase = renalData.DeficitBase || 0;
+            if (deficitBase) {
+                if (deficitBase <= 1.9) {
                     return 0;
-                } else if (fcValue >= 2 && fcValue <= 5.9) {
+                } else if (deficitBase >= 2 && deficitBase <= 5.9) {
                     return 1;
-                } else if (fcValue >= 6 && fcValue <= 9.9) {
+                } else if (deficitBase >= 6 && deficitBase <= 9.9) {
                     return 2;
-                } else if (fcValue <= 10) {
+                } else if (deficitBase <= 10) {
                     return 3;
                 }
             }
             return 0;
         }
+
+        return { creatinina: calculateCreatinina(), acidourico: calculateAcidoUrico(), diuresis: calculateDiuresis(), proteinuria: calculateProteinuria(), tfg: calculateTasadefiltraciónGlomerular(), deficitbase: calculateDeficitBase() }
 
     }
 
@@ -471,50 +506,55 @@ const MyForm = () => {
 
     const handleCalculateRespiratorio = () => {
 
-        const calculateFrecuenciaRespiratoria = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue >= 16 && fcValue <= 23) {
+        const calculateFrecuenciaRespiratoria = (): number => {
+            let frValue = respiratorio.FrecuenciaRespiratoria || 0;
+            if (frValue) {
+                if (frValue >= 16 && frValue <= 23) {
                     return 0;
-                } else if (fcValue >= 24 && fcValue <= 29) {
+                } else if (frValue >= 24 && frValue <= 29) {
                     return 1;
-                } else if (fcValue >= 30 && fcValue <= 39) {
+                } else if (frValue >= 30 && frValue <= 39) {
                     return 2;
-                } else if (fcValue >= 40 || fcValue <= 6) {
+                } else if (frValue >= 40 || frValue <= 6) {
                     return 3;
                 }
             }
             return 0;
         };
 
-        const calculateIndiceKirby = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue >= 401) {
+        const calculateIndiceKirby = (): number => {
+            let IkValue = respiratorio.IndiceKirby || 0;
+            if (IkValue) {
+                if (IkValue >= 401) {
                     return 0;
-                } else if (fcValue >= 351 && fcValue <= 400) {
+                } else if (IkValue >= 351 && IkValue <= 400) {
                     return 1;
-                } else if (fcValue >= 301 && fcValue <= 350) {
+                } else if (IkValue >= 301 && IkValue <= 350) {
                     return 2;
-                } else if (fcValue >= 300) {
+                } else if (IkValue >= 300) {
                     return 3
                 }
             }
             return 0;
         }
 
-        const calculateSaturacion = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue >= 94.1) {
+        const calculateSaturacion = (): number => {
+            let StValue = respiratorio.Saturación || 0;
+            if (StValue) {
+                if (StValue >= 94.1) {
                     return 0;
-                } else if (fcValue >= 90.1 && fcValue <= 94) {
+                } else if (StValue >= 90.1 && StValue <= 94) {
                     return 1;
-                } else if (fcValue >= 85.1 && fcValue <= 90) {
+                } else if (StValue >= 85.1 && StValue <= 90) {
                     return 2;
-                } else if (fcValue <= 85) {
+                } else if (StValue <= 85) {
                     return 3;
                 }
             }
             return 0;
         }
+
+        return { fr: calculateFrecuenciaRespiratoria(), ik: calculateIndiceKirby(), st: calculateSaturacion() }
     }
 
     const handleInputChangeHematologico = (name: string, value: string) => {
@@ -528,101 +568,109 @@ const MyForm = () => {
 
     const handleCalculateHematologico = () => {
 
-        const calculateLeucocitos = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue >= 4100 && fcValue <= 16900) {
+        const calculateLeucocitos = (): number => {
+            let leucocitos = hematologico.Leucocitos || 0;
+            if (leucocitos) {
+                if (leucocitos >= 4100 && leucocitos <= 16900) {
                     return 0;
-                } else if ((fcValue >= 17000 && fcValue <= 20900) || (fcValue >= 2100 && fcValue <= 4000)) {
+                } else if ((leucocitos >= 17000 && leucocitos <= 20900) || (leucocitos >= 2100 && leucocitos <= 4000)) {
                     return 1;
-                } else if ((fcValue >= 21000 && fcValue <= 29900) || (fcValue >= 1100 && fcValue <= 2000)) {
+                } else if ((leucocitos >= 21000 && leucocitos <= 29900) || (leucocitos >= 1100 && leucocitos <= 2000)) {
                     return 2;
-                } else if ((fcValue >= 1000 && fcValue <= 30000)) {
+                } else if ((leucocitos >= 1000 && leucocitos <= 30000)) {
                     return 3;
                 }
             }
             return 0;
         };
 
-        const calculateHemoglobina = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue >= 10.1) {
+        const calculateHemoglobina = (): number => {
+            let hemoglobina = hematologico.Hemoglobina || 0;
+            if (hemoglobina) {
+                if (hemoglobina >= 10.1) {
                     return 0;
-                } else if (fcValue >= 8.1 && fcValue <= 10) {
+                } else if (hemoglobina >= 8.1 && hemoglobina <= 10) {
                     return 1;
-                } else if (fcValue >= 6.1 && fcValue <= 8) {
+                } else if (hemoglobina >= 6.1 && hemoglobina <= 8) {
                     return 2;
-                } else if (fcValue <= 6) {
+                } else if (hemoglobina <= 6) {
                     return 3;
                 }
             }
             return 0;
         }
 
-        const calculatePlaquetas = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue >= 150000) {
+        const calculatePlaquetas = (): number => {
+            let plaquetas = hematologico.Plaquetas || 0;
+            if (plaquetas) {
+                if (plaquetas >= 150000) {
                     return 0;
-                } else if (fcValue >= 100100 && fcValue <= 149000) {
+                } else if (plaquetas >= 100100 && plaquetas <= 149000) {
                     return 1;
-                } else if (fcValue >= 50100 && fcValue <= 1000000) {
+                } else if (plaquetas >= 50100 && plaquetas <= 1000000) {
                     return 2;
-                } else if (fcValue <= 50000) {
+                } else if (plaquetas <= 50000) {
                     return 3;
                 }
             }
             return 0;
         }
 
-        const calculateFibrinogeno = (fcValue: number | undefined): number => {
+        const calculateFibrinogeno = (): number => {
+            let fibrinogeno = hematologico.Fibrinogeno || 0;
             const ValueDimeroD = hematologico.DimeroD || 0;
             const ValueIRN = hematologico.IRN || 0;
-            if (fcValue) {
-                if (fcValue >= 301) {
+            if (fibrinogeno) {
+                if (fibrinogeno >= 301) {
                     return 0;
-                } else if (fcValue >= 201 && fcValue <= 300) {
+                } else if (fibrinogeno >= 201 && fibrinogeno <= 300) {
                     return 1;
-                } else if (fcValue >= 101 && fcValue <= 200) {
+                } else if (fibrinogeno >= 101 && fibrinogeno <= 200) {
                     return 2;
-                } else if ((ValueIRN >= 2 && fcValue <= 100) || (ValueDimeroD >= 3000)) {
+                } else if ((ValueIRN >= 2 && fibrinogeno <= 100) || (ValueDimeroD >= 3000)) {
                     return 3;
                 }
             }
             return 0;
         }
 
-        const calculateDimeroD = (fcValue: number | undefined): number => {
+        const calculateDimeroD = (): number => {
+            let dimeroD = hematologico.DimeroD || 0;
             const ValueFibrinogeno = hematologico.Fibrinogeno || 0;
             const ValueIRN = hematologico.IRN || 0;
-            if (fcValue) {
-                if (fcValue <= 999) {
+            if (dimeroD) {
+                if (dimeroD <= 999) {
                     return 0;
-                } else if (fcValue >= 1000 && fcValue <= 1999) {
+                } else if (dimeroD >= 1000 && dimeroD <= 1999) {
                     return 1;
-                } else if (fcValue >= 2000 && fcValue <= 2999) {
+                } else if (dimeroD >= 2000 && dimeroD <= 2999) {
                     return 2;
-                } else if ((ValueIRN >= 2 && ValueFibrinogeno <= 100) || (fcValue >= 3000)) {
+                } else if ((ValueIRN >= 2 && ValueFibrinogeno <= 100) || (dimeroD >= 3000)) {
                     return 3;
                 }
             }
             return 0;
         }
 
-        const calculateIRN = (fcValue: number | undefined): number => {
+        const calculateIRN = (): number => {
+            let irn = hematologico.IRN || 0;
             const ValueDimeroD = hematologico.DimeroD || 0;
             const ValueFibrinogeno = hematologico.Fibrinogeno || 0;
-            if (fcValue !== undefined) {
-                if (fcValue >= 2) {
+            if (irn !== undefined) {
+                if (irn >= 2) {
                     return 0;
-                } else if (fcValue >= 1.5 && fcValue <= 1.99) {
+                } else if (irn >= 1.5 && irn <= 1.99) {
                     return 1;
-                } else if (fcValue >= 1.21 && fcValue <= 1.49) {
+                } else if (irn >= 1.21 && irn <= 1.49) {
                     return 2;
-                } else if ((fcValue >= 2 && (ValueFibrinogeno <= 100)) || (ValueDimeroD >= 3000)) {
+                } else if ((irn >= 2 && (ValueFibrinogeno <= 100)) || (ValueDimeroD >= 3000)) {
                     return 3;
                 }
             }
             return 0;
         }
+
+        return { leucocitos: calculateLeucocitos(), hemoglobina: calculateHemoglobina(), plaquetas: calculatePlaquetas(), fibrinogeno: calculateFibrinogeno(), dimerod: calculateDimeroD(), irn: calculateIRN() }
     }
 
     const handleInputChangeHepatico = (name: string, value: string) => {
@@ -636,52 +684,55 @@ const MyForm = () => {
 
     const handleCalculateHepatico = () => {
 
-        const calculateTransaminasas = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue >= 2 && fcValue <= 39) {
+        const calculateTransaminasas = (): number => {
+            let transaminasas = hepatico.Transaminasas || 0;
+            if (transaminasas) {
+                if (transaminasas >= 2 && transaminasas <= 39) {
                     return 0;
-                } else if (fcValue >= 40 && fcValue <= 69) {
+                } else if (transaminasas >= 40 && transaminasas <= 69) {
                     return 1;
-                } else if (fcValue >= 70 && fcValue <= 149) {
+                } else if (transaminasas >= 70 && transaminasas <= 149) {
                     return 2;
-                } else if (fcValue >= 150) {
+                } else if (transaminasas >= 150) {
                     return 3;
                 }
             }
             return 0;
         };
 
-        const calculateLDH = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue <= 399) {
+        const calculateLDH = (): number => {
+            let ldh = hepatico.LDH || 0;
+            if (ldh) {
+                if (ldh <= 399) {
                     return 0;
-                } else if (fcValue >= 400 && fcValue <= 599) {
+                } else if (ldh >= 400 && ldh <= 599) {
                     return 1;
-                } else if (fcValue >= 600 && fcValue <= 899) {
+                } else if (ldh >= 600 && ldh <= 899) {
                     return 2;
-                } else if (fcValue >= 900) {
+                } else if (ldh >= 900) {
                     return 3;
                 }
             }
             return 0;
         }
 
-        const calculateBilirrubinasTotales = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue >= 0.09 && fcValue <= 1.16) {
+        const calculateBilirrubinasTotales = (): number => {
+            let bilirrubinasTotales = hepatico.BilirrubinasTotales || 0;
+            if (bilirrubinasTotales) {
+                if (bilirrubinasTotales >= 0.09 && bilirrubinasTotales <= 1.16) {
                     return 0;
-                } else if (fcValue >= 1.17 && fcValue <= 1.86) {
+                } else if (bilirrubinasTotales >= 1.17 && bilirrubinasTotales <= 1.86) {
                     return 1;
-                } else if (fcValue >= 1.87 && fcValue <= 3.4) {
+                } else if (bilirrubinasTotales >= 1.87 && bilirrubinasTotales <= 3.4) {
                     return 2;
-                } else if (fcValue >= 3.5) {
+                } else if (bilirrubinasTotales >= 3.5) {
                     return 3;
                 }
             }
             return 0;
         }
 
-        const calculatePresiónColoidosmótica = (fcValue: number | undefined): number => {
+        const calculatePresiónColoidosmótica = (): number => {
             if (hepatico.Albumina && hepatico.GlobulinaSérica && cardioData.Tam) {
                 const presióncoloidosmótica = (hepatico.Albumina * 5.54 + hepatico.GlobulinaSérica * 1.43).toFixed(2);
                 const indicebriones = (Number(presióncoloidosmótica) / cardioData.Tam).toFixed(2);
@@ -692,54 +743,59 @@ const MyForm = () => {
                 }));
             }
 
-            if (fcValue) {
-                if (fcValue >= 3.1) {
+            let presiónColoidosmótica = hepatico.PresiónColoidosmótica || 0;
+
+            if (presiónColoidosmótica) {
+                if (presiónColoidosmótica >= 3.1) {
                     return 0;
-                } else if (fcValue >= 2.6 && fcValue <= 3) {
+                } else if (presiónColoidosmótica >= 2.6 && presiónColoidosmótica <= 3) {
                     return 1;
-                } else if (fcValue >= 2.1 && fcValue <= 2.5) {
+                } else if (presiónColoidosmótica >= 2.1 && presiónColoidosmótica <= 2.5) {
                     return 2;
-                } else if (fcValue <= 2) {
+                } else if (presiónColoidosmótica <= 2) {
                     return 3;
                 }
             }
             return 0;
         }
 
-        const calculateAlbumina = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue >= 3.5) {
+        const calculateAlbumina = (): number => {
+            let albumina = hepatico.Albumina || 0;
+            if (albumina) {
+                if (albumina >= 3.5) {
                     return 0;
-                } else if (fcValue >= 2.8 && fcValue <= 3.4) {
+                } else if (albumina >= 2.8 && albumina <= 3.4) {
                     return 1;
-                } else if (fcValue >= 2.1 && fcValue <= 2.7) {
+                } else if (albumina >= 2.1 && albumina <= 2.7) {
                     return 2;
-                } else if (fcValue <= 2) {
+                } else if (albumina <= 2) {
                     return 3;
                 }
             }
             return 0;
         }
 
-        const calculateIndiceBriones = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue >= 0.21) {
+        const calculateIndiceBriones = (): number => {
+            let indicebriones = hepatico.IndiceBriones || 0;
+            if (indicebriones) {
+                if (indicebriones >= 0.21) {
                     return 0;
-                } else if (fcValue >= 0.16 && fcValue <= 0.20) {
+                } else if (indicebriones >= 0.16 && indicebriones <= 0.20) {
                     return 1;
-                } else if (fcValue >= 0.12 && fcValue <= 0.15) {
+                } else if (indicebriones >= 0.12 && indicebriones <= 0.15) {
                     return 2;
-                } else if (fcValue <= 0.11) {
+                } else if (indicebriones <= 0.11) {
                     return 3;
                 }
             }
             return 0;
         }
+
+        return { transaminasas: calculateTransaminasas(), ldh: calculateLDH(), bilirrubinasTotales: calculateBilirrubinasTotales(), presioncoloidosmotica: calculatePresiónColoidosmótica(), albumina: calculateAlbumina(), indicebriones: calculateIndiceBriones() }
     }
 
-    const handleInputChangeNeurologico = (name: string, value: string, selectedValue: number) => {
+    const handleInputChangeNeurologico = (name: string, value: string) => {
         const numericValue = parseFloat(value) || undefined;
-        setSelectedValueINeurologico(selectedValue)
 
         setNeurologico(prevData => ({
             ...prevData,
@@ -747,19 +803,16 @@ const MyForm = () => {
         }));
     }
 
-    const handleInputChangeUterino = (name: string, value: string, selectedValue: number) => {
+    const handleInputChangeUterino = (name: string, value: string,) => {
         const numericValue = parseFloat(value) || undefined;
-        setSelectedValueHemorragia(selectedValue);
-        setSelectedValueBloods(selectedValue);
         setUterino(prevData => ({
             ...prevData,
             [name]: numericValue,
         }));
     }
 
-    const handleInputChangeGastroIntestinal = (name: string, value: string, selectedValue: number) => {
+    const handleInputChangeGastroIntestinal = (name: string, value: string) => {
         const numericValue = parseFloat(value) || undefined;
-        setSelectedValueViaOral(selectedValue);
         setGastroIntestinal(prevData => ({
             ...prevData,
             [name]: numericValue,
@@ -768,46 +821,51 @@ const MyForm = () => {
 
     const handleCalculateGastroIntestinal = () => {
 
-        const calculateGlucosa = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue >= 140 && fcValue <= 179) {
+        const calculateGlucosa = (): number => {
+            let glucosa = gastroIntestinal.Glucosa || 0;
+            if (glucosa) {
+                if (glucosa >= 140 && glucosa <= 179) {
                     return 0;
-                } else if ((fcValue >= 61 && fcValue <= 139) || (fcValue >= 180 && fcValue <= 400)) {
+                } else if ((glucosa >= 61 && glucosa <= 139) || (glucosa >= 180 && glucosa <= 400)) {
                     return 1;
-                } else if (fcValue <= 50) {
+                } else if (glucosa <= 50) {
                     return 2;
-                } else if (fcValue >= 401) {
+                } else if (glucosa >= 401) {
                     return 3;
                 }
             }
             return 0;
         }
 
-        const calculateNA = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue >= 131 && fcValue <= 144) {
+        const calculateNA = (): number => {
+            let na = gastroIntestinal.NA || 0;
+            if (na) {
+                if (na >= 131 && na <= 144) {
                     return 0;
-                } else if ((fcValue >= 145 && fcValue <= 149) || (fcValue >= 126 && fcValue <= 130)) {
+                } else if ((na >= 145 && na <= 149) || (na >= 126 && na <= 130)) {
                     return 1;
-                } else if ((fcValue <= 125) || (fcValue >= 150)) {
+                } else if ((na <= 125) || (na >= 150)) {
                     return 2;
                 }
             }
             return 0;
         }
 
-        const calculateK = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (fcValue >= 3.51 && fcValue <= 4.49) {
+        const calculateK = (): number => {
+            let k = gastroIntestinal.K || 0;
+            if (k) {
+                if (k >= 3.51 && k <= 4.49) {
                     return 0;
-                } else if ((fcValue >= 3.1 && fcValue <= 3.5) || (fcValue >= 4.5 && fcValue <= 4.9)) {
+                } else if ((k >= 3.1 && k <= 3.5) || (k >= 4.5 && k <= 4.9)) {
                     return 1;
-                } else if ((fcValue >= 3) || (fcValue >= 5)) {
+                } else if ((k >= 3) || (k >= 5)) {
                     return 2;
                 }
             }
             return 0;
         }
+
+        return { glucosa: calculateGlucosa(), na: calculateNA(), k: calculateK() }
     }
 
     const [categoryGeneral, setCategoryGeneral] = useState({
@@ -871,15 +929,6 @@ const MyForm = () => {
         Indicedechoque: 60,
     };
 
-    const resultado = encontrarValorMasAlto(categoryGeneral.CardioVascular);
-    // const resultado2 = encontrarValorMasAlto(categoryGeneral.Renal);
-    // const resultado3 = encontrarValorMasAlto(categoryGeneral.Respiratorio);
-    // const resultado4 = encontrarValorMasAlto(categoryGeneral.Hematologico);
-    // const resultado5 = encontrarValorMasAlto(categoryGeneral.Hepaticos);
-    // const resultado6 = encontrarValorMasAlto(categoryGeneral.Neurologico);
-    // const resultado7 = encontrarValorMasAlto(categoryGeneral.Uterino);
-    // const resultado8 = encontrarValorMasAlto(categoryGeneral.GastroIntestital);
-    console.log(resultado);
 
     useEffect(() => {
 
@@ -1089,10 +1138,10 @@ const MyForm = () => {
                     })
                 }
                 <View style={styles.inner}>
-                    <Text style={styles.header}>Respiratorio</Text>
+                    <Text style={styles.header}>Hemotologico</Text>
                 </View>
                 {
-                    fieldsRespiratorio.map((field, index) => {
+                    fieldsHematologico.map((field, index) => {
                         return (
                             <View key={field.name} style={{
                                 flexDirection: 'row',
@@ -1122,14 +1171,58 @@ const MyForm = () => {
                                         color: 'black',
                                     }}
                                     keyboardType='numeric'
-                                    onChangeText={(text) => handleInputChangeRespiratorio(field.name, text)}
-                                    value={respiratorio[field.name as keyof IRespiratorio]?.toString() || ''}
+                                    onChangeText={(text) => handleInputChangeHematologico(field.name, text)}
+                                    value={hematologico[field.name as keyof IHematologico]?.toString() || ''}
                                 />
 
                             </View>
                         )
                     })
                 }
+                <View style={styles.inner}>
+                    <Text style={styles.header}>Hepatico</Text>
+                </View>
+                {
+                    fieldsHepatico.map((field, index) => {
+                        return (
+                            <View key={field.name} style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                width: '100%',
+                                height: 80,
+                                justifyContent: 'center',
+                                flexWrap: 'wrap',
+                                gap: 10,
+                                columnGap: 10,
+                                rowGap: 10,
+
+                            }}
+                            >
+                                <Text
+                                    style={{ width: 66, textAlign: 'center', fontSize: 15, }}
+                                >{field.name}
+                                </Text>
+                                <TextInput
+                                    style={{
+                                        width: 200, height: 50,
+                                        marginBottom: 10,
+                                        backgroundColor: 'rgb(255, 255, 255)',
+                                        borderColor: 'rgba(0, 0, 0, 0.29)',
+                                        borderRadius: 4,
+                                        borderWidth: 1,
+                                        color: 'black',
+                                    }}
+                                    keyboardType='numeric'
+                                    onChangeText={(text) => handleInputChangeHepatico(field.name, text)}
+                                    value={hepatico[field.name as keyof IHepatico]?.toString() || ''}
+                                />
+                            </View>
+                        )
+                    })
+                }
+                <View style={styles.inner}>
+                    <Text style={styles.header}>Neurologico fieldsUterino</Text>
+                </View>
                 <View style={styles.containerDrop}>
                     <Text style={styles.label}> Escala de Glasgow</Text>
                     <Picker
@@ -1147,7 +1240,49 @@ const MyForm = () => {
                             />
                         ))}
                     </Picker>
+                </View>
 
+                <View style={styles.inner}>
+                    <Text style={styles.header}>Uterino</Text>
+                </View>
+                <View style={styles.containerDrop}>
+                    <Text style={styles.label}>Hemorragia</Text>
+                    <Picker
+                        selectedValue={fieldsUterino}
+                        onValueChange={(itemValue, itemIndex) =>
+                            handleInputChangeUterino(itemIndex as any, itemValue as any)
+                        }
+                        style={styles.picker}
+                    >
+                        {Object.keys(HemorragiaOptions).map((key) => (
+                            <Picker.Item
+                                key={key}
+                                label={key}
+                                value={key}
+                            />
+                        ))}
+                    </Picker>
+                </View>
+                <View style={styles.containerDrop}>
+                    <Text style={styles.label}>Sangre</Text>
+                    <Picker
+                        selectedValue={fieldsUterino}
+                        onValueChange={(itemValue, itemIndex) =>
+                            handleInputChangeUterino(itemIndex as any, itemValue as any)
+                        }
+                        style={styles.picker}
+                    >
+                        {Object.keys(BloodsOptions).map((key) => (
+                            <Picker.Item
+                                key={key}
+                                label={key}
+                                value={key}
+                            />
+                        ))}
+                    </Picker>
+                </View>
+
+                <View>
                     <View style={styles.inner}>
                         <Text style={styles.header}>GastroIntestinal</Text>
                     </View>
@@ -1164,17 +1299,15 @@ const MyForm = () => {
                                     gap: 10,
                                     columnGap: 10,
                                     rowGap: 10,
-
                                 }}
                                 >
                                     {key === 'ToleranciaVíaOral' ? (
                                         <Picker
-                                            selectedValue={ToleranciaVíaOralOptions}
+                                            selectedValue={gastroIntestinal.ToleranciaVíaOral}
                                             onValueChange={(itemValue, itemIndex) =>
-                                                handleInputChangeGastroIntestinal(key, itemValue.toString(), selectedValue as any)
-                                            }
+                                                handleCalculateGastroIntestinal()}
+                                            style={styles.picker}
                                         >
-                                            {/*@ts-ignore   */}
                                             {Object.keys(ToleranciaVíaOralOptions).map((key) => (
                                                 <Picker.Item
                                                     key={key}
@@ -1183,6 +1316,7 @@ const MyForm = () => {
                                                 />
                                             ))}
                                         </Picker>
+
                                     ) : (
                                         <>
                                             <Text
@@ -1200,7 +1334,7 @@ const MyForm = () => {
                                                     color: 'black',
                                                 }}
                                                 keyboardType='numeric'
-                                                onChangeText={(text) => handleInputChangeGastroIntestinal(key, text, selectedValue as any)}
+                                                onChangeText={(text) => handleInputChangeGastroIntestinal(key, text)}
                                                 value={value?.toString() || ''}
                                             />
                                         </>
@@ -1217,7 +1351,7 @@ const MyForm = () => {
 
                         })
                     }
-                    {/* <Text style={styles.selectedText}>Valor seleccionado: {selectedValue}</Text>
+                    {/* <Text style={styles.selectedText}>Valor seleccionado: {selectedValue}</Text>  fieldsHepatico
                     <Text style={styles.selectedText}>Clasificación: {selectedValue} - Valor: {GlasgowOptions[selectedValue as keyof typeof GlasgowOptions]}</Text> */}
 
                 </View>
