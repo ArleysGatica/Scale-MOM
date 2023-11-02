@@ -8,6 +8,7 @@ export type RootStackParamList = {
     CustomBottomTabNavigator: undefined;
     HomeScreen: undefined;
     ListDoctor: undefined;
+    ListPatient: undefined;
 };
 
 export interface IFirstGroup {

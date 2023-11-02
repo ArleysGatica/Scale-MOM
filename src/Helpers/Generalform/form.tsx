@@ -5,8 +5,7 @@ import { View, Image, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighl
 import { Appbar, Text, TextInput, Button, } from 'react-native-paper';
 
 import { Picker } from '@react-native-picker/picker';
-import { useRoute } from '@react-navigation/native';
-import { fetchAddResultPatient } from '../../services';
+import useValorMasAlto from '../../hook/useHighestNumber';
 
 interface ICardioVascular {
     TASistolica?: number;
@@ -141,15 +140,7 @@ const fieldsGastroIntestinal = [
     { name: 'K', label: 'K:' },
 ];
 
-interface IParams {
-    id: string;
-}
-
 const MyForm = () => {
-
-    const route = useRoute();
-
-    const id = (route.params as IParams)?.id;
 
 
     const [cardioData, setCardioData] = useState<ICardioVascular>({
@@ -258,16 +249,20 @@ const MyForm = () => {
     });
 
     const handleInputChange = (name: string, value: string) => {
-        const numericValue = parseFloat(value) || undefined;
 
         setCardioData(prevData => ({
             ...prevData,
-            [name]: numericValue,
+            [name]: value,
         }));
     };
 
 
-    const handleCalculate = async () => {
+    const handleCalculate = () => {
+
+        let cardioDataFCNumber = parseFloat(cardioData.FC?.toString() || '0');
+        let cardioDataTASistolicaNumber = parseFloat(cardioData.TASistolica?.toString() || '0');
+        let cardioDataTADiastolicaNumber = parseFloat(cardioData.TADiastolica?.toString() || '0');
+
         const calculateCardiacPressure = (fcValue: number | undefined): number => {
             if (fcValue) {
                 if ((fcValue > 99 && fcValue <= 119) || (fcValue >= 51 && fcValue <= 60)) {
@@ -311,9 +306,9 @@ const MyForm = () => {
             return 0;
         };
 
-        const cardiacPressure = calculateCardiacPressure(cardioData.FC);
-        const tasistolicaValue = calculateTASistolicaValue(cardioData.TASistolica);
-        const tadiastolicaValue = calculateTADiastolicaValue(cardioData.TADiastolica);
+        const cardiacPressure = calculateCardiacPressure(cardioDataFCNumber);
+        const tasistolicaValue = calculateTASistolicaValue(cardioDataTASistolicaNumber);
+        const tadiastolicaValue = calculateTADiastolicaValue(cardioDataTADiastolicaNumber);
 
         setCardioData(prevData => ({
             ...prevData,
@@ -322,17 +317,18 @@ const MyForm = () => {
             ValueTADiastolica: tadiastolicaValue,
         }));
 
-        if (cardioData.TASistolica && cardioData.TADiastolica) {
-            const tam = ((cardioData.TADiastolica * 2 + cardioData.TASistolica) / 3).toFixed(2);
-            const indicedechoque = (cardioData.FC || 0) / (cardioData.TASistolica || 1);
+        if (cardioDataTASistolicaNumber && cardioDataTADiastolicaNumber) {
+            const tam = ((cardioDataTADiastolicaNumber * 2 + cardioDataTASistolicaNumber) / 3).toFixed(2);
+            const indicedechoque = (cardioDataFCNumber || 0) / (cardioDataTASistolicaNumber || 1);
 
             setCardioData(prevData => ({
                 ...prevData,
                 Tam: parseFloat(tam),
-                Indicedechoque: parseFloat(indicedechoque.toFixed(2)),
+                Indicedechoque: indicedechoque,
             }));
 
             const shockIndex = indicedechoque || 0;
+
             if (shockIndex >= 0.7 && shockIndex <= 0.89) {
                 setCardioData(prevData => ({ ...prevData, ShockIndex: 0 }));
             } else if (shockIndex >= 0.9 && shockIndex <= 0.99) {
@@ -344,6 +340,11 @@ const MyForm = () => {
             }
         }
 
+        if (handleCalculateRenal().creatinina === false || handleCalculateRespiratorio().ik === false) {
+            return;
+            
+        }
+
         let resultadoRenal = encontrarValorMasAlto(handleCalculateRenal());
         let resultRespiratorio = encontrarValorMasAlto(handleCalculateRespiratorio()) || 0;
         let resultH = encontrarValorMasAlto(handleCalculateHematologico()) || 0;
@@ -352,10 +353,9 @@ const MyForm = () => {
 
         let ResultSuma = (resultadoRenal as number) + resultRespiratorio + resultH + resultHepatico + resultG;
 
-        console.log(ResultSuma);
-
         const handleCalculateResult = () => {
             if (ResultSuma >= 0 && ResultSuma <= 3) {
+
                 return `MML ${ResultSuma} BAJO RIESGO`
             } else if (ResultSuma >= 4 && ResultSuma <= 7) {
                 return `MMM ${ResultSuma} RIESGO Intermedio`
@@ -368,27 +368,30 @@ const MyForm = () => {
         }
 
         let R = handleCalculateResult();
-
+        
         console.log(R);
-        console.log(id);
+        
 
-        await fetchAddResultPatient(id, { resultado: R });
     };
 
     const handleInputChangeRenal = (name: string, value: string) => {
 
-        const numericValue = parseFloat(value) || undefined;
-
         setRenalData(prevData => ({
             ...prevData,
-            [name]: numericValue,
+            [name]: value,
         }));
     }
 
     const handleCalculateRenal = () => {
 
-        const calculateCreatinina = (): number => {
-            let creatinina = renalData.Creatinina || 0;
+        const calculateCreatinina = (): number | boolean => {
+            let creatinina = parseFloat(renalData.Creatinina?.toString() || '0');
+
+            if (creatinina <= 0.4) {
+                Alert.alert('El valor de la creatinina debe ser mayor a 0.4');
+                return false;
+            }
+
             if (creatinina) {
                 if (creatinina >= 0.4 && creatinina <= 0.89) {
                     return 0;
@@ -404,7 +407,7 @@ const MyForm = () => {
         };
 
         const calculateAcidoUrico = (): number => {
-            let acidoUrico = renalData.AcidoUrico || 0;
+            let acidoUrico = parseFloat(renalData.AcidoUrico?.toString() || '0');
 
             if (acidoUrico) {
                 if (acidoUrico <= 5.9) {
@@ -420,16 +423,22 @@ const MyForm = () => {
             return 0;
         }
 
-        const calculateDiuresis = (): number => {
+        const calculateDiuresis = (): number | boolean => {
 
-            if (renalData.Orina && renalData.horas && renalData.Peso) {
-                const diuresis = (renalData.Orina / renalData.horas / renalData.Peso).toFixed(2);
+            let renalDataOrina = parseFloat(renalData.Orina?.toString() || '0');
+            let renalDataHoras = parseFloat(renalData.horas?.toString() || '0');
+            let renalDataPeso = parseFloat(renalData.Peso?.toString() || '0');
+
+
+            if (renalDataOrina && renalDataHoras && renalDataPeso) {
+                const diuresis = renalDataOrina / renalDataHoras / renalDataPeso;
                 setRenalData({
                     ...renalData,
-                    Diuresis: parseFloat(diuresis),
+                    Diuresis: diuresis,
                 });
             }
             let diuresis = renalData.Diuresis || 0;
+
             if (diuresis) {
                 if (diuresis >= 0.51) {
                     return 0;
@@ -442,9 +451,10 @@ const MyForm = () => {
             return 0;
         }
 
-        const calculateProteinuria = (): number => {
-            let proteinuria = renalData.Proteinuria || 0;
+        const calculateProteinuria = (): number | boolean => {
+            let proteinuria = parseFloat(renalData.Proteinuria?.toString() || '0');
             if (proteinuria) {
+               
                 if (proteinuria <= 299) {
                     return 0;
                 } else if (proteinuria >= 300 && proteinuria <= 499) {
@@ -458,7 +468,7 @@ const MyForm = () => {
             return 0;
         }
 
-        const calculateTasadefiltraciónGlomerular = (): number => {
+        const calculateTasadefiltraciónGlomerular = (): number | boolean => {
             let tasadefiltraciónGlomerular = renalData.TasadefiltraciónGlomerular || 0;
             if (renalData.Creatinina && renalData.edad) {
                 const f = 0.7;
@@ -484,7 +494,7 @@ const MyForm = () => {
             return 0;
         }
 
-        const calculateDeficitBase = (): number => {
+        const calculateDeficitBase = (): number | boolean => {
             let deficitBase = renalData.DeficitBase || 0;
             if (deficitBase) {
                 if (deficitBase <= 1.9) {
@@ -505,11 +515,11 @@ const MyForm = () => {
     }
 
     const handleInputChangeRespiratorio = (name: string, value: string) => {
-        const numericValue = parseFloat(value) || undefined;
+    
 
         setRespiratorio(prevData => ({
             ...prevData,
-            [name]: numericValue,
+            [name]: value,
         }));
     }
 
@@ -531,8 +541,13 @@ const MyForm = () => {
             return 0;
         };
 
-        const calculateIndiceKirby = (): number => {
+        const calculateIndiceKirby = (): number | boolean => {
             let IkValue = respiratorio.IndiceKirby || 0;
+            if (IkValue < 300) {
+                Alert.alert('El valor del indice kirby debe ser mayor a 300');
+                return false;
+            }
+
             if (IkValue) {
                 if (IkValue >= 401) {
                     return 0;
@@ -571,7 +586,7 @@ const MyForm = () => {
 
         setHematologico(prevData => ({
             ...prevData,
-            [name]: numericValue,
+            [name]: value,
         }));
     }
 
@@ -579,6 +594,7 @@ const MyForm = () => {
 
         const calculateLeucocitos = (): number => {
             let leucocitos = hematologico.Leucocitos || 0;
+
             if (leucocitos) {
                 if (leucocitos >= 4100 && leucocitos <= 16900) {
                     return 0;
@@ -687,7 +703,7 @@ const MyForm = () => {
 
         setHepatico(prevData => ({
             ...prevData,
-            [name]: numericValue,
+            [name]: value,
         }));
     }
 
@@ -808,7 +824,7 @@ const MyForm = () => {
 
         setNeurologico(prevData => ({
             ...prevData,
-            [name]: numericValue,
+            [name]: value,
         }));
     }
 
@@ -816,7 +832,7 @@ const MyForm = () => {
         const numericValue = parseFloat(value) || undefined;
         setUterino(prevData => ({
             ...prevData,
-            [name]: numericValue,
+            [name]: value,
         }));
     }
 
@@ -824,7 +840,7 @@ const MyForm = () => {
         const numericValue = parseFloat(value) || undefined;
         setGastroIntestinal(prevData => ({
             ...prevData,
-            [name]: numericValue,
+            [name]: value,
         }));
     }
 
@@ -877,36 +893,6 @@ const MyForm = () => {
         return { glucosa: calculateGlucosa(), na: calculateNA(), k: calculateK() }
     }
 
-    const [categoryGeneral, setCategoryGeneral] = useState({
-        CardioVascular: {
-            PH: cardioData.PH, TASistolica: cardioData.TASistolica, TADiastolica: cardioData.ValueTADiastolica, Temperatura: cardioData.Temperatura, Lactato: cardioData.Lactato, Indicedechoque: cardioData.ShockIndex,
-        },
-        Renal: {
-            AcidoUrico: renalData.AcidoUrico, Proteinuria: renalData.Proteinuria, Creatinina: renalData.Creatinina, DeficitBase: renalData.DeficitBase, Diuresis: renalData.Diuresis, TasadefiltraciónGlomerular: renalData.TasadefiltraciónGlomerular,
-        },
-        Respiratorio: {
-            FrecuenciaRespiratoria: respiratorio.FrecuenciaRespiratoria, IndiceKirby: respiratorio.IndiceKirby, Saturación: respiratorio.Saturación,
-        },
-        Hematologico: {
-            Leucocitos: hematologico.Leucocitos, Hemoglobina: hematologico.Hemoglobina, Plaquetas: hematologico.Plaquetas, DimeroD: hematologico.DimeroD, Fibrinogeno: hematologico.Fibrinogeno, IRN: hematologico.IRN,
-        },
-
-        Hepaticos: {
-            Transaminasas: hepatico.Transaminasas, LDH: hepatico.LDH, BilirrubinasTotales: hepatico.BilirrubinasTotales, PresiónColoidosmótica: hepatico.PresiónColoidosmótica, Albumina: hepatico.Albumina, GlobulinaSérica: hepatico.GlobulinaSérica, IndiceBriones: hepatico.IndiceBriones,
-        },
-        Neurologico: {
-            EscalaGlasgow: neurologico.EscalaGlasgow
-        },
-
-        Uterino: {
-            HemorragiaObstétrica: uterino.HemorragiaObstétrica, PerdidaVolumenSangre: uterino.PerdidaVolumenSangre
-        },
-
-        GastroIntestital: {
-            ToleranciaVíaOral: gastroIntestinal.ToleranciaVíaOral, Glucosa: gastroIntestinal.Glucosa, NA: gastroIntestinal.NA, K: gastroIntestinal.K,
-        },
-    });
-
     function esObjetoVacio(obj: any) {
         return Object.keys(obj).length === 0;
     }
@@ -929,88 +915,9 @@ const MyForm = () => {
         return valorMasAlto as number;
     }
 
-    const miArray = {
-        PH: 10,
-        TASistolica: 20,
-        TADiastolica: 30,
-        Temperatura: 40,
-        Lactato: 50,
-        Indicedechoque: 60,
-    };
+    const [selectedValue, setSelectedValue] = useState('15');
 
 
-    useEffect(() => {
-
-        setCategoryGeneral({
-            CardioVascular: {
-                PH: cardioData.PH, TASistolica: cardioData.TASistolica, TADiastolica: cardioData.ValueTADiastolica, Temperatura: cardioData.Temperatura, Lactato: cardioData.Lactato, Indicedechoque: cardioData.ShockIndex,
-            },
-            Renal: {
-                AcidoUrico: renalData.AcidoUrico, Proteinuria: renalData.Proteinuria, Creatinina: renalData.Creatinina, DeficitBase: renalData.DeficitBase, Diuresis: renalData.Diuresis, TasadefiltraciónGlomerular: renalData.TasadefiltraciónGlomerular,
-            },
-            Respiratorio: {
-                FrecuenciaRespiratoria: respiratorio.FrecuenciaRespiratoria, IndiceKirby: respiratorio.IndiceKirby, Saturación: respiratorio.Saturación,
-            },
-            Hematologico: {
-                Leucocitos: hematologico.Leucocitos, Hemoglobina: hematologico.Hemoglobina, Plaquetas: hematologico.Plaquetas, DimeroD: hematologico.DimeroD, Fibrinogeno: hematologico.Fibrinogeno, IRN: hematologico.IRN,
-            },
-
-            Hepaticos: {
-                Transaminasas: hepatico.Transaminasas, LDH: hepatico.LDH, BilirrubinasTotales: hepatico.BilirrubinasTotales, PresiónColoidosmótica: hepatico.PresiónColoidosmótica, Albumina: hepatico.Albumina, GlobulinaSérica: hepatico.GlobulinaSérica, IndiceBriones: hepatico.IndiceBriones,
-            },
-            Neurologico: {
-                EscalaGlasgow: neurologico.EscalaGlasgow
-            },
-
-            Uterino: {
-                HemorragiaObstétrica: uterino.HemorragiaObstétrica, PerdidaVolumenSangre: uterino.PerdidaVolumenSangre
-            },
-
-            GastroIntestital: {
-                ToleranciaVíaOral: gastroIntestinal.ToleranciaVíaOral, Glucosa: gastroIntestinal.Glucosa, NA: gastroIntestinal.NA, K: gastroIntestinal.K,
-            },
-
-        });
-
-    }, [
-        cardioData.PH,
-        cardioData.TASistolica,
-        cardioData.ValueTADiastolica,
-        cardioData.Temperatura,
-        cardioData.Lactato,
-        cardioData.ShockIndex,
-        renalData.AcidoUrico,
-        renalData.Proteinuria,
-        renalData.Creatinina,
-        renalData.DeficitBase,
-        renalData.Diuresis,
-        renalData.TasadefiltraciónGlomerular,
-        respiratorio.FrecuenciaRespiratoria,
-        respiratorio.IndiceKirby,
-        respiratorio.Saturación,
-        hematologico.Leucocitos,
-        hematologico.Hemoglobina,
-        hematologico.Plaquetas,
-        hematologico.DimeroD,
-        hematologico.Fibrinogeno,
-        hematologico.IRN,
-        hepatico.Transaminasas,
-        hepatico.LDH,
-        hepatico.BilirrubinasTotales,
-        hepatico.PresiónColoidosmótica,
-        hepatico.Albumina,
-        hepatico.GlobulinaSérica,
-        hepatico.IndiceBriones,
-        neurologico.EscalaGlasgow,
-        uterino.HemorragiaObstétrica,
-        uterino.PerdidaVolumenSangre,
-        gastroIntestinal.ToleranciaVíaOral,
-        gastroIntestinal.Glucosa,
-        gastroIntestinal.NA,
-        gastroIntestinal.K,
-    ])
-
-    const [selectedValue, setSelectedValue] = useState('15')
 
     return (
         <>

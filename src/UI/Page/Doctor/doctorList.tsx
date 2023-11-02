@@ -1,25 +1,25 @@
 import * as React from 'react';
 import { Avatar, Card, IconButton,  } from 'react-native-paper';
 import { fetchGetDoctors } from '../../../services';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Appbar, Text, TextInput, Button, } from 'react-native-paper';
 import { View } from 'react-native';
 
 const ListDoctor = () => {
 
     const [listDoctor, setListDoctor] = React.useState<Array<any>>([]);
+    const route = useRoute();
+
+    const id = (route.params as any)?.id;
 
     const navigation = useNavigation();
 
     React.useEffect(() => {
 
         fetchGetDoctors().then((response) => {
-            console.log(response);
-
             setListDoctor(response.doctors);
-
         })
-    }, []);
+    }, [id]);
 
     return (
         <>

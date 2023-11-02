@@ -15,7 +15,7 @@ interface IAdminUser{
 }
 
 export const ConexionFetch = async ({ url, method, body, controller }: IResponse) => {
-    const baseURL = 'http://172.16.144.14:3000/api';
+    const baseURL = 'http://192.168.1.30:3000/api';
     const requestURL = url ? `${baseURL}/${controller}/${url}` : `${baseURL}/${controller}`;
     
 
@@ -63,7 +63,7 @@ export const login = async (user: ILogin) => {
 }
 
 export const fetchDeleteDoctor = async (id: string) => {
-    return await ConexionFetch({ url: id, method: 'DELETE', controller: "doctors" })
+    return await ConexionFetch({ url: id, method: 'DELETE', controller: "user" })
 }
 
 export const fetchUpdateDoctors = async (id: string, doctor: IDoctor) => {
@@ -76,7 +76,7 @@ export const fetchCreatePatient = async (paciente: IPatient) => {
 }
 
 export const fetchDeletePatient = async (id: string) => {
-    return await ConexionFetch({ url: id, method: 'DELETE', controller: "paciente" })
+    return await ConexionFetch({ url: id, method: 'DELETE', controller: "user" })
 }
 
 export const fetchUpdatePatient = async (id: string, paciente: IPatient) => {
