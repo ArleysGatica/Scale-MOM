@@ -1,47 +1,53 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { View, Image, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighlight, Alert, ActivityIndicator, Pressable, ScrollView, Text } from 'react-native';
+import { Appbar } from 'react-native-paper';
+import { fetchDeleteDoctor } from '../../../services';
 
 interface IParams {
-    id:string;
+    id: string;
 }
 
 const DoctorProfile = () => {
     const route = useRoute();
-    
+
     const id = (route.params as IParams).id;
 
     const navigation = useNavigation();
 
+const deletePatientHandler = async () => {
+    
+    await fetchDeleteDoctor(id);
+    //@ts-ignore
+    navigation.navigate('ListDoctor');
+   
+    }
+    
+
     return (
         <>
-         <View
+            <Appbar.Header>
+                <Appbar.BackAction onPress={() => { }} />
+            </Appbar.Header>
+            <View
                 style={styles.box}>
                 <Image source={require('../../../Assets/RegistroPacient.png')}
                     style={{ width: 70, height: 70, resizeMode: 'cover', }} />
 
-                
-                <Text
-                    style={{
-                        width: '35%',
-                        fontSize: 20,
-                        fontWeight: 'bold',
-                    }}
-                    onPress={() => { navigation.navigate('DoctorCreationForm' as never)}}
-                >
-                    Crear Doctor
-                </Text>
+
+
                 {/*@ts-ignore */}
-                <Text onPress={() => { navigation.navigate('DoctorCreationForm' , { id:id  })}} >
+                <Text onPress={() => { navigation.navigate('DoctorCreationForm', { id: id }) }} >
                     Editar
                 </Text>
-                <Text>
+                {/*@ts-ignore */}
+                <Text onPress={() => { deletePatientHandler() }} >
                     Eliminar
                 </Text>
 
-            </View> 
-            
+            </View>
 
-            
+
+
         </>
     )
 

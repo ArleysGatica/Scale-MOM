@@ -1,5 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { View, Image, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighlight, Alert, ActivityIndicator, Pressable, ScrollView, Text } from 'react-native';
+import { Appbar } from 'react-native-paper';
 
 interface IParams {
     id:string;
@@ -8,17 +9,22 @@ interface IParams {
 const Pacient = () => {
     const route = useRoute();
 
-    const id = (route.params as IParams).id;
+    const id = (route.params as IParams)?.id;
 
     const navigation = useNavigation();
 
     return (
         <>
+            <Appbar.Header>
+                <Appbar.BackAction onPress={() => { }} />
+            </Appbar.Header>
          <View
                 style={styles.box}>
                 <Image source={require('../../../Assets/RegistroPacient.png')}
                     style={{ width: 70, height: 70, resizeMode: 'cover', }} />
-                <Text
+                {/*@ts-ignore */}
+                <Text                    
+                    // onPress={() => { navigation.navigate('RegisterPatient' );}}
                     style={{
                         width: '35%',
                         fontSize: 20,
@@ -34,8 +40,12 @@ const Pacient = () => {
                 <Text>
                     Eliminar
                 </Text>
+                {/*@ts-ignore */}
+                <Text onPress={() => { navigation.navigate('MyForm', { id: id }); }} >
+                    Agregar formulario
+                </Text>
 
-            </View> 
+            </View>       
             
 
             

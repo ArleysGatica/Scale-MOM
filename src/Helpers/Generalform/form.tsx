@@ -5,7 +5,8 @@ import { View, Image, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighl
 import { Appbar, Text, TextInput, Button, } from 'react-native-paper';
 
 import { Picker } from '@react-native-picker/picker';
-import useValorMasAlto from '../../hook/useHighestNumber';
+import { useRoute } from '@react-navigation/native';
+import { fetchAddResultPatient } from '../../services';
 
 interface ICardioVascular {
     TASistolica?: number;
@@ -140,7 +141,15 @@ const fieldsGastroIntestinal = [
     { name: 'K', label: 'K:' },
 ];
 
+interface IParams {
+    id: string;
+}
+
 const MyForm = () => {
+
+    const route = useRoute();
+
+    const id = (route.params as IParams)?.id;
 
 
     const [cardioData, setCardioData] = useState<ICardioVascular>({
@@ -258,7 +267,7 @@ const MyForm = () => {
     };
 
 
-    const handleCalculate = () => {
+    const handleCalculate = async () => {
         const calculateCardiacPressure = (fcValue: number | undefined): number => {
             if (fcValue) {
                 if ((fcValue > 99 && fcValue <= 119) || (fcValue >= 51 && fcValue <= 60)) {
@@ -347,7 +356,6 @@ const MyForm = () => {
 
         const handleCalculateResult = () => {
             if (ResultSuma >= 0 && ResultSuma <= 3) {
-
                 return `MML ${ResultSuma} BAJO RIESGO`
             } else if (ResultSuma >= 4 && ResultSuma <= 7) {
                 return `MMM ${ResultSuma} RIESGO Intermedio`
@@ -360,10 +368,11 @@ const MyForm = () => {
         }
 
         let R = handleCalculateResult();
-        
-        console.log(R);
-        
 
+        console.log(R);
+        console.log(id);
+
+        await fetchAddResultPatient(id, { resultado: R });
     };
 
     const handleInputChangeRenal = (name: string, value: string) => {
@@ -963,46 +972,45 @@ const MyForm = () => {
 
         });
 
-    }, [cardioData.PH,
-    cardioData.TASistolica,
-    cardioData.ValueTADiastolica,
-    cardioData.Temperatura,
-    cardioData.Lactato,
-    cardioData.ShockIndex,
-    renalData.AcidoUrico,
-    renalData.Proteinuria,
-    renalData.Creatinina,
-    renalData.DeficitBase,
-    renalData.Diuresis,
-    renalData.TasadefiltraciónGlomerular,
-    respiratorio.FrecuenciaRespiratoria,
-    respiratorio.IndiceKirby,
-    respiratorio.Saturación,
-    hematologico.Leucocitos,
-    hematologico.Hemoglobina,
-    hematologico.Plaquetas,
-    hematologico.DimeroD,
-    hematologico.Fibrinogeno,
-    hematologico.IRN,
-    hepatico.Transaminasas,
-    hepatico.LDH,
-    hepatico.BilirrubinasTotales,
-    hepatico.PresiónColoidosmótica,
-    hepatico.Albumina,
-    hepatico.GlobulinaSérica,
-    hepatico.IndiceBriones,
-    neurologico.EscalaGlasgow,
-    uterino.HemorragiaObstétrica,
-    uterino.PerdidaVolumenSangre,
-    gastroIntestinal.ToleranciaVíaOral,
-    gastroIntestinal.Glucosa,
-    gastroIntestinal.NA,
-    gastroIntestinal.K,
+    }, [
+        cardioData.PH,
+        cardioData.TASistolica,
+        cardioData.ValueTADiastolica,
+        cardioData.Temperatura,
+        cardioData.Lactato,
+        cardioData.ShockIndex,
+        renalData.AcidoUrico,
+        renalData.Proteinuria,
+        renalData.Creatinina,
+        renalData.DeficitBase,
+        renalData.Diuresis,
+        renalData.TasadefiltraciónGlomerular,
+        respiratorio.FrecuenciaRespiratoria,
+        respiratorio.IndiceKirby,
+        respiratorio.Saturación,
+        hematologico.Leucocitos,
+        hematologico.Hemoglobina,
+        hematologico.Plaquetas,
+        hematologico.DimeroD,
+        hematologico.Fibrinogeno,
+        hematologico.IRN,
+        hepatico.Transaminasas,
+        hepatico.LDH,
+        hepatico.BilirrubinasTotales,
+        hepatico.PresiónColoidosmótica,
+        hepatico.Albumina,
+        hepatico.GlobulinaSérica,
+        hepatico.IndiceBriones,
+        neurologico.EscalaGlasgow,
+        uterino.HemorragiaObstétrica,
+        uterino.PerdidaVolumenSangre,
+        gastroIntestinal.ToleranciaVíaOral,
+        gastroIntestinal.Glucosa,
+        gastroIntestinal.NA,
+        gastroIntestinal.K,
     ])
 
-    const [selectedValue, setSelectedValue] = useState('15');
-
-
+    const [selectedValue, setSelectedValue] = useState('15')
 
     return (
         <>
