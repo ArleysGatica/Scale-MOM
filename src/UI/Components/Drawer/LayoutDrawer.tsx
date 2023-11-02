@@ -1,18 +1,12 @@
-import React, { useRef, useState } from 'react'
-import { Button, DrawerLayoutAndroid, Text, StyleSheet, View, TouchableOpacity } from 'react-native';
-import NavigationView from './Nave';
-import PruebaHome from '../../Page/Profile/Prueba';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useRef } from "react";
+import { DrawerLayoutAndroid, View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import NavigationView from "./Nave";
 
-type HomeScreenProps = {
-    navigation: NativeStackNavigationProp<RootStackParamList, 'RegisterPatient'>;
-};
+interface IProps {
+    children: React.ReactNode;
+}
 
-type RootStackParamList = {
-    RegisterPatient: undefined;
-    ListPatient: undefined;
-};
-const AppDrawer = ({ navigation }: HomeScreenProps) => {
+export const LayoutDrawer = ({ children }:IProps) => {
 
     const drawer = useRef<DrawerLayoutAndroid>(null);
 
@@ -39,12 +33,13 @@ const AppDrawer = ({ navigation }: HomeScreenProps) => {
             </View>
             <View style={styles.container}>
 
-                <PruebaHome navigation={navigation} />
+                {children}
             </View>
 
         </DrawerLayoutAndroid>
     );
 };
+
 const styles = StyleSheet.create({
     headerContainer: {
         flexDirection: 'row',
@@ -73,6 +68,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         display: 'flex',
+        backgroundColor: 'white',
 
 
     },
@@ -85,5 +81,3 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
 });
-
-export default AppDrawer;

@@ -5,16 +5,15 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 
 type HomeScreenProps = {
-    navigation?: NativeStackNavigationProp<RootStackParamList, 'Welcome'>;
+    navigation: NativeStackNavigationProp<RootStackParamList, 'RegisterPatient'>;
 };
 
 type RootStackParamList = {
-    Welcome?: undefined;
+    RegisterPatient: undefined;
+    ListPatient: undefined;
 };
 
 export default function PruebaHome({ navigation }: HomeScreenProps) {
-
-
  
     return (
         <View style={styles.container}>
@@ -44,6 +43,16 @@ export default function PruebaHome({ navigation }: HomeScreenProps) {
                     // marginBottom: 20,
                     gap: 20,
                 }}>
+                <Pressable onPress={() => navigation.navigate!('ListPatient')}>
+                    <Text
+                    style={{
+                        width: '35%',
+                        fontSize: 20,
+                        fontWeight: 'bold',
+                    }}>
+                        Lista de pacientes
+                    </Text>
+                </Pressable>
 
                 <View
                     style={styles.box}>
@@ -66,7 +75,7 @@ export default function PruebaHome({ navigation }: HomeScreenProps) {
                         style={{ width: 70, height: 70, resizeMode: 'cover', }} />
                
                 </View>
-                <Pressable onPress={() => navigation?.navigate!('Welcome')}>
+                <Pressable onPress={() => navigation.navigate!('RegisterPatient')}>
                     <Image source={require('../../../Assets/Done.png')} />
                 </Pressable>
             </View>

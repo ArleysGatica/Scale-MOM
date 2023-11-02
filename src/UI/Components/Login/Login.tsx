@@ -6,7 +6,14 @@ import style from './Style.Login';
 import { login } from '../../../services';
 
 type LoginFormProps = {
-    navigation?: NativeStackNavigationProp<RootStackParamList, 'DoctorCreationForm' | 'Login' | 'CustomBottomTabNavigator'>;
+  navigation?: NativeStackNavigationProp<
+    RootStackParamList,
+    | 'DoctorCreationForm'
+    | 'Login'
+    | 'CustomBottomTabNavigator'
+    | 'ListDoctor'
+    | 'ListPatient'
+  >;
 };
 
 export function Login({ navigation }: LoginFormProps) {
@@ -19,12 +26,13 @@ export function Login({ navigation }: LoginFormProps) {
         const response = await login({username, password});
 
         if (response.userType === 1) {
-            navigation?.navigate('DoctorCreationForm');
             Alert.alert('Entrar como admin');
+
+            return navigation?.navigate('ListDoctor');     
         }
         
         if (response.userType === 2) {
-            navigation?.navigate('CustomBottomTabNavigator');
+            navigation?.navigate('ListPatient');
             Alert.alert('Entrar como doctor');
         } else {
             Alert.alert('Credenciales incorrectas');
@@ -65,10 +73,9 @@ export function Login({ navigation }: LoginFormProps) {
                 </View>
             </View>
             <View style={{ width: '100%', alignItems: 'center', top:50 }}>
-                <TouchableHighlight style={style.buttonSing}>
+                <TouchableHighlight onPress={() => handleLogin()} style={style.buttonSing}>
                     <Button
                         color='rgb(18, 19, 48)'
-                        onPress={() => handleLogin()}
                         title='Login'
                         testID='login-button'
                    />

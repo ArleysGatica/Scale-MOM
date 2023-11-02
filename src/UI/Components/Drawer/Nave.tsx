@@ -1,4 +1,5 @@
 // NavigationView.tsx
+import { useNavigation } from '@react-navigation/native';
 import React, { useRef, useState } from 'react';
 import { View, Image, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, } from 'react-native';
 
@@ -17,6 +18,12 @@ const NavigationView = ({ closeDrawer, id, name, image, }: NavigationViewProps &
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
+
+    const navigation = useNavigation();
+
+    const toWelcome = () => {
+        navigation.navigate('Welcome' as never);
+    }
 
 
 
@@ -61,7 +68,7 @@ const NavigationView = ({ closeDrawer, id, name, image, }: NavigationViewProps &
                 data={data}
                 keyExtractor={(item) => item.id || ''}
                 renderItem={({ item }) => (
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={toWelcome}>
                         <View
                             style={{
                                 paddingHorizontal: 0,
