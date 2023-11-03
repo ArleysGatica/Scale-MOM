@@ -39,11 +39,6 @@ export function Login({ navigation }: LoginFormProps) {
         }
     };
 
-    const handleLogout = () => {
-        navigation?.navigate('Login');
-        Alert.alert('Logout');
-    }
-
     return (
         <SafeAreaView style={style.containerLogin}>
             <View style={style.Container}>
@@ -55,6 +50,7 @@ export function Login({ navigation }: LoginFormProps) {
 
                 <View style={style.passwordContainer}>
                     <TextInput
+                        testID="username-input" 
                         style={style.passwordInput}
                         placeholderTextColor="gray"
                         placeholder="Nombre de usuario"
@@ -64,6 +60,7 @@ export function Login({ navigation }: LoginFormProps) {
 
                 <View style={style.passwordContainer} >
                     <TextInput
+                        testID="password-input"
                         style={style.passwordInput}
                         placeholderTextColor="gray"
                         placeholder="Contraseña"
@@ -75,9 +72,10 @@ export function Login({ navigation }: LoginFormProps) {
             <View style={{ width: '100%', alignItems: 'center', top:50 }}>
                 <TouchableHighlight onPress={() => handleLogin()} style={style.buttonSing}>
                     <Button
+                        testID="login-button" 
                         color='rgb(18, 19, 48)'
-                        title='Login'
-                        testID='login-button'
+                        title='Iniciar Sesión'
+                        onPress={() => handleLogin()}
                    />
                 </TouchableHighlight>
             </View>
