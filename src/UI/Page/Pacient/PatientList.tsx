@@ -26,16 +26,11 @@ const ListPatient = () => {
     return (
         <LayoutDrawer>
             <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
-                <Text style={{ fontSize: 25 }}>
-                Bienvenido Doctor Juan Perez
-                </Text>
+                
                 <Text style={{ fontSize: 25 }}>
                     Lista de pacientes
                 </Text>
             </View>
-
-            
-
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white',maxHeight:"70%" }}>
                 {
                     listPatient && listPatient.map((patient) => (
@@ -52,7 +47,6 @@ const ListPatient = () => {
                     ))
                 }
             </View>
-
             <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
                 <Button
                     icon="account-check"

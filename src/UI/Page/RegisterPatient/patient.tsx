@@ -1,18 +1,19 @@
 import { View,  TouchableOpacity, SafeAreaView, StyleSheet, Alert,  Pressable, ScrollView } from 'react-native';
-
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
-import { IPatient } from '../../../types/types';
+import { IPatient, RootStackParamList } from '../../../types/types';
 import { fetchCreatePatient, fetchUpdatePatient, getUserById } from '../../../services';
 
 import { Appbar, Text, TextInput, Button, } from 'react-native-paper';
-import { useRoute } from '@react-navigation/native';
+
 
 interface IParams {
     id:string;
 }
 
 const RegisterPatient = () => {
-
+    //@ts-ignore
+    const navigation = useNavigation();
     const [registerData, setRegisterData] = useState<IPatient>({});
 
     const route = useRoute();
@@ -40,8 +41,9 @@ const RegisterPatient = () => {
 
 
     const createPatientHandler = async () => {
-        id ? await fetchUpdatePatient(id, registerData) : await fetchCreatePatient({ ...registerData, userType: 0 });
-        
+          id ? await fetchUpdatePatient(id, registerData) : await fetchCreatePatient({ ...registerData, userType: 0 });
+        // @ts-ignore
+        navigation.navigate('ListPatient', { id: Math.random() });
     }
 
     const handleTextChange = (fieldName: keyof IPatient, text: string) => {
@@ -90,10 +92,13 @@ const RegisterPatient = () => {
                                         rowGap: 10,
 
                                     }}>
-                                    <Text style={{ width: 75, textAlign: 'center', fontSize: 15, }}>{item.label}</Text>
+                                    <Text style={{ width: 75, textAlign: 'center', fontSize: 15, }}>
+                                        {item.label}
+                                    </Text>
                                     <TextInput
                                         style={{
-                                            width: 200, height: 50,
+                                            width: 200,
+                                            height: 50,
                                             marginBottom: 10,
                                             backgroundColor: 'rgb(255, 255, 255)',
                                             borderColor: 'rgba(0, 0, 0, 0.29)',

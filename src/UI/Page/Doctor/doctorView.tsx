@@ -13,7 +13,7 @@ type IDoctor = {
     username?: string;
     password?: string;
     idMinsa?: string;
-    userType?:number;
+    userType?: number;
 };
 
 const DoctorProfile = () => {
@@ -32,29 +32,29 @@ const DoctorProfile = () => {
     useEffect(() => {
         if (id) {
             getUserById(id).then((response) => {
-                setDoctor({ username:response.username, idMinsa:response.idMinsa })
+                setDoctor({ username: response.username, idMinsa: response.idMinsa })
             })
-        }; 
+        };
     }, []);
 
     const toEditDoctor = () => {
         //@ts-ignore
-        navigation.navigate('DoctorCreationForm' , { id:id  });
+        navigation.navigate('DoctorCreationForm', { id: id });
     }
-    
+
 
     const toDeleteDoctor = async () => {
         await fetchDeleteDoctor(id);
         //@ts-ignore
         navigation.navigate('ListDoctor', { id: Math.random() });
-    
+
     }
-    
+
 
     return (
         <LayoutDrawer>
-            <View style={{  alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
-                <Text style={{ fontSize: 25 }}>
+            <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
+                <Text style={{ fontSize: 25, fontWeight: 'bold' }}>
                     Detalle del Doctor
                 </Text>
             </View>
@@ -76,26 +76,22 @@ const DoctorProfile = () => {
                     Borrar
                 </Button>
             </View>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white',maxHeight:"70%" }}>
-
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', maxHeight: "70%", width: '100%' }}>
                 {
-                     objData.map((item, index) => (
+                    objData.map((item, index) => (
                         <Card.Title
                             key={index}
-                            style={{ width: '90%', marginBottom: 10 }}
+                            style={{ width: '50%', marginBottom: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', paddingLeft:30 }}
                             title={item.label}
                             subtitle={doctor[item.name]?.toString()}
                         />
-                     ))
+                    ))
                 }
-            </View> 
-
-
+            </View>
         </LayoutDrawer>
     )
 
 }
-
 
 const styles = StyleSheet.create({
     box: {
@@ -125,7 +121,7 @@ const styles = StyleSheet.create({
         columnGap: 12,
         paddingLeft: 8,
         paddingTop: 16,
-      },
+    },
 });
 
 export default DoctorProfile;
