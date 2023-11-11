@@ -1,147 +1,79 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { IFirstGroup, ISecondGroup, IThreeGroup, IFourGroup, IFiveGroup, InputsGeneral, InputsSelects } from '../../types/types';
-import { View, Image, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighlight, Alert, ActivityIndicator, Pressable, ScrollView } from 'react-native';
-
+import React, { useState } from 'react';
+import { ICardioVascular, IRenal, IRespiratorio, IHematologico, IHepatico, IUterino, INeurologico, IGastroIntestital } from '../../types/types';
+import { View, Image, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighlight, Alert, Pressable, ScrollView } from 'react-native';
 import { Appbar, Text, TextInput, Button, } from 'react-native-paper';
 
 import { Picker } from '@react-native-picker/picker';
 import useValorMasAlto from '../../hook/useHighestNumber';
-
-interface ICardioVascular {
-    TASistolica?: number;
-    TADiastolica?: number;
-    Tam?: number;
-    FC?: number;
-    Temperatura?: number;
-    PH?: number;
-    Lactato?: number;
-    Indicedechoque?: number;
-
-    CardiacPressure?: number;
-    ValueTASistolica?: number;
-    ValueTADiastolica?: number;
-    ShockIndex?: number;
-}
+import { useNavigation } from '@react-navigation/native';
 
 const fields = [
-    { name: 'FC', label: 'FC:' },
-    { name: 'TASistolica', label: 'TASistolica:' },
-    { name: 'TADiastolica', label: 'TADiastolica:' },
-    { name: 'Temperatura', label: 'Temperatura:' },
-    { name: 'PH', label: 'PH:' },
-    { name: 'Lactato', label: 'Lactato:' },
+    { name: 'FC', label: 'FC:', min: 40, max: 140, medida: 'lpm' },
+    { name: 'TASistolica', label: 'TASistolica:', min: 80, max: 180, medida: 'mmHg' },
+    { name: 'TADiastolica', label: 'TADiastolica:', min: 40, max: 110, medida: 'mmHg' },
+    { name: 'Temperatura', label: 'Temperatura:', min: 35, max: 40, medida: '°C' },
+    { name: 'PH', label: 'PH:', min: 7.1, max: 7.7, medida: '' },
+    { name: 'Lactato', label: 'Lactato:', min: 1.79, max: 4, medida: 'mmol/L' },
 ];
-
-interface IRenal {
-    Creatinina?: number;
-    AcidoUrico?: number;
-    Orina?: number;
-    horas?: number;
-    Peso?: number;
-    Diuresis?: number;
-    Proteinuria?: number;
-    TasadefiltraciónGlomerular?: number;
-    edad?: number;
-    DeficitBase?: number;
-}
 
 const fieldsRenal = [
-    { name: 'Creatinina', label: 'Creatinina:' },
-    { name: 'AcidoUrico', label: 'AcidoUrico:' },
+    { name: 'Creatinina', label: 'Creatinina:', min: 0.4, max: 2.8, medida: 'mg/dL' },
+    { name: 'AcidoUrico', label: 'AcidoUrico:', min: 6, max: 9, medida: 'mg/dL' },
     // { name: 'Diuresis', label: 'Diuresis:' },
-    { name: 'Proteinuria', label: 'Proteinuria:' },
+    { name: 'Proteinuria', label: 'Proteinuria:', min: 290, max: 3500, medida: 'mg/dL' },
     { name: 'TasadefiltraciónGlomerular', label: 'TasadefiltraciónGlomerular:' },
-    { name: 'DeficitBase', label: 'DeficitBase:' },
-    { name: 'Orina', label: 'Orina:' },
-    { name: 'horas', label: 'horas:' },
-    { name: 'Peso', label: 'Peso:' },
-    { name: 'edad', label: 'edad:' },
+    { name: 'DeficitBase', label: 'DeficitBase:', min: 1.8, max: 10, medida: 'mmol/L' },
+    { name: 'Orina', label: 'Orina:', min: 0.1, max: 0.5, medida: 'mL' },
+    { name: 'horas', label: 'horas:', min: 1, max: 24, medida: 'h' },
+    { name: 'Peso', label: 'Peso:', min: 40, max: 150, medida: 'kg' },
+    { name: 'edad', label: 'edad:', min: 15, max: 100, medida: 'años' },
 ];
-
-interface IRespiratorio {
-    FrecuenciaRespiratoria?: number;
-    IndiceKirby?: number;
-    Saturación?: number;
-}
 
 const fieldsRespiratorio = [
-    { name: 'FrecuenciaRespiratoria', label: 'FrecuenciaRespiratoria:' },
-    { name: 'IndiceKirby', label: 'IndiceKirby:' },
-    { name: 'Saturación', label: 'Saturación:' },
+    { name: 'FrecuenciaRespiratoria', label: 'FrecuenciaRespiratoria:', min: 6, max: 40, medida: 'rpm' },
+    { name: 'IndiceKirby', label: 'IndiceKirby:', min: 300, max: 500, medida: 'PaO2/FiO2' },
+    { name: 'Saturación', label: 'Saturación:', min: 85, max: 100, medida: '%' },
 ];
 
-interface IHematologico {
-    Leucocitos?: number;
-    Hemoglobina?: number;
-    Plaquetas?: number;
-    Fibrinogeno?: number;
-    DimeroD?: number;
-    IRN?: number;
-}
 
 const fieldsHematologico = [
-    { name: 'Leucocitos', label: 'Leucocitos:' },
-    { name: 'Hemoglobina', label: 'Hemoglobina:' },
-    { name: 'Plaquetas', label: 'Plaquetas:' },
-    { name: 'Fibrinogeno', label: 'Fibrinogeno:' },
-    { name: 'DimeroD', label: 'DimeroD:' },
+    { name: 'Leucocitos', label: 'Leucocitos:', min: 1100, max: 30000, medida: 'mm3' },
+    { name: 'Hemoglobina', label: 'Hemoglobina:', min: 6, max: 10, medida: 'g/dL' },
+    { name: 'Plaquetas', label: 'Plaquetas:', min: 50000, max: 150000, medida: 'mm4' },
+    { name: 'Fibrinogeno', label: 'Fibrinogeno:', min: 101, max: 300, medida: 'mg/dL' },
+    { name: 'DimeroD', label: 'DimeroD:', min: 1000, max: 3000, medida: 'ng/mL' },
     // { name: 'IRN', label: 'IRN:' },
 ];
 
-interface IHepatico {
-    Transaminasas?: number;
-    LDH?: number;
-    BilirrubinasTotales?: number;
-    PresiónColoidosmótica?: number;
-    Albumina?: number;
-    GlobulinaSérica?: number;
-    IndiceBriones?: number;
-}
-
 const fieldsHepatico = [
-    { name: 'Transaminasas', label: 'Transaminasas:' },
-    { name: 'LDH', label: 'LDH:' },
-    { name: 'BilirrubinasTotales', label: 'BilirrubinasTotales:' },
-    { name: 'PresiónColoidosmótica', label: 'PresiónColoidosmótica:' },
-    { name: 'Albumina', label: 'Albumina:' },
-    { name: 'GlobulinaSérica', label: 'GlobulinaSérica:' },
-    // { name: 'IndiceBriones', label: 'IndiceBriones:' },
+    { name: 'Transaminasas', label: 'Transaminasas:', min: 2, max: 150, medida: 'U/L' },
+    { name: 'LDH', label: 'LDH:', min: 300, max: 900, medida: 'U/L' },
+    { name: 'BilirrubinasTotales', label: 'BilirrubinasTotales:', min: 0.09, max: 3.7, medida: 'mg/dL' },
+    { name: 'PresiónColoidosmótica', label: 'PresiónColoidosmótica:', min: 15, max: 22, medida: 'mmHg' },
+    { name: 'Albumina', label: 'Albumina:', min: 2, max: 5, medida: 'g/dL' },
+    { name: 'GlobulinaSérica', label: 'GlobulinaSérica:', min: 2, max: 5, medida: 'g/dL' },
 ];
-
-interface INeurologico {
-    EscalaGlasgow?: number;
-}
 
 const fieldsNeurologico = [
     { name: 'EscalaGlasgow', label: 'EscalaGlasgow:' },
 ];
-
-interface IUterino {
-    HemorragiaObstétrica?: number;
-    PerdidaVolumenSangre?: number;
-}
 
 const fieldsUterino = [
     { name: 'HemorragiaObstétrica', label: 'HemorragiaObstétrica:' },
     { name: 'PerdidaVolumenSangre', label: 'PerdidaVolumenSangre:' },
 ];
 
-interface IGastroIntestital {
-    ToleranciaVíaOral?: number;
-    Glucosa?: number;
-    NA?: number;
-    K?: number;
-}
-
 const fieldsGastroIntestinal = [
     { name: 'ToleranciaVíaOral', label: 'ToleranciaVíaOral:' },
-    { name: 'Glucosa', label: 'Glucosa:' },
-    { name: 'NA', label: 'NA:' },
-    { name: 'K', label: 'K:' },
+    { name: 'Glucosa', label: 'Glucosa:', min: 45, max: 190, medida: 'mg/dL' },
+    { name: 'NA', label: 'NA:', min: 120, max: 160, medida: 'mEq/L' },
+    { name: 'K', label: 'K:', min: 3, max: 5.5, medida: 'mEq/L' },
 ];
 
 const MyForm = () => {
 
+    //@ts-ignore
+    const navigation = useNavigation();
 
     const [cardioData, setCardioData] = useState<ICardioVascular>({
         TASistolica: undefined,
@@ -258,6 +190,8 @@ const MyForm = () => {
 
 
     const handleCalculate = () => {
+        //@ts-ignore
+        navigation.navigate('ListPatient', { id: Math.random() });
 
         let cardioDataFCNumber = parseFloat(cardioData.FC?.toString() || '0');
         let cardioDataTASistolicaNumber = parseFloat(cardioData.TASistolica?.toString() || '0');
@@ -342,7 +276,7 @@ const MyForm = () => {
 
         if (handleCalculateRenal().creatinina === false || handleCalculateRespiratorio().ik === false) {
             return;
-            
+
         }
 
         let resultadoRenal = encontrarValorMasAlto(handleCalculateRenal());
@@ -356,21 +290,24 @@ const MyForm = () => {
         const handleCalculateResult = () => {
             if (ResultSuma >= 0 && ResultSuma <= 3) {
 
-                return `MML ${ResultSuma} BAJO RIESGO`
+                return `MML ${ResultSuma} PTS RIESGO DE MORTALIDAD BAJO.`
             } else if (ResultSuma >= 4 && ResultSuma <= 7) {
-                return `MMM ${ResultSuma} RIESGO Intermedio`
+                return `MMM ${ResultSuma} PTS RIESGO DE MORTALIDAD INTERMEDIO`
             } else if (ResultSuma >= 8 && ResultSuma <= 11) {
-                return `MMS ${ResultSuma} RIESGO ALTO`
+                return `MMS ${ResultSuma} PTS RIESGO DE MORTALIDAD ALTO`
             } else if (ResultSuma >= 12 && ResultSuma <= 24) {
-                return `MME ${ResultSuma} RIESGO MUY ALTO`
+                return `MME ${ResultSuma} PTS RIESGO DE MORTALIDAD MUY ALTO`
             }
 
         }
 
         let R = handleCalculateResult();
-        
+
         console.log(R);
-        
+
+        //Cuando hay mas de 2 categorias en extremos SINDROME DE DISFUNCION MULTI ORGANICA
+        //Cuando una 1 Categoria esta en extremo 'Renal', Disfuncion Renal.
+        //
 
     };
 
@@ -388,7 +325,7 @@ const MyForm = () => {
             let creatinina = parseFloat(renalData.Creatinina?.toString() || '0');
 
             if (creatinina <= 0.4) {
-                Alert.alert('El valor de la creatinina debe ser mayor a 0.4');
+                // Alert.alert('El valor de la creatinina debe ser mayor a 0.4');
                 return false;
             }
 
@@ -454,7 +391,7 @@ const MyForm = () => {
         const calculateProteinuria = (): number | boolean => {
             let proteinuria = parseFloat(renalData.Proteinuria?.toString() || '0');
             if (proteinuria) {
-               
+
                 if (proteinuria <= 299) {
                     return 0;
                 } else if (proteinuria >= 300 && proteinuria <= 499) {
@@ -515,7 +452,7 @@ const MyForm = () => {
     }
 
     const handleInputChangeRespiratorio = (name: string, value: string) => {
-    
+
 
         setRespiratorio(prevData => ({
             ...prevData,
@@ -544,7 +481,7 @@ const MyForm = () => {
         const calculateIndiceKirby = (): number | boolean => {
             let IkValue = respiratorio.IndiceKirby || 0;
             if (IkValue < 300) {
-                Alert.alert('El valor del indice kirby debe ser mayor a 300');
+                // Alert.alert('El valor del indice kirby debe ser mayor a 300');
                 return false;
             }
 
@@ -917,8 +854,6 @@ const MyForm = () => {
 
     const [selectedValue, setSelectedValue] = useState('15');
 
-
-
     return (
         <>
             <Appbar.Header>
@@ -945,7 +880,6 @@ const MyForm = () => {
                                 gap: 10,
                                 columnGap: 10,
                                 rowGap: 10,
-
                             }}
                             >
                                 <Text
@@ -964,8 +898,9 @@ const MyForm = () => {
                                     keyboardType='numeric'
                                     onChangeText={(text) => handleInputChange(field.name, text)}
                                     value={cardioData[field.name as keyof ICardioVascular]?.toString() || ''}
+                                    placeholder={`Min: ${field.min} Max: ${field.max}`}
                                 />
-
+                                <Text style={{ width: 75, textAlign: 'center', fontSize: 15, }}>{field.medida}</Text>
                             </View>
                         )
                     })}
@@ -1004,8 +939,9 @@ const MyForm = () => {
                                     keyboardType='numeric'
                                     onChangeText={(text) => handleInputChangeRenal(field.name, text)}
                                     value={renalData[field.name as keyof IRenal]?.toString() || ''}
+                                    placeholder={`Min: ${field.min} Max: ${field.max}`}
                                 />
-
+                                <Text style={{ width: 75, textAlign: 'center', fontSize: 15, }}>{field.medida}</Text>
                             </View>
                         )
                     })
@@ -1046,8 +982,9 @@ const MyForm = () => {
                                     keyboardType='numeric'
                                     onChangeText={(text) => handleInputChangeRespiratorio(field.name, text)}
                                     value={respiratorio[field.name as keyof IRespiratorio]?.toString() || ''}
+                                    placeholder={`Min: ${field.min} Max: ${field.max}`}
                                 />
-
+                                <Text style={{ width: 75, textAlign: 'center', fontSize: 15, }}>{field.medida}</Text>
                             </View>
                         )
                     })
@@ -1088,8 +1025,9 @@ const MyForm = () => {
                                     keyboardType='numeric'
                                     onChangeText={(text) => handleInputChangeHematologico(field.name, text)}
                                     value={hematologico[field.name as keyof IHematologico]?.toString() || ''}
+                                    placeholder={`Min: ${field.min} Max: ${field.max}`}
                                 />
-
+                                <Text style={{ width: 75, textAlign: 'center', fontSize: 15, }}>{field.medida}</Text>
                             </View>
                         )
                     })
@@ -1130,13 +1068,15 @@ const MyForm = () => {
                                     keyboardType='numeric'
                                     onChangeText={(text) => handleInputChangeHepatico(field.name, text)}
                                     value={hepatico[field.name as keyof IHepatico]?.toString() || ''}
+                                    placeholder={`Min: ${field.min} Max: ${field.max}`}
                                 />
+                                <Text style={{ width: 75, textAlign: 'center', fontSize: 15, }}>{field.medida}</Text>
                             </View>
                         )
                     })
                 }
                 <View style={styles.inner}>
-                    <Text style={styles.header}>Neurologico fieldsUterino</Text>
+                    <Text style={styles.header}>Neurologico</Text>
                 </View>
                 <View style={styles.containerDrop}>
                     <Text style={styles.label}> Escala de Glasgow</Text>
@@ -1202,9 +1142,9 @@ const MyForm = () => {
                         <Text style={styles.header}>GastroIntestinal</Text>
                     </View>
                     {
-                        Object.entries(gastroIntestinal).map(([key, value]) => {
+                        fieldsGastroIntestinal.map(field => {
                             return (
-                                <View key={key} style={{
+                                <View key={field.name} style={{
                                     flexDirection: 'row',
                                     alignItems: 'center',
                                     width: '100%',
@@ -1214,33 +1154,28 @@ const MyForm = () => {
                                     gap: 10,
                                     columnGap: 10,
                                     rowGap: 10,
-                                }}
-                                >
-                                    {key === 'ToleranciaVíaOral' ? (
+                                }}>
+                                    {field.name === 'ToleranciaVíaOral' ? (
                                         <Picker
                                             selectedValue={gastroIntestinal.ToleranciaVíaOral}
-                                            onValueChange={(itemValue, itemIndex) =>
-                                                handleCalculateGastroIntestinal()}
+                                            onValueChange={(itemValue, itemIndex) => handleCalculateGastroIntestinal()}
                                             style={styles.picker}
                                         >
-                                            {Object.keys(ToleranciaVíaOralOptions).map((key) => (
+                                            {Object.entries(ToleranciaVíaOralOptions).map(([key, value]) => (
                                                 <Picker.Item
                                                     key={key}
                                                     label={key}
-                                                    value={key}
+                                                    value={value}
                                                 />
                                             ))}
                                         </Picker>
-
                                     ) : (
                                         <>
-                                            <Text
-                                                style={{ width: 66, textAlign: 'center', fontSize: 15, }}
-                                            >{key}
-                                            </Text>
+                                            <Text style={{ width: 66, textAlign: 'center', fontSize: 15 }}>{field.label}</Text>
                                             <TextInput
                                                 style={{
-                                                    width: 200, height: 50,
+                                                    width: 200,
+                                                    height: 50,
                                                     marginBottom: 10,
                                                     backgroundColor: 'rgb(255, 255, 255)',
                                                     borderColor: 'rgba(0, 0, 0, 0.29)',
@@ -1249,42 +1184,32 @@ const MyForm = () => {
                                                     color: 'black',
                                                 }}
                                                 keyboardType='numeric'
-                                                onChangeText={(text) => handleInputChangeGastroIntestinal(key, text)}
-                                                value={value?.toString() || ''}
+                                                onChangeText={(text) => handleInputChangeGastroIntestinal(field.name, text)}
+                                                value={gastroIntestinal[field.name as keyof IGastroIntestital]?.toString() || ''}
+                                                placeholder={`Min: ${field.min} Max: ${field.max}`}
                                             />
+                                            <Text style={{ width: 75, textAlign: 'center', fontSize: 15 }}>{field.medida}</Text>
                                         </>
-
-                                    )
-
-                                    }
-
-
+                                    )}
                                 </View>
-                            )
-
-
-
+                            );
                         })
                     }
-                    {/* <Text style={styles.selectedText}>Valor seleccionado: {selectedValue}</Text>  fieldsHepatico
-                    <Text style={styles.selectedText}>Clasificación: {selectedValue} - Valor: {GlasgowOptions[selectedValue as keyof typeof GlasgowOptions]}</Text> */}
 
                 </View>
+                <View style={{ width: '100%', alignItems: 'center' }}>
+                    <Button
+                        onPress={handleCalculate}
+                        icon="check"
+                        mode="contained"
+                        style={{ width: 200, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                    >
+                        <Text
+                            style={{ fontSize: 20, color: 'white' }}
 
-                <TouchableOpacity style={styles.button} onPress={handleCalculate}>
-                    <Text>Calcular</Text>
-                </TouchableOpacity>
-
-                {/* <View style={{ width: '100%', alignItems: 'center', top: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ fontSize: 20 }}>Cardiovascular</Text>
-                    <Text style={{ fontSize: 20 }}>Renal</Text> fieldsRespiratorio
-               fieldsGastroIntestinal
-                <View style={styles.resultContainer}>
-                    <Text>Tam: {cardioData.Tam?.toString() || ''}</Text>
-                    <Text>Indicedechoque: {cardioData.Indicedechoque?.toString() || ''}</Text>
+                        >Calcular</Text>
+                    </Button>
                 </View>
-                </View> */}
-
             </ScrollView>
         </>
     )

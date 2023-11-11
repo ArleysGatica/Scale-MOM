@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { Button, DrawerLayoutAndroid, Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import NavigationView from './Nave';
-import PruebaHome from '../../Page/Profile/Prueba';
+// import PruebaHome from '../../Page/Profile/Prueba';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type HomeScreenProps = {
@@ -39,7 +39,7 @@ const AppDrawer = ({ navigation }: HomeScreenProps) => {
             </View>
             <View style={styles.container}>
 
-                <PruebaHome navigation={navigation} />
+                {/* <PruebaHome navigation={navigation} /> */}
             </View>
 
         </DrawerLayoutAndroid>

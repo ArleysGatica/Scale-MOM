@@ -37,6 +37,8 @@ export function Login({ navigation }: LoginFormProps) {
         } else {
             Alert.alert('Credenciales incorrectas');
         }
+        // console.log('Here');
+        
     };
 
     return (
@@ -65,7 +67,7 @@ export function Login({ navigation }: LoginFormProps) {
                         placeholderTextColor="gray"
                         placeholder="Contraseña"
                         onChangeText={(text) => setPassword(text)}
-                        secureTextEntry={true}
+                        // secureTextEntry={true}
                     />
                 </View>
             </View>

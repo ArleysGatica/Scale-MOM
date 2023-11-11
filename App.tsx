@@ -3,22 +3,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider } from "react-redux";
 import { Welcome } from './src/UI/Components/Welcome/Welcome';
-import { Logout } from './src/UI/Components/Welcome/Logout';
 import { Login } from './src/UI/Components/Login/Login';
-import { Register } from './src/UI/Components/Register/Register';
 import CustomBottomTabNavigator from './src/UI/Components/ButtonTab/Tab';
-import DoctorCreationForm from './src/UI/Components/CreateDr';
+import DoctorCreationForm from './src/UI/Page/CreateDr';
 import { store } from './src/app/store';
 
 import MyForm from './src/Helpers/Generalform/form';
-import FormularyPart from './src/UI/Page/Formulary';
 import RegisterPatient from './src/UI/Page/RegisterPatient/patient';
-import TemporalHome from './src/UI/Page/Home/Home';
 
 //Paper
 import { PaperProvider } from 'react-native-paper';
 import { Provider as StoreProvider } from 'react-redux';
-import MyComponent from './src/UI/Components/CreateDr';
+import MyComponent from './src/UI/Page/CreateDr';
 import ListPatient from './src/UI/Page/Pacient/PatientList';
 import Pacient from './src/UI/Page/Pacient/pacientView';
 import ListDoctor from './src/UI/Page/Doctor/doctorList';
@@ -46,7 +42,6 @@ function AppStack() {
             <Stack.Screen options={{ headerShown: false }} name="Login" component={Login} />
             <Stack.Screen options={{ headerShown: false }} name="MyForm" component={MyForm} />
             <Stack.Screen options={{ headerShown: false }} name="DoctorCreationForm" component={DoctorCreationForm} />
-            <Stack.Screen options={{ headerShown: true}} name="TemporalHome" component={TemporalHome} />
         </Stack.Navigator>
     )
 }

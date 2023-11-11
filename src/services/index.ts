@@ -15,7 +15,7 @@ interface IAdminUser{
 }
 
 export const ConexionFetch = async ({ url, method, body, controller }: IResponse) => {
-    const baseURL = 'http://192.168.1.23:3000/api';
+    const baseURL = 'http://192.168.1.4:3000/api';
     const requestURL = url ? `${baseURL}/${controller}/${url}` : `${baseURL}/${controller}`;
     
 
