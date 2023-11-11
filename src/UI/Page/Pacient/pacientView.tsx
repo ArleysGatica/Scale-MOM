@@ -6,7 +6,7 @@ import { fetchDeletePatient, getUserById } from '../../../services';
 import { IPatient } from '../../../types/types';
 
 interface IParams {
-    id:string;
+    id: string;
 }
 
 const Pacient = () => {
@@ -32,17 +32,17 @@ const Pacient = () => {
     useEffect(() => {
         if (id) {
             getUserById(id).then((response) => {
-                setPatient({username:response.username, dni:response.dni, nameEncargado:response.nameEncargado, telefonoEncargado:response.telefonoEncargado, telefono:response.telefono, edad:response.edad})
+                setPatient({ username: response.username, dni: response.dni, nameEncargado: response.nameEncargado, telefonoEncargado: response.telefonoEncargado, telefono: response.telefono, edad: response.edad })
 
                 setResultado(response.resultado);
-                
+
             })
-        }; 
+        };
     }, []);
 
     const toEditPatient = () => {
         //@ts-ignore
-        navigation.navigate('RegisterPatient' , { id:id  });
+        navigation.navigate('RegisterPatient', { id: id });
     }
 
     const toFormPatient = () => {
@@ -61,9 +61,9 @@ const Pacient = () => {
             <Appbar.Header>
                 <Appbar.BackAction onPress={() => { }} />
             </Appbar.Header>
-            <View style={{  alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
-                <Text style={{ fontSize: 25 }}>
-                    Detalle de paciente
+            <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
+                <Text style={{ fontSize: 25, fontWeight: 'bold' }}>
+                    Detalle del paciente
                 </Text>
             </View>
             <View style={styles.boxButtonAction}>
@@ -92,21 +92,18 @@ const Pacient = () => {
                 >
                     Borrar
                 </Button>
-            </View>  
-
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white',maxHeight:"70%" }}>
-
+            </View>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', maxHeight: "70%" }}>
                 {
-                     objData.map((item, index) => (
+                    objData.map((item, index) => (
                         <Card.Title
                             key={index}
                             style={{ width: '90%', marginBottom: 10 }}
                             title={item.label}
                             subtitle={patient[item.name]?.toString()}
                         />
-                     ))
+                    ))
                 }
-
                 {
                     resultado && <Card.Title
                         style={{ width: '90%', marginBottom: 10 }}
@@ -114,43 +111,40 @@ const Pacient = () => {
                         subtitle={resultado}
                     />
                 }
-            </View> 
-
+            </View>
         </>
     )
-
 }
 
-
 const styles = StyleSheet.create({
-  box: {
-    width: '100%',
-    height: 90,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    // Estilos de sombra para iOS
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    // Estilos de sombra para Android
-    elevation: 2,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: 10,
-    paddingRight: 10,
-    columnGap: 18,
-    justifyContent: 'center',
-  },
-  boxButtonAction: {
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    columnGap: 12,
-    paddingLeft: 8,
-    paddingTop: 16,
-  },
+    box: {
+        width: '100%',
+        height: 90,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        // Estilos de sombra para iOS
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        // Estilos de sombra para Android
+        elevation: 2,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingLeft: 10,
+        paddingRight: 10,
+        columnGap: 18,
+        justifyContent: 'center',
+    },
+    boxButtonAction: {
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        backgroundColor: 'white',
+        flexDirection: 'row',
+        columnGap: 12,
+        paddingLeft: 8,
+        paddingTop: 16,
+    },
 });
 
 export default Pacient;

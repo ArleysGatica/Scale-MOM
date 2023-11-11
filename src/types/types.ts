@@ -1,4 +1,71 @@
-// types.ts
+export interface ICardioVascular {
+    TASistolica?: number;
+    TADiastolica?: number;
+    Tam?: number;
+    FC?: number;
+    Temperatura?: number;
+    PH?: number;
+    Lactato?: number;
+    Indicedechoque?: number;
+    CardiacPressure?: number;
+    ValueTASistolica?: number;
+    ValueTADiastolica?: number;
+    ShockIndex?: number;
+}
+
+export interface IRenal {
+    Creatinina?: number;
+    AcidoUrico?: number;
+    Orina?: number;
+    horas?: number;
+    Peso?: number;
+    Diuresis?: number;
+    Proteinuria?: number;
+    TasadefiltraciónGlomerular?: number;
+    edad?: number;
+    DeficitBase?: number;
+}
+
+export interface IRespiratorio {
+    FrecuenciaRespiratoria?: number;
+    IndiceKirby?: number;
+    Saturación?: number;
+}
+
+export interface IHematologico {
+    Leucocitos?: number;
+    Hemoglobina?: number;
+    Plaquetas?: number;
+    Fibrinogeno?: number;
+    DimeroD?: number;
+    IRN?: number;
+}
+
+export interface IHepatico {
+    Transaminasas?: number;
+    LDH?: number;
+    BilirrubinasTotales?: number;
+    PresiónColoidosmótica?: number;
+    Albumina?: number;
+    GlobulinaSérica?: number;
+    IndiceBriones?: number;
+}
+
+export interface INeurologico {
+    EscalaGlasgow?: number;
+}
+
+export interface IUterino {
+    HemorragiaObstétrica?: number;
+    PerdidaVolumenSangre?: number;
+}
+
+export interface IGastroIntestital {
+    ToleranciaVíaOral?: number;
+    Glucosa?: number;
+    NA?: number;
+    K?: number;
+}
 
 export type RootStackParamList = {
     Welcome: undefined;
@@ -10,70 +77,6 @@ export type RootStackParamList = {
     ListDoctor: undefined;
     ListPatient: undefined;
 };
-
-export interface IFirstGroup {
-    FC?: number;
-    TASistolica?: number;
-    TADiastolica?: number;
-    Tam?: number;
-    Indicedechoque?: number;
-}
-
-export interface ISecondGroup {
-    Albumina?: number;
-    GlobulinaSérica?: number;
-    PresiónColoidosmótica?: number;
-    Indicebriones?: number;
-}
-
-export interface IThreeGroup {
-    Creatinina?: number
-    Edad?: number;
-    TasadefiltraciónGlomerular?: number;
-}
-
-export interface IFourGroup {
-    Orina?: number;
-    hors?: number;
-    Peso?: number;
-    Diuresis?: number;
-}
-
-export interface IFiveGroup {
-    TPN?: number;
-    IRN?: number;
-}
-
-export type InputsGeneral = {
-    Temperatura?: number;
-    PH?: number;
-    Lactato?: number;
-    AcidoUrico?: number;
-    Proteinuria?: number;
-    DeficitBase?: number;
-    FrecuenciaRespiratoria?: number;
-    IndiceKirby?: number;
-    Saturación?: number;
-    Leucocitos?: number;
-    Hemoglobina?: number;
-    Plaquetas?: number;
-    Fibrinogeno?: number;
-    DimeroD?: number;
-    "Transaminasas (AST / ALT)"?: number;
-    LDH?: number;
-    BilirrubinasTotales?: number;
-    Glucosa?: number;
-    "NA+"?: number;
-    "K+"?: number;
-}
-
-export type InputsSelects = {
-    type?: string | number | boolean;
-    ToleranciaVíaOral?: string;
-    PerdidaVolumenSanguíneo?: string;
-    HemorragiaObstétrica?: string;
-    EscalaGlasgow?: string;
-}
 
 export interface IDoctor {
     id?: string;
@@ -104,18 +107,17 @@ export type status = "idle" | "loading" | "succeeded" | "failed";
 
 export interface IGeneral {
     id?: string;
-    // idDoctor?: string;
-    // idPaciente?: string;
-    // createdAt?: string;
-    // updatedAt?: string;
-    // status?: string;
-    firstGroup?: IFirstGroup;
-    secondGroup?: ISecondGroup;
-    threeGroup?: IThreeGroup;
-    fourGroup?: IFourGroup;
-    fiveGroup?: IFiveGroup;
-    inputsGeneral?: InputsGeneral;
-    inputsSelects?: InputsSelects;
+    idDoctor?: string;
+    idPatient?: string;
+    date?: string;
+    cardioVascular?: ICardioVascular;
+    renal?: IRenal;
+    respiratorio?: IRespiratorio;
+    hematologico?: IHematologico;
+    hepatico?: IHepatico;
+    neurologico?: INeurologico;
+    uterino?: IUterino;
+    gastroIntestital?: IGastroIntestital;    
 }
 
 export interface IGeneralState {
@@ -125,30 +127,3 @@ export interface IGeneralState {
     status: status;
     error?: string | undefined;
 }
-
-
-// extraReducers: (builder) => {
-//     builder
-//         .addCase(fetchDoctorByIdAsync.pending, (state) => {
-//             state.status = "loading";
-//         })
-//         .addCase(fetchDoctorByIdAsync.fulfilled, (state, action) => {
-//             state.status = "succeeded";
-//             state.dataGeneral = action.payload;
-//         })
-//         .addCase(fetchDoctorByIdAsync.rejected, (state, action) => {
-//             state.status = "failed";
-//             state.error = action.error.message;
-//         })
-//         .addCase(addDoctor.pending, (state) => {
-//             state.status = "loading";
-//         })
-//         .addCase(addDoctor.fulfilled, (state, action) => {
-//             state.status = "succeeded";
-//             state.dataGeneral = action.payload;
-//         })
-//         .addCase(addDoctor.rejected, (state, action) => {
-//             state.status = "failed";
-//             state.error = action.error.message;
-//         });
-// },
