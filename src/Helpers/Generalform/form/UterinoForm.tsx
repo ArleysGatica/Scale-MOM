@@ -1,5 +1,5 @@
 import React from 'react';
-import {ICardioVascular} from '../../../types/types';
+import {ICardioVascular, IUterino} from '../../../types/types';
 import {View, StyleSheet, ScrollView} from 'react-native';
 import {Text, TextInput} from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
@@ -14,6 +14,7 @@ interface Iprops {
   handleInputChangeUterino: (name: string, value: string) => void;
   HemorragiaOptions: any;
   BloodsOptions: any;
+  uterino: IUterino
 }
 
 export const UterinoForm = ({
@@ -21,6 +22,7 @@ export const UterinoForm = ({
   handleInputChangeUterino,
   HemorragiaOptions,
   BloodsOptions,
+  uterino
 }: Iprops) => {
   return (
     <ScrollView
@@ -32,9 +34,9 @@ export const UterinoForm = ({
       <View style={styles.containerDrop}>
         <Text style={styles.label}>Hemorragia</Text>
         <Picker
-          selectedValue={fieldsUterino}
+          selectedValue={uterino.HemorragiaObstétrica}
           onValueChange={(itemValue, itemIndex) =>
-            handleInputChangeUterino(itemIndex as any, itemValue as any)
+            handleInputChangeUterino("HemorragiaObstétrica", itemValue as any)
           }
           style={styles.picker}>
           {Object.keys(HemorragiaOptions).map(key => (
@@ -45,9 +47,9 @@ export const UterinoForm = ({
       <View style={styles.containerDrop}>
         <Text style={styles.label}>Sangre</Text>
         <Picker
-          selectedValue={fieldsUterino}
+          selectedValue={uterino.PerdidaVolumenSangre}
           onValueChange={(itemValue, itemIndex) =>
-            handleInputChangeUterino(itemIndex as any, itemValue as any)
+            handleInputChangeUterino("PerdidaVolumenSangre", itemValue as any)
           }
           style={styles.picker}>
           {Object.keys(BloodsOptions).map(key => (

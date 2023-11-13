@@ -285,7 +285,7 @@ const MyForm = () => {
   });
 
   const ToleranciaVíaOralOptions = {
-    Tolera: 0,
+    "Tolera": 0,
     'Intolerancia 3-4 días': 1,
     'Intolerancia ≥5 días': 2,
     'Sangrado del tubo digestivo': 3,
@@ -977,6 +977,11 @@ const MyForm = () => {
 
   const handleInputChangeUterino = (name: string, value: string) => {
     const numericValue = parseFloat(value) || undefined;
+
+    // name = "HemorragiaObstétrica"
+
+    console.log(name, value);
+    
     setUterino(prevData => ({
       ...prevData,
       [name]: value,
@@ -985,6 +990,9 @@ const MyForm = () => {
 
   const handleInputChangeGastroIntestinal = (name: string, value: string) => {
     const numericValue = parseFloat(value) || undefined;
+
+    console.log(name, value);
+    
     setGastroIntestinal(prevData => ({
       ...prevData,
       [name]: value,
@@ -1070,6 +1078,9 @@ const MyForm = () => {
     const validateMINMAX = (fieldArray: any, state: any, isError: boolean) => {
       fieldArray.forEach(
         (element: {min: number; max: number; name: string | number}) => {
+
+            console.log(element);
+            
           if (element.min && element.max && !isError) {
             if (state[element.name]?.toString() === undefined) {
               isError = true;
@@ -1096,6 +1107,8 @@ const MyForm = () => {
 
     let isError = false;
 
+    console.log(currentGroup);
+
     if (currentGroup === 0) {
       isError = validateMINMAX(fields, cardioData, isError);
     } else if (currentGroup === 1) {
@@ -1106,9 +1119,9 @@ const MyForm = () => {
         isError = validateMINMAX(fieldsHematologico, hematologico, isError);
     } else if (currentGroup === 4) {
         isError = validateMINMAX(fieldsHepatico, hepatico, isError);
-    } else if (currentGroup === 5) {
-        isError = validateMINMAX(fieldsUterino, uterino, isError);
     } else if (currentGroup === 6) {
+        isError = validateMINMAX(fieldsUterino, uterino, isError);
+    } else if (currentGroup === 7) {
         isError = validateMINMAX(fieldsGastroIntestinal, gastroIntestinal, isError);
     }
 
@@ -1173,6 +1186,7 @@ const MyForm = () => {
           BloodsOptions={BloodsOptions}
           HemorragiaOptions={HemorragiaOptions}
           fieldsUterino={fieldsUterino}
+          uterino={uterino}
           handleInputChangeUterino={handleInputChangeUterino}
         />
       )}
