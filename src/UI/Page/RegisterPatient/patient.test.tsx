@@ -15,9 +15,9 @@ describe('RegisterPatient', () => {
         const { getByPlaceholderText } = render(<RegisterPatient />);
 
         const input = getByPlaceholderText('Input Placeholder'); 
-        fireEvent.changeText(input, 'Nuevo valor');
+        fireEvent.changeText(input, 'New valor');
 
-        expect(input.props.value).toBe('Nuevo valor');
+        expect(input.props.value).toBe('New valor');
     });
 
     test('button click works correctly', () => {

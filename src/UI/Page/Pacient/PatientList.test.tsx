@@ -19,7 +19,15 @@ describe('PatientList Component', () => {
     it('should update the list of patients when setListPatient is called', () => {
         const { getByTestId } = render(<ListPatient />);
         const patientList = getByTestId('patient-list');
-        const newPatientList = [{ name: 'John Doe', age: 35 }, { name: 'Jane Doe', age: 28 }];
+        const newPatientList = [
+            {
+                name: 'Maria Lopez',
+                age: 35,
+                phone: '86349918',
+                dni: '121-161199-1002M',
+                Namecharge: 'Juan Perez',
+                phonecharge: '88340917'
+            }];
         patientList.props.setListPatient(newPatientList);
         expect(patientList.props.data).toEqual(newPatientList);
     });
