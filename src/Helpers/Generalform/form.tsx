@@ -1156,7 +1156,7 @@ const MyForm = () => {
       {GROUPS_ENUM[currentGroup as keyof typeof GROUPS_ENUM] === 'hepatico' && (
         <HepaticoForm
           fieldsHepatico={fieldsHepatico}
-          handleInputChangeHepatico={handleCalculateHepatico}
+          handleInputChangeHepatico={handleInputChangeHepatico}
           hepatico={hepatico}
         />
       )}
