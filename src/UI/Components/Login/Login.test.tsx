@@ -22,10 +22,10 @@ describe('Login Component', () => {
         const passwordInput = getByTestId('password-input');
         const loginButton = getByTestId('login-button');
 
-        // fireEvent.changeText(usernameInput, 'exampleUser');
-        // fireEvent.changeText(passwordInput, 'examplePassword');
+        fireEvent.changeText(usernameInput, 'User');
+        fireEvent.changeText(passwordInput, '123456A');
 
-        // fireEvent.press(loginButton);
+        fireEvent.press(loginButton);
 
     });
 });
