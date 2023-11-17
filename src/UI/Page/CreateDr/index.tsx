@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, Alert } from 'react-native';
 import { getUserById, fetchCreateDoctor, fetchUpdatePatient, fetchUpdateDoctors } from '../../../services';
 import { Appbar, Text, TextInput, Button, } from 'react-native-paper';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 type Doctor = {
     username?: string;
     password?: string;
     idMinsa?: string;
-    userType?:number;
+    userType?: number;
 };
 
 interface IAdminUser {
@@ -18,10 +18,13 @@ interface IAdminUser {
 }
 
 interface IParams {
-    id:string;
+    id: string;
 }
 
-const DoctorCreationForm= () => {
+const DoctorCreationForm = () => {
+
+    //@ts-ignore
+    const navigation = useNavigation();
 
     const [createDoctor, setCreateDoctor] = useState<Doctor>({});
     const [userAdmin, setUserAdmin] = useState<IAdminUser>({});
@@ -33,13 +36,13 @@ const DoctorCreationForm= () => {
 
         if (id) {
             getUserById(id).then((resultado) => {
-                setCreateDoctor({username:resultado.username, idMinsa:resultado.idMinsa})
-                
+                setCreateDoctor({ username: resultado.username, idMinsa: resultado.idMinsa })
+
             })
-        }; 
-        if (!id) console.log("Create"); 
+        };
+        if (!id) console.log("Create");
     }, []);
-    
+
 
     const objData: { name: keyof Doctor, label: string, type: string }[] = [
         { name: 'username', label: 'Nombre', type: 'text' },
@@ -49,11 +52,13 @@ const DoctorCreationForm= () => {
 
     const createDoctorHandler = async () => {
         id
-          ? await fetchUpdateDoctors(id, {
-              username: createDoctor.username,
-              idMinsa: createDoctor.idMinsa,
+            ? await fetchUpdateDoctors(id, {
+                username: createDoctor.username,
+                idMinsa: createDoctor.idMinsa,
             })
             : await fetchCreateDoctor({ ...createDoctor, userType: 2 });
+        //@ts-ignore
+        navigation.navigate('ListDoctor', { id: Math.random() });
     }
 
     return (
@@ -79,45 +84,45 @@ const DoctorCreationForm= () => {
                 <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', }}>
                     {objData.map((item, index) => {
                         return (
-                            id ?  item.name === "password" ? <></> : <View key={index}
-                            style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                width: '100%',
-                                height: 80,
-                                justifyContent: 'center',
-                                flexWrap: 'wrap',
-                                gap: 10,
-                                columnGap: 10,
-                                rowGap: 10,
+                            id ? item.name === "password" ? <></> : <View key={index}
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    width: '100%',
+                                    height: 80,
+                                    justifyContent: 'center',
+                                    flexWrap: 'wrap',
+                                    gap: 10,
+                                    columnGap: 10,
+                                    rowGap: 10,
 
-                            }}>
-                            <TextInput
-                                style={{ width: 200, height: 50, backgroundColor: 'white' }}
-                                label={item.label}
-                                onChangeText={text => setCreateDoctor({ ...createDoctor, [item.name]: text })}
-                                value={createDoctor[item.name]?.toString()}
-                            />
-                        </View> : <View key={index}
-                            style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                width: '100%',
-                                height: 80,
-                                justifyContent: 'center',
-                                flexWrap: 'wrap',
-                                gap: 10,
-                                columnGap: 10,
-                                rowGap: 10,
+                                }}>
+                                <TextInput
+                                    style={{ width: 200, height: 50, backgroundColor: 'white' }}
+                                    label={item.label}
+                                    onChangeText={text => setCreateDoctor({ ...createDoctor, [item.name]: text })}
+                                    value={createDoctor[item.name]?.toString()}
+                                />
+                            </View> : <View key={index}
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    width: '100%',
+                                    height: 80,
+                                    justifyContent: 'center',
+                                    flexWrap: 'wrap',
+                                    gap: 10,
+                                    columnGap: 10,
+                                    rowGap: 10,
 
-                            }}>
-                            <TextInput
-                                style={{ width: 200, height: 50, backgroundColor: 'white' }}
-                                label={item.label}
-                                onChangeText={text => setCreateDoctor({ ...createDoctor, [item.name]: text })}
-                                value={createDoctor[item.name]?.toString()}
-                            />
-                        </View>
+                                }}>
+                                <TextInput
+                                    style={{ width: 200, height: 50, backgroundColor: 'white' }}
+                                    label={item.label}
+                                    onChangeText={text => setCreateDoctor({ ...createDoctor, [item.name]: text })}
+                                    value={createDoctor[item.name]?.toString()}
+                                />
+                            </View>
                         )
                     })}
                 </View>
@@ -129,7 +134,7 @@ const DoctorCreationForm= () => {
                 >
                     {id ? "Editar" : "Registrar"}
                 </Button>
-          
+
             </View>
         </>
     )

@@ -21,10 +21,14 @@ const ListDoctor = () => {
         })
     }, [id]);
 
+    const toWelcome = () => {
+        navigation.navigate('Welcome' as never);
+    }
+
     return (
         <>
             <Appbar.Header>
-                <Appbar.BackAction onPress={() => { }} />
+                <Appbar.BackAction onPress={toWelcome} />
             </Appbar.Header>
             <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
                 <Text style={{ fontSize: 25 }}>

@@ -34,6 +34,10 @@ export const doctorsSlice = createSlice({
 
         RemoveDoctor: (state, { payload }: PayloadAction<Array<IDoctor>>) => {
             state.userUse = payload;
+        },
+        
+        EditDoctor: (state, { payload }: PayloadAction<Array<IDoctor>>) => {
+            state.userUse = payload;
         }
     },
     extraReducers: (builder) => {
