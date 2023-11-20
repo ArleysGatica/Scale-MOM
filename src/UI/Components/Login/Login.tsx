@@ -4,6 +4,8 @@ import { RootStackParamList } from '../../../types/types';
 import { Text, View, TextInput, Image, Button, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighlight, Alert, ActivityIndicator, Pressable } from 'react-native';
 import style from './Style.Login';
 import { login } from '../../../services';
+import { useAppDispatch } from '../../../app/hook';
+import { setCurrentDoctor } from '../../../app/slice/doctorSlice';
 
 type LoginFormProps = {
   navigation?: NativeStackNavigationProp<
@@ -21,17 +23,22 @@ export function Login({ navigation }: LoginFormProps) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const dispatch = useAppDispatch()
+
     const handleLogin = async () => {
 
         const response = await login({username, password});
 
-        if (response.userType === 1) {
+        if (response.user.userType === 1) {
             Alert.alert('Entrar como admin');
 
             return navigation?.navigate('ListDoctor');     
         }
         
-        if (response.userType === 2) {
+        if (response.user.userType === 2) {
+            console.log(response);
+            dispatch(setCurrentDoctor(response.user));
+            
             navigation?.navigate('ListPatient');
             Alert.alert('Entrar como doctor');
         } else {

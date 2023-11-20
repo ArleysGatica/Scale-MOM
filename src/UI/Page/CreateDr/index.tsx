@@ -3,13 +3,7 @@ import { View, Alert } from 'react-native';
 import { getUserById, fetchCreateDoctor, fetchUpdatePatient, fetchUpdateDoctors } from '../../../services';
 import { Appbar, Text, TextInput, Button, } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
-
-type Doctor = {
-    username?: string;
-    password?: string;
-    idMinsa?: string;
-    userType?: number;
-};
+import { IDoctor } from '../../../types/types';
 
 interface IAdminUser {
     id?: string;
@@ -26,7 +20,7 @@ const DoctorCreationForm = () => {
     //@ts-ignore
     const navigation = useNavigation();
 
-    const [createDoctor, setCreateDoctor] = useState<Doctor>({});
+    const [createDoctor, setCreateDoctor] = useState<IDoctor>({});
     const [userAdmin, setUserAdmin] = useState<IAdminUser>({});
 
     const route = useRoute();
@@ -44,7 +38,7 @@ const DoctorCreationForm = () => {
     }, []);
 
 
-    const objData: { name: keyof Doctor, label: string, type: string }[] = [
+    const objData: { name: keyof IDoctor, label: string, type: string }[] = [
         { name: 'username', label: 'Nombre', type: 'text' },
         { name: 'password', label: 'Contraseña', type: 'text' },
         { name: 'idMinsa', label: 'IdMinsa', type: 'text' },

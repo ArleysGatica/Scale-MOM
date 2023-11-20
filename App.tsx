@@ -31,7 +31,7 @@ const screenOptions = {
 
 function AppStack() {
     return (
-        <Stack.Navigator screenOptions={screenOptions} initialRouteName="BarChartExample">
+        <Stack.Navigator screenOptions={screenOptions} initialRouteName="Login">
             <Stack.Screen options={{ headerShown: false }} name="BarChartExample" component={BarChartExample} />
             <Stack.Screen options={{ headerShown: false }} name="App22" component={App22} />
             <Stack.Screen options={{ headerShown: false }} name="RegisterPatient" component={RegisterPatient} />

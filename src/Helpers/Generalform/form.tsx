@@ -9,7 +9,7 @@ import {
   INeurologico,
   IGastroIntestital,
 } from '../../types/types';
-import { View, Alert, StyleSheet } from 'react-native';
+import {View, Alert, StyleSheet} from 'react-native';
 import {Appbar, Text, TextInput, Button} from 'react-native-paper';
 
 import useValorMasAlto from '../../hook/useHighestNumber';
@@ -22,23 +22,67 @@ import {HepaticoForm} from './form/HepaticoForm';
 import {NeurologicoForm} from './form/NeurologicoForm';
 import {UterinoForm} from './form/UterinoForm';
 import {GastroIntestinalForm} from './form/GastroIntestinalForm';
-import { fetchAddResultPatient } from '../../services';
+import {fetchAddResultPatient, fetchCreateDatoClinico} from '../../services';
+import {useAppSelector} from '../../app/hook';
+import moment from 'moment';
 
 const fields = [
   {name: 'FC', label: 'FC:', min: 40, max: 140, medida: 'lpm'},
-  { name: 'TASistolica', label: 'TASistolica:', min: 80, max: 180, medida: 'mmHg' },
-  { name: 'TADiastolica', label: 'TADiastolica:', min: 40, max: 110, medida: 'mmHg'},
+  {
+    name: 'TASistolica',
+    label: 'TASistolica:',
+    min: 80,
+    max: 180,
+    medida: 'mmHg',
+  },
+  {
+    name: 'TADiastolica',
+    label: 'TADiastolica:',
+    min: 40,
+    max: 110,
+    medida: 'mmHg',
+  },
   {name: 'Temperatura', label: 'Temperatura:', min: 35, max: 40, medida: '°C'},
   {name: 'PH', label: 'PH:', min: 7, max: 8, medida: ''},
-  {name: 'Lactato', label: 'Lactato:', min: 1.70, max: 4, medida: 'mmol/L'},
+  {name: 'Lactato', label: 'Lactato:', min: 1.7, max: 4, medida: 'mmol/L'},
 ];
 
 const fieldsRenal = [
-  { name: 'Creatinina', label: 'Creatinina:', min: 0.4, max: 2.8, medida: 'mg/dL' },
-  {name: 'AcidoUrico', label: 'Acido Urico:', min: 5.8, max: 10, medida: 'mg/dL'},
-  { name: 'Proteinuria', label: 'Proteinuria:', min: 290, max: 3500, medida: 'mg/dL' },
-  {name: 'TasadefiltraciónGlomerular', label: 'Filtrado Glomerular:', min: 15, max: 110, medida: 'mL/min/1.73m2'},
-  { name: 'DeficitBase', label: 'Deficit de Base:', min: 1.8, max: 10, medida: 'mmol/L' },
+  {
+    name: 'Creatinina',
+    label: 'Creatinina:',
+    min: 0.4,
+    max: 2.8,
+    medida: 'mg/dL',
+  },
+  {
+    name: 'AcidoUrico',
+    label: 'Acido Urico:',
+    min: 5.8,
+    max: 10,
+    medida: 'mg/dL',
+  },
+  {
+    name: 'Proteinuria',
+    label: 'Proteinuria:',
+    min: 290,
+    max: 3500,
+    medida: 'mg/dL',
+  },
+  {
+    name: 'TasadefiltraciónGlomerular',
+    label: 'Filtrado Glomerular:',
+    min: 15,
+    max: 110,
+    medida: 'mL/min/1.73m2',
+  },
+  {
+    name: 'DeficitBase',
+    label: 'Deficit de Base:',
+    min: 1.8,
+    max: 10,
+    medida: 'mmol/L',
+  },
   {name: 'Orina', label: 'Orina:', min: 100, max: 2000, medida: 'mL'},
   {name: 'horas', label: 'horas:', min: 1, max: 24, medida: 'Hrs'},
   {name: 'Peso', label: 'Peso:', min: 40, max: 150, medida: 'KG'},
@@ -46,26 +90,80 @@ const fieldsRenal = [
 ];
 
 const fieldsRespiratorio = [
-  { name: 'FrecuenciaRespiratoria', label: 'Frecuencia Respiratoria:', min: 6, max: 40, medida: 'rpm' },
-  { name: 'IndiceKirby', label: 'Indice de Kirby:', min: 300, max: 500, medida: 'PaO2/FiO2' },
+  {
+    name: 'FrecuenciaRespiratoria',
+    label: 'Frecuencia Respiratoria:',
+    min: 6,
+    max: 40,
+    medida: 'rpm',
+  },
+  {
+    name: 'IndiceKirby',
+    label: 'Indice de Kirby:',
+    min: 300,
+    max: 500,
+    medida: 'PaO2/FiO2',
+  },
   {name: 'Saturación', label: 'Saturación:', min: 85, max: 100, medida: '%'},
 ];
 
 const fieldsHematologico = [
-  { name: 'Leucocitos', label: 'Leucocitos:', min: 1000, max: 30000, medida: 'mm3' },
+  {
+    name: 'Leucocitos',
+    label: 'Leucocitos:',
+    min: 1000,
+    max: 30000,
+    medida: 'mm3',
+  },
   {name: 'Hemoglobina', label: 'Hemoglobina:', min: 6, max: 10, medida: 'g/dL'},
-  { name: 'Plaquetas', label: 'Plaquetas:', min: 50000, max: 150000, medida: 'mm4' },
-  { name: 'Fibrinogeno', label: 'Fibrinogeno:', min: 101, max: 310, medida: 'mg/dL'  },
+  {
+    name: 'Plaquetas',
+    label: 'Plaquetas:',
+    min: 50000,
+    max: 150000,
+    medida: 'mm4',
+  },
+  {
+    name: 'Fibrinogeno',
+    label: 'Fibrinogeno:',
+    min: 101,
+    max: 310,
+    medida: 'mg/dL',
+  },
   {name: 'DimeroD', label: 'DimeroD:', min: 1000, max: 3000, medida: 'ng/mL'},
 ];
 
 const fieldsHepatico = [
-  { name: 'Transaminasas', label: 'Transaminasas:', min: 2, max: 150, medida: 'U/L' },
+  {
+    name: 'Transaminasas',
+    label: 'Transaminasas:',
+    min: 2,
+    max: 150,
+    medida: 'U/L',
+  },
   {name: 'LDH', label: 'LDH:', min: 300, max: 900, medida: 'U/L'},
-  { name: 'BilirrubinasTotales', label: 'BilirrubinasTotales:', min: 0.09, max: 3.7, medida: 'mg/dL' },
-  { name: 'PresiónColoidosmótica', label: 'PresiónColoidosmótica:', min: 15, max: 22, medida: 'mmHg' },
+  {
+    name: 'BilirrubinasTotales',
+    label: 'BilirrubinasTotales:',
+    min: 0.09,
+    max: 3.7,
+    medida: 'mg/dL',
+  },
+  {
+    name: 'PresiónColoidosmótica',
+    label: 'PresiónColoidosmótica:',
+    min: 15,
+    max: 22,
+    medida: 'mmHg',
+  },
   {name: 'Albumina', label: 'Albumina:', min: 2, max: 5, medida: 'g/dL'},
-  { name: 'GlobulinaSérica', label: 'GlobulinaSérica:', min: 2, max: 5, medida: 'g/dL' },
+  {
+    name: 'GlobulinaSérica',
+    label: 'GlobulinaSérica:',
+    min: 2,
+    max: 5,
+    medida: 'g/dL',
+  },
 ];
 
 const fieldsNeurologico = [{name: 'EscalaGlasgow', label: 'EscalaGlasgow:'}];
@@ -83,16 +181,18 @@ const fieldsGastroIntestinal = [
 ];
 
 interface IParams {
-    id: string;
+  id: string;
 }
 
 const MyForm = () => {
   //@ts-ignore
   const navigation = useNavigation();
 
-    const route = useRoute();
-    const id = (route.params as IParams)?.id;
-    
+  const currentDoctor = useAppSelector(state => state.doctors.currentDoctor);
+
+  const route = useRoute();
+  const id = (route.params as IParams)?.id;
+
   const [cardioData, setCardioData] = useState<ICardioVascular>({
     TASistolica: undefined,
     TADiastolica: undefined,
@@ -102,7 +202,6 @@ const MyForm = () => {
     PH: undefined,
     Lactato: undefined,
     Indicedechoque: undefined,
-    CardiacPressure: 0,
     ValueTASistolica: 0,
     ValueTADiastolica: 0,
     ShockIndex: 0,
@@ -196,7 +295,7 @@ const MyForm = () => {
   });
 
   const ToleranciaVíaOralOptions = {
-    "Tolera": 0,
+    Tolera: 0,
     'Intolerancia 3-4 días': 1,
     'Intolerancia ≥5 días': 2,
     'Sangrado del tubo digestivo': 3,
@@ -347,51 +446,50 @@ const MyForm = () => {
 
     let resultCardio = encontrarValorMasAlto(handleCalculate()) || 0;
     let resultadoRenal = encontrarValorMasAlto(handleCalculateRenal());
-    let resultRespiratorio = encontrarValorMasAlto(handleCalculateRespiratorio()) || 0;
+    let resultRespiratorio =
+      encontrarValorMasAlto(handleCalculateRespiratorio()) || 0;
     let resultH = encontrarValorMasAlto(handleCalculateHematologico()) || 0;
     let resultHepatico = encontrarValorMasAlto(handleCalculateHepatico()) || 0;
     let resultG = encontrarValorMasAlto(handleCalculateGastroIntestinal()) || 0;
 
     let ResultSuma =
       (resultadoRenal as number) +
-        resultRespiratorio +
-        resultCardio +
+      resultRespiratorio +
+      resultCardio +
       resultH +
       resultHepatico +
       resultG;
 
-      const handleCalculateResult = () => {
-          if (ResultSuma >= 0 && ResultSuma <= 3) {
-              return (
-                  <Text style={styles.greenText}>
-                      MML {ResultSuma} PTS RIESGO DE MORTALIDAD BAJO.
-                  </Text>
-              );
-          } else if (ResultSuma >= 4 && ResultSuma <= 7) {
-              return (
-                  <Text style={styles.yellowText}>
-                      MMM {ResultSuma} PTS RIESGO DE MORTALIDAD INTERMEDIO.
-                  </Text>
-              );
-          } else if (ResultSuma >= 8 && ResultSuma <= 11) {
-              return (
-                  <Text style={styles.orangeText}>
-                      MMS {ResultSuma} PTS RIESGO DE MORTALIDAD ALTO.
-                  </Text>
-              );
-          } else if (ResultSuma >= 12 && ResultSuma <= 24) {
-              return (
-                  <Text style={styles.redText}>
-                      MME {ResultSuma} PTS RIESGO DE MORTALIDAD MUY ALTO.
-                  </Text>
-              );
-          }
-      };
+    const handleCalculateResult = () => {
+      if (ResultSuma >= 0 && ResultSuma <= 3) {
+        return {escalaClinica: ResultSuma, escalaClinicaString: 'MML'};
+      } else if (ResultSuma >= 4 && ResultSuma <= 7) {
+        return {escalaClinica: ResultSuma, escalaClinicaString: 'MMM'};
+      } else if (ResultSuma >= 8 && ResultSuma <= 11) {
+        return {escalaClinica: ResultSuma, escalaClinicaString: 'MMS'};
+      } else if (ResultSuma >= 12 && ResultSuma <= 24) {
+        return {escalaClinica: ResultSuma, escalaClinicaString: 'MME'};
+      }
+    };
 
-    let R = handleCalculateResult();
-      
-      await fetchAddResultPatient(id, { resultado: R });
-    
+    let Resultado = handleCalculateResult();
+
+    let datoClinico = {
+      doctorId: currentDoctor?.id as string,
+      pacienteId: id,
+      escalaClinica: Resultado?.escalaClinica as number,
+      escalaClinicaString: Resultado?.escalaClinicaString as string,
+      fechaRegistro: moment().format('yyy-mm-dd'),
+      gastroIntestinalValue: resultG,
+      cardioVascularValue: resultCardio,
+      hematologicoValue: resultH,
+      hepaticoValue: resultHepatico,
+      renalValue: resultadoRenal as number,
+      neurologicoValue: neurologico as number,
+      respiratorioValue: resultRespiratorio,
+    };
+
+    await fetchCreateDatoClinico(datoClinico);
   };
 
   const handleInputChangeRenal = (name: string, value: string) => {
@@ -906,7 +1004,7 @@ const MyForm = () => {
     // name = "HemorragiaObstétrica"
 
     console.log(name, value);
-    
+
     setUterino(prevData => ({
       ...prevData,
       [name]: value,
@@ -917,7 +1015,7 @@ const MyForm = () => {
     const numericValue = parseFloat(value) || undefined;
 
     console.log(name, value);
-    
+
     setGastroIntestinal(prevData => ({
       ...prevData,
       [name]: value,
@@ -1003,9 +1101,8 @@ const MyForm = () => {
     const validateMINMAX = (fieldArray: any, state: any, isError: boolean) => {
       fieldArray.forEach(
         (element: {min: number; max: number; name: string | number}) => {
+          console.log(element);
 
-            console.log(element);
-            
           if (element.min && element.max && !isError) {
             if (state[element.name]?.toString() === undefined) {
               isError = true;
@@ -1018,9 +1115,9 @@ const MyForm = () => {
               parseFloat(state[element.name]?.toString() as string) >
                 element.max
             ) {
-                Alert.alert(
-                    `El valor de ${element.name} debe estar entre ${element.min} y ${element.max}`,
-                );
+              Alert.alert(
+                `El valor de ${element.name} debe estar entre ${element.min} y ${element.max}`,
+              );
               isError = true;
             }
           }
@@ -1037,17 +1134,21 @@ const MyForm = () => {
     if (currentGroup === 0) {
       isError = validateMINMAX(fields, cardioData, isError);
     } else if (currentGroup === 1) {
-        isError = validateMINMAX(fieldsRenal, renalData, isError);
+      isError = validateMINMAX(fieldsRenal, renalData, isError);
     } else if (currentGroup === 2) {
-        isError = validateMINMAX(fieldsRespiratorio, respiratorio, isError);
+      isError = validateMINMAX(fieldsRespiratorio, respiratorio, isError);
     } else if (currentGroup === 3) {
-        isError = validateMINMAX(fieldsHematologico, hematologico, isError);
+      isError = validateMINMAX(fieldsHematologico, hematologico, isError);
     } else if (currentGroup === 4) {
-        isError = validateMINMAX(fieldsHepatico, hepatico, isError);
+      isError = validateMINMAX(fieldsHepatico, hepatico, isError);
     } else if (currentGroup === 6) {
-        isError = validateMINMAX(fieldsUterino, uterino, isError);
+      isError = validateMINMAX(fieldsUterino, uterino, isError);
     } else if (currentGroup === 7) {
-        isError = validateMINMAX(fieldsGastroIntestinal, gastroIntestinal, isError);
+      isError = validateMINMAX(
+        fieldsGastroIntestinal,
+        gastroIntestinal,
+        isError,
+      );
     }
 
     if (!isError) setCurrentGroup(prev => prev + 1);
@@ -1178,18 +1279,18 @@ const MyForm = () => {
 };
 
 const styles = StyleSheet.create({
-    greenText: {
-        color: 'green',
-    },
-    yellowText: {
-        color: 'yellow',
-    },
-    orangeText: {
-        color: 'orange',
-    },
-    redText: {
-        color: 'red',
-    },
+  greenText: {
+    color: 'green',
+  },
+  yellowText: {
+    color: 'yellow',
+  },
+  orangeText: {
+    color: 'orange',
+  },
+  redText: {
+    color: 'red',
+  },
 });
 
 export default MyForm;

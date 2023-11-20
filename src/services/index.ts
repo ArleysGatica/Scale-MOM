@@ -1,4 +1,4 @@
-import { IDoctor, ILogin, IPatient } from "../types/types"
+import { IDatosClinicoCreate, IDoctor, ILogin, IPatient } from "../types/types"
 import axios from "axios";
 
 interface IResponse {
@@ -15,7 +15,7 @@ interface IAdminUser{
 }
 
 export const ConexionFetch = async ({ url, method, body, controller }: IResponse) => {
-    const baseURL = 'http://192.168.1.4:3000/api';
+    const baseURL = 'http://192.168.1.5:3000/api';
     const requestURL = url ? `${baseURL}/${controller}/${url}` : `${baseURL}/${controller}`;
     
 
@@ -102,6 +102,12 @@ export const fetchPatientById = async (id: string) => {
 //UsersAdmin
 export const getUserById = async (id: string) => {
     return await ConexionFetch({ url: id, method: 'GET', controller: "user" })
+}
+
+//Dato clinico
+
+export const fetchCreateDatoClinico = async (datosClinicos: IDatosClinicoCreate) => {
+    return await ConexionFetch({ body: datosClinicos, method: 'POST', controller: "datoClinico" })
 }
 
 
