@@ -18,7 +18,7 @@ const style = StyleSheet.create({
     txtSegund: {
         textAlign: 'center',
         fontSize: 21,
-        paddingBottom: 50,
+        paddingBottom: 40,
         color: '#000000',
         top: 25,
         width: '75%',
@@ -38,10 +38,10 @@ const style = StyleSheet.create({
     },
 
     buttonSing: {
-        backgroundColor: 'rgb(18, 19, 48)',
+        backgroundColor: '#0B153C',
         borderRadius: 4,
         height: 45,
-        width: '80%',
+        width: '65%',
         justifyContent: 'center',
         alignItems: 'center',
         shadowColor: 'rgba(0, 0, 0, 0.24)',
@@ -93,7 +93,7 @@ const style = StyleSheet.create({
         borderColor: 'rgba(0, 0, 0, 0.29)',
         borderRadius: 4,
         borderWidth: 1,
-        color: 'black',
+        color: 'rgba(0, 0, 0, 0.25)',
     },
 
     passwordContainer: {
@@ -104,11 +104,10 @@ const style = StyleSheet.create({
         padding: 10,
         marginTop: 5,
         marginBottom: 10,
-        backgroundColor: 'red ',
-        borderColor: 'rgba(0, 0, 0, 0.29)',
+        borderColor: '#17C2EC',
         borderRadius: 4,
         borderWidth: 1,
-        color: 'black',
+        color: 'rgba(0, 0, 0, 0.25)',
         justifyContent: 'center',
         paddingLeft: 10,
     },
@@ -120,15 +119,26 @@ const style = StyleSheet.create({
         paddingLeft: 10,
     },
 
+    eyeIcon: {
+        padding: 10,
+    },
+
+    eyeImage: {
+        width: 20,
+        height: 20,
+        resizeMode: 'contain',
+    },
+
+
     passwordIcon: {
         padding: 10,
     },
 
     txtForgot: {
-        textAlign: 'right',
+        textAlign: 'left',
         fontSize: 15,
-        paddingBottom: 50,
-        color: 'gray',
+        // paddingBottom: 50,
+        color: 'black',
         width: '75%',
     },
 
@@ -193,40 +203,6 @@ const style = StyleSheet.create({
         width: "100%",
         gap: 15,
     },
-
-    containerNetworkSub: {
-        backgroundColor: 'rgb(255, 255, 255)',
-        borderColor: 'rgba(0, 0, 0, 0.29)',
-        borderRadius: 4,
-        borderWidth: 1,
-        padding: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    network: {
-        width: 35,
-        height: 35,
-        borderRadius: 5,
-    },
-
-
-    errorText: {
-        color: 'red',
-        fontSize: 14,
-        marginBottom: 10,
-        textAlign: 'center',
-    },
-
-    passwordRequirements: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginTop: 10,
-    },
-
-
-
-
 
     Header: {
         flex: 1,
