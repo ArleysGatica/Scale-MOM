@@ -29,10 +29,7 @@ const Pacient = () => {
         { name: 'telefono', label: 'Telefono', type: 'number' },
         { name: 'edad', label: 'Edad', type: 'number' },
     ];
-
-    console.log(moment().format('YYYY-MM-DD'));
     
-
     useEffect(() => {
         if (id) {
             getUserById(id).then((response) => {
