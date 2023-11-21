@@ -309,133 +309,16 @@ const MyForm = () => {
     K: undefined,
   });
 
-  const handleInputChange = (name: string, value: string) => {
-    setCardioData(prevData => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+//   const handleInputChange = (name: string, value: string) => {
+//     setCardioData(prevData => ({
+//       ...prevData,
+//       [name]: value,
+//     }));
+//   };
 
-  const handleCalculate = async () => {
+  const handleCalculateResult = async () => {
     //@ts-ignore
     navigation.navigate('ListPatient', {id: Math.random()});
-
-    let cardioDataFCNumber = parseFloat(cardioData.FC?.toString() || '0');
-    let cardioDataTASistolicaNumber = parseFloat(
-      cardioData.TASistolica?.toString() || '0',
-    );
-    let cardioDataTADiastolicaNumber = parseFloat(
-      cardioData.TADiastolica?.toString() || '0',
-    );
-
-    const calculateCardiacPressure = (fcValue: number | undefined): number => {
-      if (fcValue) {
-        if (
-          (fcValue > 99 && fcValue <= 119) ||
-          (fcValue >= 51 && fcValue <= 60)
-        ) {
-          return 1;
-        } else if (
-          (fcValue >= 120 && fcValue <= 139) ||
-          (fcValue >= 41 && fcValue <= 50)
-        ) {
-          return 2;
-        } else if (fcValue >= 140 || fcValue <= 40) {
-          return 3;
-        }
-      }
-      return 0;
-    };
-
-    const calculateTASistolicaValue = (
-      TASistolica: number | undefined,
-    ): number => {
-      if (TASistolica) {
-        if (TASistolica >= 101 && TASistolica <= 139) {
-          return 0;
-        } else if (
-          (TASistolica >= 140 && TASistolica <= 179) ||
-          (TASistolica >= 91 && TASistolica <= 100)
-        ) {
-          return 1;
-        } else if (
-          (TASistolica > 140 && TASistolica <= 90) ||
-          TASistolica === 81 ||
-          TASistolica >= 81
-        ) {
-          return 2;
-        } else if (TASistolica <= 80) {
-          return 3;
-        }
-      }
-      return 0;
-    };
-
-    const calculateTADiastolicaValue = (
-      TADiastolica: number | undefined,
-    ): number => {
-      if (TADiastolica) {
-        if (TADiastolica >= 61 && TADiastolica <= 89) {
-          return 0;
-        } else if (
-          (TADiastolica >= 90 && TADiastolica <= 109) ||
-          (TADiastolica >= 51 && TADiastolica <= 60)
-        ) {
-          return 1;
-        } else if (
-          (TADiastolica > 110 && TADiastolica <= 50) ||
-          TADiastolica === 41 ||
-          TADiastolica >= 41
-        ) {
-          return 2;
-        } else if (TADiastolica <= 40) {
-          return 3;
-        }
-      }
-      return 0;
-    };
-
-    const cardiacPressure = calculateCardiacPressure(cardioDataFCNumber);
-    const tasistolicaValue = calculateTASistolicaValue(
-      cardioDataTASistolicaNumber,
-    );
-    const tadiastolicaValue = calculateTADiastolicaValue(
-      cardioDataTADiastolicaNumber,
-    );
-
-    setCardioData(prevData => ({
-      ...prevData,
-      CardiacPressure: cardiacPressure,
-      ValueTASistolica: tasistolicaValue,
-      ValueTADiastolica: tadiastolicaValue,
-    }));
-
-    if (cardioDataTASistolicaNumber && cardioDataTADiastolicaNumber) {
-      const tam = (
-        (cardioDataTADiastolicaNumber * 2 + cardioDataTASistolicaNumber) /
-        3
-      ).toFixed(2);
-      const indicedechoque =
-        (cardioDataFCNumber || 0) / (cardioDataTASistolicaNumber || 1);
-
-      setCardioData(prevData => ({
-        ...prevData,
-        Tam: parseFloat(tam),
-        Indicedechoque: indicedechoque,
-      }));
-
-      const shockIndex = indicedechoque || 0;
-
-      if (shockIndex >= 0.7 && shockIndex <= 0.89) {
-        setCardioData(prevData => ({...prevData, ShockIndex: 0}));
-      } else if (shockIndex >= 0.9 && shockIndex <= 0.99) {
-        setCardioData(prevData => ({...prevData, ShockIndex: 1}));
-      } else if (shockIndex > 1 && shockIndex <= 1.69) {
-        setCardioData(prevData => ({...prevData, ShockIndex: 2}));
-      } else if (shockIndex >= 1.7) {
-        setCardioData(prevData => ({...prevData, ShockIndex: 3}));
-      }
-    }
 
     if (
       handleCalculateRenal().creatinina === false ||
@@ -444,20 +327,20 @@ const MyForm = () => {
       return;
     }
 
-    let resultCardio = encontrarValorMasAlto(handleCalculate()) || 0;
+    let resultCardio = encontrarValorMasAlto(handleCalculateCardio()) || 0;
     let resultadoRenal = encontrarValorMasAlto(handleCalculateRenal());
-    let resultRespiratorio =
-      encontrarValorMasAlto(handleCalculateRespiratorio()) || 0;
+    let resultRespiratorio = encontrarValorMasAlto(handleCalculateRespiratorio()) || 0;
     let resultH = encontrarValorMasAlto(handleCalculateHematologico()) || 0;
     let resultHepatico = encontrarValorMasAlto(handleCalculateHepatico()) || 0;
-    let resultG = encontrarValorMasAlto(handleCalculateGastroIntestinal()) || 0;
+      let resultG = encontrarValorMasAlto(handleCalculateGastroIntestinal()) || 0;
 
     let ResultSuma =
       (resultadoRenal as number) +
       resultRespiratorio +
       resultCardio +
       resultH +
-      resultHepatico +
+        resultHepatico +
+        
       resultG;
 
     const handleCalculateResult = () => {
@@ -479,7 +362,7 @@ const MyForm = () => {
       pacienteId: id,
       escalaClinica: Resultado?.escalaClinica as number,
       escalaClinicaString: Resultado?.escalaClinicaString as string,
-      fechaRegistro: moment().format('YYYY-MM-DD'),
+      fechaRegistro: moment().format('YYYY-MM-DD') || (moment().format('LTS')), 
       gastroIntestinalValue: resultG,
       cardioVascularValue: resultCardio,
       hematologicoValue: resultH,
@@ -490,7 +373,141 @@ const MyForm = () => {
     };
 
     await fetchCreateDatoClinico(datoClinico);
-  };
+    };
+    
+    const handleInputChangeCardio = (name: string, value: string) => {
+
+        setCardioData(prevData => ({
+            ...prevData,
+            [name]: value,
+        }));
+    }
+
+    const handleCalculateCardio = () => { 
+        let cardioDataFCNumber = parseFloat(cardioData.FC?.toString() || '0');
+        let cardioDataTASistolicaNumber = parseFloat(
+            cardioData.TASistolica?.toString() || '0',
+        );
+        let cardioDataTADiastolicaNumber = parseFloat(
+            cardioData.TADiastolica?.toString() || '0',
+        );
+
+        const calculateCardiacPressure = (fcValue: number | undefined): number => {
+            if (fcValue) {
+                if (
+                    (fcValue > 99 && fcValue <= 119) ||
+                    (fcValue >= 51 && fcValue <= 60)
+                ) {
+                    return 1;
+                } else if (
+                    (fcValue >= 120 && fcValue <= 139) ||
+                    (fcValue >= 41 && fcValue <= 50)
+                ) {
+                    return 2;
+                } else if (fcValue >= 140 || fcValue <= 40) {
+                    return 3;
+                }
+            }
+            return 0;
+        };
+
+        const calculateTASistolicaValue = (
+            TASistolica: number | undefined,
+        ): number => {
+            if (TASistolica) {
+                if (TASistolica >= 101 && TASistolica <= 139) {
+                    return 0;
+                } else if (
+                    (TASistolica >= 140 && TASistolica <= 179) ||
+                    (TASistolica >= 91 && TASistolica <= 100)
+                ) {
+                    return 1;
+                } else if (
+                    (TASistolica > 140 && TASistolica <= 90) ||
+                    TASistolica === 81 ||
+                    TASistolica >= 81
+                ) {
+                    return 2;
+                } else if (TASistolica <= 80) {
+                    return 3;
+                }
+            }
+            return 0;
+        };
+
+        const calculateTADiastolicaValue = (
+            TADiastolica: number | undefined,
+        ): number => {
+            if (TADiastolica) {
+                if (TADiastolica >= 61 && TADiastolica <= 89) {
+                    return 0;
+                } else if (
+                    (TADiastolica >= 90 && TADiastolica <= 109) ||
+                    (TADiastolica >= 51 && TADiastolica <= 60)
+                ) {
+                    return 1;
+                } else if (
+                    (TADiastolica > 110 && TADiastolica <= 50) ||
+                    TADiastolica === 41 ||
+                    TADiastolica >= 41
+                ) {
+                    return 2;
+                } else if (TADiastolica <= 40) {
+                    return 3;
+                }
+            }
+            return 0;
+        };
+
+        const cardiacPressure = calculateCardiacPressure(cardioDataFCNumber);
+        const tasistolicaValue = calculateTASistolicaValue(
+            cardioDataTASistolicaNumber,
+        );
+        const tadiastolicaValue = calculateTADiastolicaValue(
+            cardioDataTADiastolicaNumber,
+        );
+
+        setCardioData(prevData => ({
+            ...prevData,
+            CardiacPressure: cardiacPressure,
+            ValueTASistolica: tasistolicaValue,
+            ValueTADiastolica: tadiastolicaValue,
+        }));
+
+        if (cardioDataTASistolicaNumber && cardioDataTADiastolicaNumber) {
+            const tam = (
+                (cardioDataTADiastolicaNumber * 2 + cardioDataTASistolicaNumber) /
+                3
+            ).toFixed(2);
+            const indicedechoque =
+                (cardioDataFCNumber || 0) / (cardioDataTASistolicaNumber || 1);
+
+            setCardioData(prevData => ({
+                ...prevData,
+                Tam: parseFloat(tam),
+                Indicedechoque: indicedechoque,
+            }));
+
+            const shockIndex = indicedechoque || 0;
+
+            if (shockIndex >= 0.7 && shockIndex <= 0.89) {
+                setCardioData(prevData => ({ ...prevData, ShockIndex: 0 }));
+            } else if (shockIndex >= 0.9 && shockIndex <= 0.99) {
+                setCardioData(prevData => ({ ...prevData, ShockIndex: 1 }));
+            } else if (shockIndex > 1 && shockIndex <= 1.69) {
+                setCardioData(prevData => ({ ...prevData, ShockIndex: 2 }));
+            } else if (shockIndex >= 1.7) {
+                setCardioData(prevData => ({ ...prevData, ShockIndex: 3 }));
+            }
+        }
+
+        return {
+            cardiacPressure,
+            tasistolicaValue,
+            tadiastolicaValue,
+        };
+
+    }
 
   const handleInputChangeRenal = (name: string, value: string) => {
     setRenalData(prevData => ({
@@ -1164,7 +1181,7 @@ const MyForm = () => {
         'cardiovascular' && (
         <CardioVacularForm
           cardioData={cardioData}
-          handleInputChange={handleInputChange}
+          handleInputChange={handleInputChangeCardio}
           fields={fields}
         />
       )}
@@ -1237,7 +1254,7 @@ const MyForm = () => {
             justifyContent: 'center',
           }}>
           <Button
-            onPress={handleCalculate}
+            onPress={handleCalculateResult}
             icon="check"
             mode="contained"
             style={{
@@ -1277,20 +1294,5 @@ const MyForm = () => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  greenText: {
-    color: 'green',
-  },
-  yellowText: {
-    color: 'yellow',
-  },
-  orangeText: {
-    color: 'orange',
-  },
-  redText: {
-    color: 'red',
-  },
-});
 
 export default MyForm;
