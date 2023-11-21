@@ -143,3 +143,18 @@ export interface IDatosClinicoCreate {
   renalValue: number;
   respiratorioValue: number;
 }
+export interface IDatosClinicoIndex {
+    cardioVascularValue: number;
+    doctorId: IDoctor;
+    escalaClinica: number;
+    escalaClinicaString: string;
+    fechaRegistro: string;
+    gastroIntestinalValue: number;
+    hematologicoValue: number;
+    hepaticoValue: number;
+    id: string;
+    neurologicoValue: number;
+    pacienteId: IPatient;
+    renalValue: number;
+    respiratorioValue: number;
+  }

@@ -109,5 +109,8 @@ export const getUserById = async (id: string) => {
 export const fetchCreateDatoClinico = async (datosClinicos: IDatosClinicoCreate) => {
     return await ConexionFetch({ body: datosClinicos, method: 'POST', controller: "datoClinico" })
 }
+export const fetchGetDatoClinicoByUserId = async (userId:string) => {
+    return await ConexionFetch({ url: userId, method: 'GET', controller: "datoClinico" });
+}
 
 

@@ -21,6 +21,7 @@ import ListDoctor from './src/UI/Page/Doctor/doctorList';
 import DoctorProfile from './src/UI/Page/Doctor/doctorView';
 import App22 from './App22';
 import BarChartExample from './grafic';
+import Historico from './src/UI/Components/Historico/Index';
 
 
 const Stack = createNativeStackNavigator();
@@ -47,6 +48,7 @@ function AppStack() {
             <Stack.Screen options={{ headerShown: false }} name="Login" component={Login} />
             <Stack.Screen options={{ headerShown: false }} name="MyForm" component={MyForm} />
             <Stack.Screen options={{ headerShown: false }} name="DoctorCreationForm" component={DoctorCreationForm} />
+            <Stack.Screen options={{ headerShown: false }} name="Historico" component={Historico} />
         </Stack.Navigator>
     )
 }

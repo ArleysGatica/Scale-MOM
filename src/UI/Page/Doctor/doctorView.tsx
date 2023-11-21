@@ -49,6 +49,11 @@ const DoctorProfile = () => {
 
     }
 
+    const toHistory = () => {
+        //@ts-ignore
+        navigation.navigate('Historico', { userId: id });
+    }
+
     return (
         <LayoutDrawer>
             <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
@@ -64,6 +69,14 @@ const DoctorProfile = () => {
                     onPress={toEditDoctor}
                 >
                     Editar
+                </Button>
+                <Button
+                    icon="archive-arrow-up-outline"
+                    mode="contained"
+                    style={{ width: 150, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#17C2EC' }}
+                    onPress={toHistory}
+                >
+                    Expediente
                 </Button>
                 <Button
                     icon="delete"

@@ -47,7 +47,7 @@ const Pacient = () => {
 
     const toFormPatient = () => {
         //@ts-ignore
-        navigation.navigate('MyForm', { id: id });
+        navigation.navigate('Historico', { userId: id });
     }
 
     const toDeletePatient = async () => {
