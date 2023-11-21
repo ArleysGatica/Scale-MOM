@@ -4,6 +4,7 @@ import { View, Image, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighl
 import { Appbar, Avatar, Button, Card, IconButton } from 'react-native-paper';
 import { fetchDeletePatient, getUserById } from '../../../services';
 import { IPatient } from '../../../types/types';
+import moment from 'moment';
 
 interface IParams {
     id: string;
@@ -28,6 +29,9 @@ const Pacient = () => {
         { name: 'telefono', label: 'Telefono', type: 'number' },
         { name: 'edad', label: 'Edad', type: 'number' },
     ];
+
+    console.log(moment().format('YYYY-MM-DD'));
+    
 
     useEffect(() => {
         if (id) {

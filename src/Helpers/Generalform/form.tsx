@@ -479,13 +479,13 @@ const MyForm = () => {
       pacienteId: id,
       escalaClinica: Resultado?.escalaClinica as number,
       escalaClinicaString: Resultado?.escalaClinicaString as string,
-      fechaRegistro: moment().format('yyy-mm-dd'),
+      fechaRegistro: moment().format('YYYY-MM-DD'),
       gastroIntestinalValue: resultG,
       cardioVascularValue: resultCardio,
       hematologicoValue: resultH,
       hepaticoValue: resultHepatico,
       renalValue: resultadoRenal as number,
-      neurologicoValue: neurologico as number,
+      neurologicoValue: neurologico.EscalaGlasgow as number,
       respiratorioValue: resultRespiratorio,
     };
 
