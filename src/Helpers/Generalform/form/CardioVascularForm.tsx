@@ -1,7 +1,7 @@
 import React from 'react';
-import {ICardioVascular} from '../../../types/types';
-import {View, StyleSheet, ScrollView} from 'react-native';
-import {Text, TextInput} from 'react-native-paper';
+import { ICardioVascular } from '../../../types/types';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { Text, TextInput, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 interface IFields {
   name: string;
@@ -17,58 +17,73 @@ interface Iprops {
   cardioData: ICardioVascular;
 }
 
-export const CardioVacularForm = ({fields, handleInputChange, cardioData}: Iprops) => {
+export const CardioVacularForm = ({ fields, handleInputChange, cardioData }: Iprops) => {
+
+  const theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      text: 'blue',
+      primary: '#17C2EC',
+      underlineColor: 'transparent',
+      background: '#ffffff',
+
+    },
+  };
+
   return (
-    <ScrollView
-      contentContainerStyle={styles.scrollViewContent}
-      keyboardShouldPersistTaps="handled">
-      <View style={styles.inner}>
-        <Text style={styles.header}>CardioVascular</Text>
-      </View>
-      {fields.map((field, index) => {
-        return (
-          <View
-            key={field.name}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: '100%',
-              height: 80,
-              justifyContent: 'center',
-              flexWrap: 'wrap',
-              gap: 10,
-              columnGap: 10,
-              rowGap: 10,
-            }}>
-            <Text style={{width: 75, textAlign: 'center', fontSize: 15}}>
-              {field.name}
-            </Text>
-            <TextInput
+    <PaperProvider theme={theme}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        keyboardShouldPersistTaps="handled">
+        <View style={styles.inner}>
+          <Text style={styles.header}>CardioVascular</Text>
+        </View>
+        {fields.map((field, index) => {
+          return (
+            <View
+              key={field.name}
               style={{
-                width: 200,
-                height: 50,
-                marginBottom: 10,
-                backgroundColor: 'rgb(255, 255, 255)',
-                borderColor: 'rgba(0, 0, 0, 0.29)',
-                borderRadius: 4,
-                borderWidth: 1,
-                color: 'black',
-              }}
-              keyboardType="numeric"
-              onChangeText={text => handleInputChange(field.name, text)}
-              value={
-                cardioData[field.name as keyof ICardioVascular]?.toString() ||
-                ''
-              }
-              placeholder={`Min: ${field.min} Max: ${field.max}`}
-            />
-            <Text style={{width: 75, textAlign: 'center', fontSize: 15}}>
-              {field.medida}
-            </Text>
-          </View>
-        );
-      })}
-    </ScrollView>
+                flexDirection: 'row',
+                alignItems: 'center',
+                width: '100%',
+                height: 80,
+                justifyContent: 'center',
+                flexWrap: 'wrap',
+                gap: 10,
+                columnGap: 10,
+                rowGap: 10,
+              }}>
+              <Text style={{ width: 75, textAlign: 'center', fontSize: 15 }}>
+                {field.name}
+              </Text>
+              <TextInput
+                style={{
+                  width: 200,
+                  height: 50,
+                  marginBottom: 10,
+                  backgroundColor: 'rgb(255, 255, 255)',
+                  borderColor: '#17C2EC',
+                  borderRadius: 4,
+                  borderWidth: 1,
+                  color: 'black',
+                }}
+                keyboardType="numeric"
+                onChangeText={text => handleInputChange(field.name, text)}
+                value={
+                  cardioData[field.name as keyof ICardioVascular]?.toString() ||
+                  ''
+                }
+                placeholder={`Min: ${field.min} Max: ${field.max}`}
+              />
+              <Text style={{ width: 75, textAlign: 'center', fontSize: 15 }}>
+                {field.medida}
+              </Text>
+            </View>
+          );
+        })}
+      </ScrollView>
+    </PaperProvider>
   );
 };
 
@@ -89,7 +104,6 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '60%',
-    borderWidth: 1,
     padding: 8,
   },
   button: {
