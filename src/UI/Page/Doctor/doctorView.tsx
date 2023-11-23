@@ -71,12 +71,12 @@ const DoctorProfile = () => {
                     Editar
                 </Button>
                 <Button
-                    icon="archive-arrow-up-outline"
+                    icon="history"
                     mode="contained"
                     style={{ width: 150, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#17C2EC' }}
                     onPress={toHistory}
                 >
-                    Expediente
+                    Historial
                 </Button>
                 <Button
                     icon="delete"
@@ -140,8 +140,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         backgroundColor: 'white',
-        flexDirection: 'row',
-        columnGap: 12,
+        gap: 12,
         paddingLeft: 8,
         paddingTop: 16,
     },

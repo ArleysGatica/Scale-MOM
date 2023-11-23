@@ -78,12 +78,12 @@ const Pacient = () => {
                 </Button>
 
                 <Button
-                    icon="archive-arrow-up-outline"
+                    icon="history"
                     mode="contained"
                     style={{ width: 150, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#17C2EC' }}
                     onPress={toFormPatient}
                 >
-                    Expediente
+                    Historial
                 </Button>
                 <Button
                     icon="delete"
@@ -95,11 +95,11 @@ const Pacient = () => {
                 </Button>
             </View>
             <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', height: '80%', width: '100%' }}>
-                <Text style={{ fontSize: 25, fontWeight: 'bold' }}>
+                <Text style={{ fontSize: 25, fontWeight: 'bold', textAlign: 'center', paddingBottom: 25 }}>
                     Informacion del paciente
                 </Text>
                 <View style={{
-                    flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', maxHeight: "85%", borderColor: '#17C2EC', borderRadius: 4, borderWidth: 1, width: '75%'
+                    flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', maxHeight: "75%", borderColor: '#17C2EC', borderRadius: 4, borderWidth: 1, width: '75%'
                 }}>
                     {
                         objData.map((item, index) => (
