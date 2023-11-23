@@ -1,10 +1,10 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {useEffect, useState} from 'react';
-import {View, StyleSheet, ScrollView, Text} from 'react-native';
-import {Appbar, Avatar, Button, Card, IconButton} from 'react-native-paper';
-import {fetchGetDatoClinicoByUserId} from '../../../services';
-import {IDatosClinicoIndex, IDoctor, IPatient} from '../../../types/types';
-import {CardHistorico} from './CardHistorico';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import { Appbar, Avatar, Button, Card, IconButton } from 'react-native-paper';
+import { fetchGetDatoClinicoByUserId } from '../../../services';
+import { IDatosClinicoIndex, IDoctor, IPatient } from '../../../types/types';
+import { CardHistorico } from './CardHistorico';
 
 interface IParams {
   userId: string;
@@ -13,7 +13,7 @@ interface IParams {
 const Historico = () => {
   const route = useRoute();
 
-  const {userId} = route.params as IParams;
+  const { userId } = route.params as IParams;
 
   const [datoClinico, setDatoClinico] = useState<Array<IDatosClinicoIndex>>([]);
   const [user, setUser] = useState<IPatient | IDoctor>({});
@@ -35,15 +35,15 @@ const Historico = () => {
 
   const toFormPatient = () => {
     //@ts-ignore
-    navigation.navigate('MyForm', {id: user.id});
+    navigation.navigate('MyForm', { id: user.id });
   };
 
   return (
     <>
-      <Appbar.Header style={{marginRight: 330}}>
+      <Appbar.Header style={{ marginRight: 330 }}>
         <Appbar.BackAction
           onPress={() => navigation.navigate('ListPatient' as never)}
-          style={{backgroundColor: '#17C2EC'}}
+          style={{ backgroundColor: '#17C2EC' }}
         />
       </Appbar.Header>
       <View
@@ -51,11 +51,12 @@ const Historico = () => {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: 'white',
+          paddingBottom: 16,
         }}>
-        <Text style={{fontSize: 25, fontWeight: 'bold', textAlign: 'center'}}>
+        <Text style={{ fontSize: 25, fontWeight: 'bold', textAlign: 'center' }}>
           {user.userType === 0
-            ? `Datos clinicos de ${user.username}`
-            : 'Historico de examenes realizados'}
+            ? `Datos clinicos de ${user?.username}`
+            : 'Historial de examenes realizados'}
         </Text>
       </View>
       {user.userType === 0 && (
@@ -68,7 +69,7 @@ const Historico = () => {
           </Button>
         </View>
       )}
-      <View style={{flex: 1, padding: 16}}>
+      <View style={{ flex: 1, paddingTop: 16}}>
         <ScrollView
           contentContainerStyle={{
             justifyContent: 'center',
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     // Estilos de sombra para iOS
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
     // Estilos de sombra para Android
@@ -106,20 +107,26 @@ const styles = StyleSheet.create({
   },
   boxButtonAction: {
     alignItems: 'center',
+    width: '100%',
     justifyContent: 'flex-start',
     backgroundColor: 'white',
     flexDirection: 'row',
     columnGap: 12,
-    paddingLeft: 8,
+    paddingLeft: '30%',
+    paddingBottom: 16,
     paddingTop: 16,
   },
   btnCreate: {
-    color: '#fff',
+    color: '#fff' ,
     padding: 6,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#17C2EC',
+    fill: '#fff',
+    borderRadius: 18,
+    borderColor: '#17C2EC',
+    borderWidth: 1,
+    width: 'auto',
   },
 });
 
