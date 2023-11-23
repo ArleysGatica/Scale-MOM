@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   ICardioVascular,
   IRenal,
@@ -9,25 +9,25 @@ import {
   INeurologico,
   IGastroIntestital,
 } from '../../types/types';
-import {View, Alert, StyleSheet} from 'react-native';
-import {Appbar, Text, TextInput, Button} from 'react-native-paper';
+import { View, Alert, StyleSheet } from 'react-native';
+import { Appbar, Text, TextInput, Button } from 'react-native-paper';
 
 import useValorMasAlto from '../../hook/useHighestNumber';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {CardioVacularForm} from './form/CardioVascularForm';
-import {RenalForm} from './form/RenalForm';
-import {RespiratorioForm} from './form/RespiratorioForm';
-import {HematologicoForm} from './form/HematologicoForm';
-import {HepaticoForm} from './form/HepaticoForm';
-import {NeurologicoForm} from './form/NeurologicoForm';
-import {UterinoForm} from './form/UterinoForm';
-import {GastroIntestinalForm} from './form/GastroIntestinalForm';
-import {fetchAddResultPatient, fetchCreateDatoClinico} from '../../services';
-import {useAppSelector} from '../../app/hook';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { CardioVacularForm } from './form/CardioVascularForm';
+import { RenalForm } from './form/RenalForm';
+import { RespiratorioForm } from './form/RespiratorioForm';
+import { HematologicoForm } from './form/HematologicoForm';
+import { HepaticoForm } from './form/HepaticoForm';
+import { NeurologicoForm } from './form/NeurologicoForm';
+import { UterinoForm } from './form/UterinoForm';
+import { GastroIntestinalForm } from './form/GastroIntestinalForm';
+import { fetchAddResultPatient, fetchCreateDatoClinico } from '../../services';
+import { useAppSelector } from '../../app/hook';
 import moment from 'moment';
 
 const fields = [
-  {name: 'FC', label: 'FC:', min: 40, max: 140, medida: 'lpm'},
+  { name: 'FC', label: 'FC:', min: 40, max: 140, medida: 'lpm' },
   {
     name: 'TASistolica',
     label: 'TASistolica:',
@@ -42,9 +42,9 @@ const fields = [
     max: 110,
     medida: 'mmHg',
   },
-  {name: 'Temperatura', label: 'Temperatura:', min: 35, max: 40, medida: '°C'},
-  {name: 'PH', label: 'PH:', min: 7, max: 8, medida: ''},
-  {name: 'Lactato', label: 'Lactato:', min: 1.7, max: 4, medida: 'mmol/L'},
+  { name: 'Temperatura', label: 'Temperatura:', min: 35, max: 40, medida: '°C' },
+  { name: 'PH', label: 'PH:', min: 7, max: 8, medida: '' },
+  { name: 'Lactato', label: 'Lactato:', min: 1.7, max: 4, medida: 'mmol/L' },
 ];
 
 const fieldsRenal = [
@@ -83,10 +83,10 @@ const fieldsRenal = [
     max: 10,
     medida: 'mmol/L',
   },
-  {name: 'Orina', label: 'Orina:', min: 100, max: 2000, medida: 'mL'},
-  {name: 'horas', label: 'horas:', min: 1, max: 24, medida: 'Hrs'},
-  {name: 'Peso', label: 'Peso:', min: 40, max: 150, medida: 'KG'},
-  {name: 'edad', label: 'edad:', min: 15, max: 100, medida: 'Años'},
+  { name: 'Orina', label: 'Orina:', min: 100, max: 2000, medida: 'mL' },
+  { name: 'horas', label: 'horas:', min: 1, max: 24, medida: 'Hrs' },
+  { name: 'Peso', label: 'Peso:', min: 40, max: 150, medida: 'KG' },
+  { name: 'edad', label: 'edad:', min: 15, max: 100, medida: 'Años' },
 ];
 
 const fieldsRespiratorio = [
@@ -104,7 +104,7 @@ const fieldsRespiratorio = [
     max: 500,
     medida: 'PaO2/FiO2',
   },
-  {name: 'Saturación', label: 'Saturación:', min: 85, max: 100, medida: '%'},
+  { name: 'Saturación', label: 'Saturación:', min: 85, max: 100, medida: '%' },
 ];
 
 const fieldsHematologico = [
@@ -115,7 +115,7 @@ const fieldsHematologico = [
     max: 30000,
     medida: 'mm3',
   },
-  {name: 'Hemoglobina', label: 'Hemoglobina:', min: 6, max: 10, medida: 'g/dL'},
+  { name: 'Hemoglobina', label: 'Hemoglobina:', min: 6, max: 10, medida: 'g/dL' },
   {
     name: 'Plaquetas',
     label: 'Plaquetas:',
@@ -130,7 +130,7 @@ const fieldsHematologico = [
     max: 310,
     medida: 'mg/dL',
   },
-  {name: 'DimeroD', label: 'DimeroD:', min: 1000, max: 3000, medida: 'ng/mL'},
+  { name: 'DimeroD', label: 'DimeroD:', min: 1000, max: 3000, medida: 'ng/mL' },
 ];
 
 const fieldsHepatico = [
@@ -141,7 +141,7 @@ const fieldsHepatico = [
     max: 150,
     medida: 'U/L',
   },
-  {name: 'LDH', label: 'LDH:', min: 300, max: 900, medida: 'U/L'},
+  { name: 'LDH', label: 'LDH:', min: 300, max: 900, medida: 'U/L' },
   {
     name: 'BilirrubinasTotales',
     label: 'BilirrubinasTotales:',
@@ -156,7 +156,7 @@ const fieldsHepatico = [
     max: 22,
     medida: 'mmHg',
   },
-  {name: 'Albumina', label: 'Albumina:', min: 2, max: 5, medida: 'g/dL'},
+  { name: 'Albumina', label: 'Albumina:', min: 2, max: 5, medida: 'g/dL' },
   {
     name: 'GlobulinaSérica',
     label: 'GlobulinaSérica:',
@@ -166,18 +166,18 @@ const fieldsHepatico = [
   },
 ];
 
-const fieldsNeurologico = [{name: 'EscalaGlasgow', label: 'EscalaGlasgow:'}];
+const fieldsNeurologico = [{ name: 'EscalaGlasgow', label: 'EscalaGlasgow:' }];
 
 const fieldsUterino = [
-  {name: 'HemorragiaObstétrica', label: 'HemorragiaObstétrica:'},
-  {name: 'PerdidaVolumenSangre', label: 'PerdidaVolumenSangre:'},
+  { name: 'HemorragiaObstétrica', label: 'HemorragiaObstétrica:' },
+  { name: 'PerdidaVolumenSangre', label: 'PerdidaVolumenSangre:' },
 ];
 
 const fieldsGastroIntestinal = [
-  {name: 'ToleranciaVíaOral', label: 'ToleranciaVíaOral:'},
-  {name: 'Glucosa', label: 'Glucosa:', min: 45, max: 190, medida: 'mg/dL'},
-  {name: 'NA', label: 'NA:', min: 120, max: 160, medida: 'mEq/L'},
-  {name: 'K', label: 'K:', min: 3, max: 5.5, medida: 'mEq/L'},
+  { name: 'ToleranciaVíaOral', label: 'ToleranciaVíaOral:' },
+  { name: 'Glucosa', label: 'Glucosa:', min: 45, max: 190, medida: 'mg/dL' },
+  { name: 'NA', label: 'NA:', min: 120, max: 160, medida: 'mEq/L' },
+  { name: 'K', label: 'K:', min: 3, max: 5.5, medida: 'mEq/L' },
 ];
 
 interface IParams {
@@ -309,16 +309,9 @@ const MyForm = () => {
     K: undefined,
   });
 
-//   const handleInputChange = (name: string, value: string) => {
-//     setCardioData(prevData => ({
-//       ...prevData,
-//       [name]: value,
-//     }));
-//   };
-
   const handleCalculateResult = async () => {
     //@ts-ignore
-    navigation.navigate('ListPatient', {id: Math.random()});
+    navigation.navigate('ListPatient', { id: Math.random() });
 
     if (
       handleCalculateRenal().creatinina === false ||
@@ -332,26 +325,35 @@ const MyForm = () => {
     let resultRespiratorio = encontrarValorMasAlto(handleCalculateRespiratorio()) || 0;
     let resultH = encontrarValorMasAlto(handleCalculateHematologico()) || 0;
     let resultHepatico = encontrarValorMasAlto(handleCalculateHepatico()) || 0;
-      let resultG = encontrarValorMasAlto(handleCalculateGastroIntestinal()) || 0;
+    let resultG = encontrarValorMasAlto(handleCalculateGastroIntestinal()) || 0;
+    console.log('resultCardio', resultCardio);
 
     let ResultSuma =
       (resultadoRenal as number) +
       resultRespiratorio +
       resultCardio +
       resultH +
-        resultHepatico +
-        
+      resultHepatico +
+
       resultG;
 
     const handleCalculateResult = () => {
       if (ResultSuma >= 0 && ResultSuma <= 3) {
-        return {escalaClinica: ResultSuma, escalaClinicaString: 'MML'};
+        console.log(`MML ${ResultSuma}`);
+        
+        return { escalaClinica: ResultSuma, escalaClinicaString: 'MML' };
       } else if (ResultSuma >= 4 && ResultSuma <= 7) {
-        return {escalaClinica: ResultSuma, escalaClinicaString: 'MMM'};
+        console.log(`MMM ${ResultSuma}`);
+        
+        return { escalaClinica: ResultSuma, escalaClinicaString: 'MMM' };
       } else if (ResultSuma >= 8 && ResultSuma <= 11) {
-        return {escalaClinica: ResultSuma, escalaClinicaString: 'MMS'};
+        console.log(`MMS ${ResultSuma}`);
+        
+        return { escalaClinica: ResultSuma, escalaClinicaString: 'MMS' };
       } else if (ResultSuma >= 12 && ResultSuma <= 24) {
-        return {escalaClinica: ResultSuma, escalaClinicaString: 'MME'};
+        console.log(`MSL ${ResultSuma}`);
+        
+        return { escalaClinica: ResultSuma, escalaClinicaString: 'MME' };
       }
     };
 
@@ -362,7 +364,7 @@ const MyForm = () => {
       pacienteId: id,
       escalaClinica: Resultado?.escalaClinica as number,
       escalaClinicaString: Resultado?.escalaClinicaString as string,
-      fechaRegistro: moment().format('YYYY-MM-DD') || (moment().format('LTS')), 
+      fechaRegistro: moment().format('YYYY-MM-DD') || (moment().format('LTS')),
       gastroIntestinalValue: resultG,
       cardioVascularValue: resultCardio,
       hematologicoValue: resultH,
@@ -373,141 +375,141 @@ const MyForm = () => {
     };
 
     await fetchCreateDatoClinico(datoClinico);
-    };
-    
-    const handleInputChangeCardio = (name: string, value: string) => {
+  };
 
-        setCardioData(prevData => ({
-            ...prevData,
-            [name]: value,
-        }));
-    }
+  const handleInputChangeCardio = (name: string, value: string) => {
 
-    const handleCalculateCardio = () => { 
-        let cardioDataFCNumber = parseFloat(cardioData.FC?.toString() || '0');
-        let cardioDataTASistolicaNumber = parseFloat(
-            cardioData.TASistolica?.toString() || '0',
-        );
-        let cardioDataTADiastolicaNumber = parseFloat(
-            cardioData.TADiastolica?.toString() || '0',
-        );
+    setCardioData(prevData => ({
+      ...prevData,
+      [name]: value,
+    }));
+  }
 
-        const calculateCardiacPressure = (fcValue: number | undefined): number => {
-            if (fcValue) {
-                if (
-                    (fcValue > 99 && fcValue <= 119) ||
-                    (fcValue >= 51 && fcValue <= 60)
-                ) {
-                    return 1;
-                } else if (
-                    (fcValue >= 120 && fcValue <= 139) ||
-                    (fcValue >= 41 && fcValue <= 50)
-                ) {
-                    return 2;
-                } else if (fcValue >= 140 || fcValue <= 40) {
-                    return 3;
-                }
-            }
-            return 0;
-        };
+  const handleCalculateCardio = () => {
+    let cardioDataFCNumber = parseFloat(cardioData.FC?.toString() || '0');
+    let cardioDataTASistolicaNumber = parseFloat(
+      cardioData.TASistolica?.toString() || '0',
+    );
+    let cardioDataTADiastolicaNumber = parseFloat(
+      cardioData.TADiastolica?.toString() || '0',
+    );
 
-        const calculateTASistolicaValue = (
-            TASistolica: number | undefined,
-        ): number => {
-            if (TASistolica) {
-                if (TASistolica >= 101 && TASistolica <= 139) {
-                    return 0;
-                } else if (
-                    (TASistolica >= 140 && TASistolica <= 179) ||
-                    (TASistolica >= 91 && TASistolica <= 100)
-                ) {
-                    return 1;
-                } else if (
-                    (TASistolica > 140 && TASistolica <= 90) ||
-                    TASistolica === 81 ||
-                    TASistolica >= 81
-                ) {
-                    return 2;
-                } else if (TASistolica <= 80) {
-                    return 3;
-                }
-            }
-            return 0;
-        };
-
-        const calculateTADiastolicaValue = (
-            TADiastolica: number | undefined,
-        ): number => {
-            if (TADiastolica) {
-                if (TADiastolica >= 61 && TADiastolica <= 89) {
-                    return 0;
-                } else if (
-                    (TADiastolica >= 90 && TADiastolica <= 109) ||
-                    (TADiastolica >= 51 && TADiastolica <= 60)
-                ) {
-                    return 1;
-                } else if (
-                    (TADiastolica > 110 && TADiastolica <= 50) ||
-                    TADiastolica === 41 ||
-                    TADiastolica >= 41
-                ) {
-                    return 2;
-                } else if (TADiastolica <= 40) {
-                    return 3;
-                }
-            }
-            return 0;
-        };
-
-        const cardiacPressure = calculateCardiacPressure(cardioDataFCNumber);
-        const tasistolicaValue = calculateTASistolicaValue(
-            cardioDataTASistolicaNumber,
-        );
-        const tadiastolicaValue = calculateTADiastolicaValue(
-            cardioDataTADiastolicaNumber,
-        );
-
-        setCardioData(prevData => ({
-            ...prevData,
-            CardiacPressure: cardiacPressure,
-            ValueTASistolica: tasistolicaValue,
-            ValueTADiastolica: tadiastolicaValue,
-        }));
-
-        if (cardioDataTASistolicaNumber && cardioDataTADiastolicaNumber) {
-            const tam = (
-                (cardioDataTADiastolicaNumber * 2 + cardioDataTASistolicaNumber) /
-                3
-            ).toFixed(2);
-            const indicedechoque =
-                (cardioDataFCNumber || 0) / (cardioDataTASistolicaNumber || 1);
-
-            setCardioData(prevData => ({
-                ...prevData,
-                Tam: parseFloat(tam),
-                Indicedechoque: indicedechoque,
-            }));
-
-            const shockIndex = indicedechoque || 0;
-
-            if (shockIndex >= 0.7 && shockIndex <= 0.89) {
-                setCardioData(prevData => ({ ...prevData, ShockIndex: 0 }));
-            } else if (shockIndex >= 0.9 && shockIndex <= 0.99) {
-                setCardioData(prevData => ({ ...prevData, ShockIndex: 1 }));
-            } else if (shockIndex > 1 && shockIndex <= 1.69) {
-                setCardioData(prevData => ({ ...prevData, ShockIndex: 2 }));
-            } else if (shockIndex >= 1.7) {
-                setCardioData(prevData => ({ ...prevData, ShockIndex: 3 }));
-            }
+    const calculateCardiacPressure = (fcValue: number | undefined): number => {
+      if (fcValue) {
+        if (
+          (fcValue > 99 && fcValue <= 119) ||
+          (fcValue >= 51 && fcValue <= 60)
+        ) {
+          return 1;
+        } else if (
+          (fcValue >= 120 && fcValue <= 139) ||
+          (fcValue >= 41 && fcValue <= 50)
+        ) {
+          return 2;
+        } else if (fcValue >= 140 || fcValue <= 40) {
+          return 3;
         }
+      }
+      return 0;
+    };
 
-        return {
-            cardiacPressure,
-            tasistolicaValue,
-            tadiastolicaValue,
-        };
+    const calculateTASistolicaValue = (
+      TASistolica: number | undefined,
+    ): number => {
+      if (TASistolica) {
+        if (TASistolica >= 101 && TASistolica <= 139) {
+          return 0;
+        } else if (
+          (TASistolica >= 140 && TASistolica <= 179) ||
+          (TASistolica >= 91 && TASistolica <= 100)
+        ) {
+          return 1;
+        } else if (
+          (TASistolica > 140 && TASistolica <= 90) ||
+          TASistolica === 81 ||
+          TASistolica >= 81
+        ) {
+          return 2;
+        } else if (TASistolica <= 80) {
+          return 3;
+        }
+      }
+      return 0;
+    };
 
+    const calculateTADiastolicaValue = (
+      TADiastolica: number | undefined,
+    ): number => {
+      if (TADiastolica) {
+        if (TADiastolica >= 61 && TADiastolica <= 89) {
+          return 0;
+        } else if (
+          (TADiastolica >= 90 && TADiastolica <= 109) ||
+          (TADiastolica >= 51 && TADiastolica <= 60)
+        ) {
+          return 1;
+        } else if (
+          (TADiastolica > 110 && TADiastolica <= 50) ||
+          TADiastolica === 41 ||
+          TADiastolica >= 41
+        ) {
+          return 2;
+        } else if (TADiastolica <= 40) {
+          return 3;
+        }
+      }
+      return 0;
+    };
+
+    const cardiacPressure = calculateCardiacPressure(cardioDataFCNumber);
+    const tasistolicaValue = calculateTASistolicaValue(
+      cardioDataTASistolicaNumber,
+    );
+    const tadiastolicaValue = calculateTADiastolicaValue(
+      cardioDataTADiastolicaNumber,
+    );
+
+    setCardioData(prevData => ({
+      ...prevData,
+      CardiacPressure: cardiacPressure,
+      ValueTASistolica: tasistolicaValue,
+      ValueTADiastolica: tadiastolicaValue,
+    }));
+
+    if (cardioDataTASistolicaNumber && cardioDataTADiastolicaNumber) {
+      const tam = (
+        (cardioDataTADiastolicaNumber * 2 + cardioDataTASistolicaNumber) /
+        3
+      ).toFixed(2);
+      const indicedechoque =
+        (cardioDataFCNumber || 0) / (cardioDataTASistolicaNumber || 1);
+
+      setCardioData(prevData => ({
+        ...prevData,
+        Tam: parseFloat(tam),
+        Indicedechoque: indicedechoque,
+      }));
+
+      const shockIndex = indicedechoque || 0;
+
+      if (shockIndex >= 0.7 && shockIndex <= 0.89) {
+        setCardioData(prevData => ({ ...prevData, ShockIndex: 0 }));
+      } else if (shockIndex >= 0.9 && shockIndex <= 0.99) {
+        setCardioData(prevData => ({ ...prevData, ShockIndex: 1 }));
+      } else if (shockIndex > 1 && shockIndex <= 1.69) {
+        setCardioData(prevData => ({ ...prevData, ShockIndex: 2 }));
+      } else if (shockIndex >= 1.7) {
+        setCardioData(prevData => ({ ...prevData, ShockIndex: 3 }));
+      }
     }
+
+    return {
+      cardiacPressure,
+      tasistolicaValue,
+      tadiastolicaValue,
+    };
+
+  }
 
   const handleInputChangeRenal = (name: string, value: string) => {
     setRenalData(prevData => ({
@@ -1020,7 +1022,7 @@ const MyForm = () => {
 
     // name = "HemorragiaObstétrica"
 
-    console.log(name, value);
+    // console.log(name, value);
 
     setUterino(prevData => ({
       ...prevData,
@@ -1031,7 +1033,7 @@ const MyForm = () => {
   const handleInputChangeGastroIntestinal = (name: string, value: string) => {
     const numericValue = parseFloat(value) || undefined;
 
-    console.log(name, value);
+    // console.log(name, value);
 
     setGastroIntestinal(prevData => ({
       ...prevData,
@@ -1087,7 +1089,7 @@ const MyForm = () => {
       return 0;
     };
 
-    return {glucosa: calculateGlucosa(), na: calculateNA(), k: calculateK()};
+    return { glucosa: calculateGlucosa(), na: calculateNA(), k: calculateK() };
   };
 
   function esObjetoVacio(obj: any) {
@@ -1117,8 +1119,8 @@ const MyForm = () => {
   const handleCurrentGroup = () => {
     const validateMINMAX = (fieldArray: any, state: any, isError: boolean) => {
       fieldArray.forEach(
-        (element: {min: number; max: number; name: string | number}) => {
-          console.log(element);
+        (element: { min: number; max: number; name: string | number }) => {
+          // console.log(element);
 
           if (element.min && element.max && !isError) {
             if (state[element.name]?.toString() === undefined) {
@@ -1128,9 +1130,9 @@ const MyForm = () => {
 
             if (
               parseFloat(state[element.name]?.toString() as string) <
-                element.min ||
+              element.min ||
               parseFloat(state[element.name]?.toString() as string) >
-                element.max
+              element.max
             ) {
               Alert.alert(
                 `El valor de ${element.name} debe estar entre ${element.min} y ${element.max}`,
@@ -1174,17 +1176,17 @@ const MyForm = () => {
   return (
     <>
       <Appbar.Header>
-        <Appbar.BackAction onPress={() => {}} />
-        <Text style={{fontSize: 25}}>Salir</Text>
+        <Appbar.BackAction onPress={() => { }} />
+        <Text style={{ fontSize: 25 }}>Salir</Text>
       </Appbar.Header>
       {GROUPS_ENUM[currentGroup as keyof typeof GROUPS_ENUM] ===
         'cardiovascular' && (
-        <CardioVacularForm
-          cardioData={cardioData}
-          handleInputChange={handleInputChangeCardio}
-          fields={fields}
-        />
-      )}
+          <CardioVacularForm
+            cardioData={cardioData}
+            handleInputChange={handleInputChangeCardio}
+            fields={fields}
+          />
+        )}
       {GROUPS_ENUM[currentGroup as keyof typeof GROUPS_ENUM] === 'renal' && (
         <RenalForm
           fieldsRenal={fieldsRenal}
@@ -1194,20 +1196,20 @@ const MyForm = () => {
       )}
       {GROUPS_ENUM[currentGroup as keyof typeof GROUPS_ENUM] ===
         'respiratorio' && (
-        <RespiratorioForm
-          fieldsRespiratorio={fieldsRespiratorio}
-          handleInputChangeRespiratorio={handleInputChangeRespiratorio}
-          respiratorio={respiratorio}
-        />
-      )}
+          <RespiratorioForm
+            fieldsRespiratorio={fieldsRespiratorio}
+            handleInputChangeRespiratorio={handleInputChangeRespiratorio}
+            respiratorio={respiratorio}
+          />
+        )}
       {GROUPS_ENUM[currentGroup as keyof typeof GROUPS_ENUM] ===
         'hematologico' && (
-        <HematologicoForm
-          fieldsHematologico={fieldsHematologico}
-          handleInputChangeHematologico={handleInputChangeHematologico}
-          hematologico={hematologico}
-        />
-      )}
+          <HematologicoForm
+            fieldsHematologico={fieldsHematologico}
+            handleInputChangeHematologico={handleInputChangeHematologico}
+            hematologico={hematologico}
+          />
+        )}
 
       {GROUPS_ENUM[currentGroup as keyof typeof GROUPS_ENUM] === 'hepatico' && (
         <HepaticoForm
@@ -1218,12 +1220,12 @@ const MyForm = () => {
       )}
       {GROUPS_ENUM[currentGroup as keyof typeof GROUPS_ENUM] ===
         'neurologico' && (
-        <NeurologicoForm
-          GlasgowOptions={GlasgowOptions}
-          selectedValue={selectedValue}
-          setSelectedValue={setSelectedValue}
-        />
-      )}
+          <NeurologicoForm
+            GlasgowOptions={GlasgowOptions}
+            selectedValue={selectedValue}
+            setSelectedValue={setSelectedValue}
+          />
+        )}
       {GROUPS_ENUM[currentGroup as keyof typeof GROUPS_ENUM] === 'uterino' && (
         <UterinoForm
           BloodsOptions={BloodsOptions}
@@ -1235,16 +1237,16 @@ const MyForm = () => {
       )}
       {GROUPS_ENUM[currentGroup as keyof typeof GROUPS_ENUM] ===
         'gastrointestinal' && (
-        <GastroIntestinalForm
-          ToleranciaVíaOralOptions={ToleranciaVíaOralOptions}
-          fieldsGastroIntestinal={fieldsGastroIntestinal}
-          gastroIntestinal={gastroIntestinal}
-          handleCalculateGastroIntestinal={handleCalculateGastroIntestinal}
-          handleInputChangeGastroIntestinal={handleInputChangeGastroIntestinal}
-        />
-      )}
+          <GastroIntestinalForm
+            ToleranciaVíaOralOptions={ToleranciaVíaOralOptions}
+            fieldsGastroIntestinal={fieldsGastroIntestinal}
+            gastroIntestinal={gastroIntestinal}
+            handleCalculateGastroIntestinal={handleCalculateGastroIntestinal}
+            handleInputChangeGastroIntestinal={handleInputChangeGastroIntestinal}
+          />
+        )}
       {GROUPS_ENUM[currentGroup as keyof typeof GROUPS_ENUM] ===
-      'gastrointestinal' ? (
+        'gastrointestinal' ? (
         <View
           style={{
             width: '100%',
@@ -1257,14 +1259,8 @@ const MyForm = () => {
             onPress={handleCalculateResult}
             icon="check"
             mode="contained"
-            style={{
-              width: 200,
-              height: 50,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Text style={{fontSize: 20, color: 'white'}}>Calcular</Text>
+            style={{ width: 200, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#17C2EC' }}>
+            <Text style={{ fontSize: 20, color: 'white' }}>Calcular</Text>
           </Button>
         </View>
       ) : (
@@ -1280,14 +1276,8 @@ const MyForm = () => {
             onPress={handleCurrentGroup}
             icon="check"
             mode="contained"
-            style={{
-              width: 200,
-              height: 50,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Text style={{fontSize: 20, color: 'white'}}>Siguiente</Text>
+            style={{ width: 200, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#17C2EC' }}>
+            <Text style={{ fontSize: 20, color: 'white' }}>Siguiente</Text>
           </Button>
         </View>
       )}
