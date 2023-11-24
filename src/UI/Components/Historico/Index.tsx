@@ -5,9 +5,20 @@ import { Appbar, Avatar, Button, Card, IconButton } from 'react-native-paper';
 import { fetchGetDatoClinicoByUserId } from '../../../services';
 import { IDatosClinicoIndex, IDoctor, IPatient } from '../../../types/types';
 import { CardHistorico } from './CardHistorico';
+import { PieChartData as RNChartPieChartData } from 'react-native-svg-charts';
+import { BarChartExample } from '../../../../grafic';
 
 interface IParams {
   userId: string;
+}
+
+interface PieChartData extends RNChartPieChartData {
+    key: number;
+    amount: number;
+    name?: string;
+    svg: {
+        fill: string;
+    };
 }
 
 const Historico = () => {
@@ -18,13 +29,36 @@ const Historico = () => {
   const [datoClinico, setDatoClinico] = useState<Array<IDatosClinicoIndex>>([]);
   const [user, setUser] = useState<IPatient | IDoctor>({});
 
+  const [leve, setLeve] = useState(0);
+  const [medio, setMedio] = useState(0)
+  const [severo, setSevero] = useState(0);
+  const [extremo, setExtremo] = useState(0);
+
   const navigation = useNavigation();
 
   useEffect(() => {
     const getDatoClinico = async () => {
       const datoClinicoResult = await fetchGetDatoClinicoByUserId(userId);
 
+      let leveCount = 0;
+      let medioCount = 0;
+      let severoCount = 0;
+      let extremoCount = 0;
+
       setDatoClinico(datoClinicoResult.datosClinicos);
+
+      datoClinicoResult.datosClinicos.map((datoClinico:IDatosClinicoIndex) => {
+        if (datoClinico.escalaClinicaString === 'MML') leveCount++;
+        if (datoClinico.escalaClinicaString === 'MMM') medioCount++;
+        if (datoClinico.escalaClinicaString === 'MMS') severoCount++;
+        if (datoClinico.escalaClinicaString === 'MME') extremoCount++;
+      });
+
+      setLeve(leveCount);
+      setMedio(medioCount);
+      setSevero(severoCount);
+      setExtremo(extremoCount);
+
       delete datoClinicoResult.datosClinicos;
 
       setUser(datoClinicoResult);
@@ -33,6 +67,12 @@ const Historico = () => {
     getDatoClinico();
   }, []);
 
+  const data: PieChartData[] = [
+    { key: 1, amount: leve, name: 'MML', svg: { fill: '#00FF00' } },
+    { key: 2, amount: medio, name: 'MMM', svg: { fill: '#FFFF00' } },
+    { key: 3, amount: severo, name: 'MMS', svg: { fill: '#FFA500' } },
+    { key: 4, amount: extremo, name: 'MME', svg: { fill: '#FF0000' } },
+];
   const toFormPatient = () => {
     //@ts-ignore
     navigation.navigate('MyForm', { id: user.id });
@@ -71,6 +111,7 @@ const Historico = () => {
       )}
       <View style={{ flex: 1, paddingTop: 16}}>
         <ScrollView
+        style={{flex:1}}
           contentContainerStyle={{
             justifyContent: 'center',
             alignItems: 'center',
@@ -81,6 +122,9 @@ const Historico = () => {
           ))}
         </ScrollView>
       </View>
+        <View style={{ flex: 1, paddingTop: 16, paddingBottom: 16}}>
+        <BarChartExample data={data} />
+        </View>
     </>
   );
 };

@@ -20,7 +20,6 @@ import Pacient from './src/UI/Page/Pacient/pacientView';
 import ListDoctor from './src/UI/Page/Doctor/doctorList';
 import DoctorProfile from './src/UI/Page/Doctor/doctorView';
 import App22 from './App22';
-import BarChartExample from './grafic';
 import Historico from './src/UI/Components/Historico/Index';
 
 
@@ -33,7 +32,6 @@ const screenOptions = {
 function AppStack() {
     return (
         <Stack.Navigator screenOptions={screenOptions} initialRouteName="Login">
-            <Stack.Screen options={{ headerShown: false }} name="BarChartExample" component={BarChartExample} />
             <Stack.Screen options={{ headerShown: false }} name="App22" component={App22} />
             <Stack.Screen options={{ headerShown: false }} name="RegisterPatient" component={RegisterPatient} />
             <Stack.Screen options={{ headerShown: false }} name="MyComponent" component={MyComponent} />

@@ -12,6 +12,10 @@ interface PieChartData extends RNChartPieChartData {
     };
 }
 
+interface IBarChartExampleProps {
+    data: PieChartData[]
+}
+
 interface LabelsProps {
     slices?: Array<{
         labelCentroid?: [number, number];
@@ -20,13 +24,7 @@ interface LabelsProps {
     }>;
 }
 
-const BarChartExample: React.FC = () => {
-    const data: PieChartData[] = [
-        { key: 1, amount: 50, name: 'test', svg: { fill: '#7cb490' } },
-        { key: 2, amount: 50, name: 'test2', svg: { fill: '#3a89c9' } },
-        { key: 3, amount: 40, name: 'test3', svg: { fill: '#ff6600' } },
-        { key: 4, amount: 95, name: 'test4', svg: { fill: '#d31900' } },
-    ];
+export const BarChartExample = ({data}:IBarChartExampleProps) => {
 
     const Labels: React.FC<LabelsProps> = ({ slices }) => {
         return slices?.map((slice, index) => {
@@ -69,5 +67,3 @@ const BarChartExample: React.FC = () => {
         </PieChart>
     );
 };
-
-export default BarChartExample;
