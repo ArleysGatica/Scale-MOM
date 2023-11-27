@@ -61,11 +61,11 @@ export const GastroIntestinalForm = ({
               columnGap: 10,
               rowGap: 10,
             }}>
-            {field.name === 'ToleranciaVíaOral' ? (
+            {field.name === 'ToleranciaViaOral' ? (
               <Picker
-                selectedValue={gastroIntestinal.ToleranciaVíaOral}
+                selectedValue={gastroIntestinal.ToleranciaViaOral}
                 onValueChange={(itemValue, itemIndex) =>
-                    handleInputChangeGastroIntestinal("ToleranciaVíaOral", itemValue as any)
+                    handleInputChangeGastroIntestinal("ToleranciaViaOral", itemValue as any)
                 }
                 style={styles.picker}>
                 {Object.entries(ToleranciaVíaOralOptions).map(

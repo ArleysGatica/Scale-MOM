@@ -34,7 +34,7 @@ export const UterinoForm = ({
       <View style={styles.containerDrop}>
         <Text style={styles.label}>Hemorragia</Text>
         <Picker
-          selectedValue={uterino.HemorragiaObstétrica}
+          selectedValue={uterino.HemorragiaObstetrica}
           onValueChange={(itemValue, itemIndex) =>
             handleInputChangeUterino("HemorragiaObstétrica", itemValue as any)
           }

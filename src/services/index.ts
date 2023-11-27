@@ -72,6 +72,8 @@ export const fetchUpdateDoctors = async (id: string, doctor: IDoctor) => {
 
 //Patients
 export const fetchCreatePatient = async (paciente: IPatient) => {
+    console.log(paciente);
+    
     return await ConexionFetch({ body: paciente, method: 'POST', controller: "user" })
 }
 

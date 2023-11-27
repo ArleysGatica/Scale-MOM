@@ -31,7 +31,7 @@ const Historico = () => {
 
   const { userId } = route.params as IParams;
 
-  const [datoClinico, setDatoClinico] = useState<Array<IDatosClinicoIndex>>([]);
+  const [datosClinicos, setDatosClinicos] = useState<Array<IDatosClinicoIndex>>([]);
   const [user, setUser] = useState<IPatient | IDoctor>({});
 
   const [leve, setLeve] = useState(0);
@@ -50,7 +50,15 @@ const Historico = () => {
         return;
       }
 
-      console.log(status);
+      const dataMatrix = datosClinicos.map((datoClinico) => {
+        // Excluir el campo específico (respiratorioValue en este caso)
+        const { pacienteId, doctorId , ...restoDatosClinico } = datoClinico;
+        return Object.values({pacienteId:pacienteId.username, doctorId:doctorId.username, ...restoDatosClinico, });
+      });
+
+      dataMatrix.unshift(Object.keys(datosClinicos[0]).filter(key => key !== 'RespiratorioValue'));
+
+      console.log(dataMatrix);
       
 
       const data = [
@@ -60,12 +68,12 @@ const Historico = () => {
       ];
   
       const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.aoa_to_sheet([ ["Odd", "Even", "Total"], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [2, 4, 6, 8, 10, 12, 14, 16, 18, 20] , [3, 6, 9, 12, 15, 18, 21, 24, 27, 30]]);
+      const ws = XLSX.utils.aoa_to_sheet(dataMatrix);
       XLSX.utils.book_append_sheet(wb, ws, 'Sheet1', true);
   
       const excelBuffer = XLSX.write(wb, { type: 'base64' });
   
-        const filePath = `${FileSystem.documentDirectory}example.xlsx`;
+        const filePath = `${FileSystem.documentDirectory}example3.xlsx`;
   
         // Se escribe el archivo en el sistema de archivos
         FileSystem.writeAsStringAsync(filePath, excelBuffer, { encoding: FileSystem.EncodingType.Base64 }).then(() => {
@@ -86,7 +94,7 @@ const Historico = () => {
       let severoCount = 0;
       let extremoCount = 0;
 
-      setDatoClinico(datoClinicoResult.datosClinicos);
+      setDatosClinicos(datoClinicoResult.datosClinicos);
 
       datoClinicoResult.datosClinicos.map((datoClinico:IDatosClinicoIndex) => {
         if (datoClinico.escalaClinicaString === 'MML') leveCount++;
@@ -172,7 +180,7 @@ const Historico = () => {
             alignItems: 'center',
             gap: 16,
           }}>
-          {datoClinico.map((datoClinico, index) => (
+          {datosClinicos.map((datoClinico, index) => (
             <CardHistorico datoClinico={datoClinico} key={index} />
           ))}
         </ScrollView>

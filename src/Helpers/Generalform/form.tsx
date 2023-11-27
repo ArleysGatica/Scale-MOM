@@ -70,7 +70,7 @@ const fieldsRenal = [
     medida: 'mg/dL',
   },
   {
-    name: 'TasadefiltraciónGlomerular',
+    name: 'TasadefiltracionGlomerular',
     label: 'Filtrado Glomerular:',
     min: 15,
     max: 110,
@@ -104,7 +104,7 @@ const fieldsRespiratorio = [
     max: 500,
     medida: 'PaO2/FiO2',
   },
-  { name: 'Saturación', label: 'Saturación:', min: 85, max: 100, medida: '%' },
+  { name: 'Saturacion', label: 'Saturación:', min: 85, max: 100, medida: '%' },
 ];
 
 const fieldsHematologico = [
@@ -150,7 +150,7 @@ const fieldsHepatico = [
     medida: 'mg/dL',
   },
   {
-    name: 'PresiónColoidosmótica',
+    name: 'PresionColoidosmotica',
     label: 'PresiónColoidosmótica:',
     min: 15,
     max: 22,
@@ -158,7 +158,7 @@ const fieldsHepatico = [
   },
   { name: 'Albumina', label: 'Albumina:', min: 2, max: 5, medida: 'g/dL' },
   {
-    name: 'GlobulinaSérica',
+    name: 'GlobulinaSerica',
     label: 'GlobulinaSérica:',
     min: 2,
     max: 5,
@@ -169,12 +169,12 @@ const fieldsHepatico = [
 const fieldsNeurologico = [{ name: 'EscalaGlasgow', label: 'EscalaGlasgow:' }];
 
 const fieldsUterino = [
-  { name: 'HemorragiaObstétrica', label: 'HemorragiaObstétrica:' },
+  { name: 'HemorragiaObstetrica', label: 'HemorragiaObstétrica:' },
   { name: 'PerdidaVolumenSangre', label: 'PerdidaVolumenSangre:' },
 ];
 
 const fieldsGastroIntestinal = [
-  { name: 'ToleranciaVíaOral', label: 'ToleranciaVíaOral:' },
+  { name: 'ToleranciaViaOral', label: 'ToleranciaVíaOral:' },
   { name: 'Glucosa', label: 'Glucosa:', min: 45, max: 190, medida: 'mg/dL' },
   { name: 'NA', label: 'NA:', min: 120, max: 160, medida: 'mEq/L' },
   { name: 'K', label: 'K:', min: 3, max: 5.5, medida: 'mEq/L' },
@@ -213,7 +213,7 @@ const MyForm = () => {
     AcidoUrico: undefined,
     Diuresis: undefined,
     Proteinuria: undefined,
-    TasadefiltraciónGlomerular: undefined,
+    TasadefiltracionGlomerular: undefined,
     DeficitBase: undefined,
     Orina: 0,
     horas: 0,
@@ -225,7 +225,7 @@ const MyForm = () => {
   const [respiratorio, setRespiratorio] = useState<IRespiratorio>({
     FrecuenciaRespiratoria: undefined,
     IndiceKirby: undefined,
-    Saturación: undefined,
+    Saturacion: undefined,
   });
 
   //cuarto grupo
@@ -243,9 +243,9 @@ const MyForm = () => {
     Transaminasas: undefined,
     LDH: undefined,
     BilirrubinasTotales: undefined,
-    PresiónColoidosmótica: undefined,
+    PresionColoidosmotica: undefined,
     Albumina: undefined,
-    GlobulinaSérica: undefined,
+    GlobulinaSerica: undefined,
     IndiceBriones: undefined,
   });
 
@@ -290,7 +290,7 @@ const MyForm = () => {
 
   //septimo grupo
   const [uterino, setUterino] = useState<IUterino>({
-    HemorragiaObstétrica: 0,
+    HemorragiaObstetrica: 0,
     PerdidaVolumenSangre: 0,
   });
 
@@ -303,7 +303,7 @@ const MyForm = () => {
 
   //octavo grupo
   const [gastroIntestinal, setGastroIntestinal] = useState<IGastroIntestital>({
-    ToleranciaVíaOral: 0,
+    ToleranciaViaOral: 0,
     Glucosa: undefined,
     NA: undefined,
     K: undefined,
@@ -319,9 +319,9 @@ const MyForm = () => {
       return objetoRemodelado;
   }
 
-  const handleCalculateResult = async () => {
-    //@ts-ignore
-    navigation.navigate('ListPatient', { id: Math.random() });
+  const handleCalculate = async () => {
+    // //@ts-ignore
+    // navigation.navigate('ListPatient', { id: Math.random() });
 
     if (
       handleCalculateRenal().creatinina === false ||
@@ -620,7 +620,7 @@ const MyForm = () => {
 
     const calculateTasadefiltraciónGlomerular = (): number | boolean => {
       let tasadefiltraciónGlomerular =
-        renalData.TasadefiltraciónGlomerular || 0;
+        renalData.TasadefiltracionGlomerular || 0;
       if (renalData.Creatinina && renalData.edad) {
         const f = 0.7;
         const TFG =
@@ -632,7 +632,7 @@ const MyForm = () => {
         const roundedTFG = TFG.toFixed(2);
         setRenalData({
           ...renalData,
-          TasadefiltraciónGlomerular: parseFloat(roundedTFG),
+          TasadefiltracionGlomerular: parseFloat(roundedTFG),
         });
       }
 
@@ -731,7 +731,7 @@ const MyForm = () => {
     };
 
     const calculateSaturacion = (): number => {
-      let StValue = respiratorio.Saturación || 0;
+      let StValue = respiratorio.Saturacion || 0;
       if (StValue) {
         if (StValue >= 94.1) {
           return 0;
@@ -950,10 +950,10 @@ const MyForm = () => {
     };
 
     const calculatePresiónColoidosmótica = (): number => {
-      if (hepatico.Albumina && hepatico.GlobulinaSérica && cardioData.Tam) {
+      if (hepatico.Albumina && hepatico.GlobulinaSerica && cardioData.Tam) {
         const presióncoloidosmótica = (
           hepatico.Albumina * 5.54 +
-          hepatico.GlobulinaSérica * 1.43
+          hepatico.GlobulinaSerica * 1.43
         ).toFixed(2);
         const indicebriones = (
           Number(presióncoloidosmótica) / cardioData.Tam
@@ -965,7 +965,7 @@ const MyForm = () => {
         }));
       }
 
-      let presiónColoidosmótica = hepatico.PresiónColoidosmótica || 0;
+      let presiónColoidosmótica = hepatico.PresionColoidosmotica || 0;
 
       if (presiónColoidosmótica) {
         if (presiónColoidosmótica >= 3.1) {
@@ -1274,7 +1274,7 @@ const MyForm = () => {
             justifyContent: 'center',
           }}>
           <Button
-            onPress={handleCalculateResult}
+            onPress={handleCalculate}
             icon="check"
             mode="contained"
             style={{ width: 200, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#17C2EC' }}>
