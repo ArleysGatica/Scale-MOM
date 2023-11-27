@@ -7,6 +7,11 @@ import { IDatosClinicoIndex, IDoctor, IPatient } from '../../../types/types';
 import { CardHistorico } from './CardHistorico';
 import { PieChartData as RNChartPieChartData } from 'react-native-svg-charts';
 import { BarChartExample } from '../../../../grafic';
+import XLSX from 'xlsx';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import * as MediaLibrary from 'expo-media-library';
+import * as Permissions from 'expo-permissions';
 
 interface IParams {
   userId: string;
@@ -35,6 +40,42 @@ const Historico = () => {
   const [extremo, setExtremo] = useState(0);
 
   const navigation = useNavigation();
+
+  const downloadExcelFile = async () => {
+    try {
+      const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY_WRITE_ONLY);
+      
+      if (status !== 'granted') {
+        console.error('Permiso de escritura en la biblioteca de medios no concedido.');
+        return;
+      }
+
+      console.log(status);
+      
+
+      const data = [
+        { Nombre: 'John', Edad: 30, Ciudad: 'New York' },
+        { Nombre: 'Jane', Edad: 25, Ciudad: 'Los Angeles' },
+        // ... más datos
+      ];
+  
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet([ ["Odd", "Even", "Total"], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [2, 4, 6, 8, 10, 12, 14, 16, 18, 20] , [3, 6, 9, 12, 15, 18, 21, 24, 27, 30]]);
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1', true);
+  
+      const excelBuffer = XLSX.write(wb, { type: 'base64' });
+  
+        const filePath = `${FileSystem.documentDirectory}example.xlsx`;
+  
+        // Se escribe el archivo en el sistema de archivos
+        FileSystem.writeAsStringAsync(filePath, excelBuffer, { encoding: FileSystem.EncodingType.Base64 }).then(() => {
+            Sharing.shareAsync(filePath)
+        });
+     
+    } catch (error) {
+      console.error('Error al escribir o descargar el archivo XLSX:', error);
+    }
+  };
 
   useEffect(() => {
     const getDatoClinico = async () => {
@@ -65,6 +106,17 @@ const Historico = () => {
     };
 
     getDatoClinico();
+  }, []);
+
+  useEffect(() => {
+    const requestMediaLibraryPermission = async () => {
+      const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+      if (status !== 'granted') {
+        console.error('Permiso de la biblioteca de medios no concedido.');
+      }
+    };
+
+    requestMediaLibraryPermission();
   }, []);
 
   const data: PieChartData[] = [
@@ -101,11 +153,14 @@ const Historico = () => {
       </View>
       {user.userType === 0 && (
         <View style={styles.boxButtonAction}>
+            <Button style={styles.btnCreate} onPress={downloadExcelFile}>
+                Generar y Descargar Excel
+            </Button>
           <Button
             icon="archive-arrow-up-outline"
             style={styles.btnCreate}
             onPress={toFormPatient}>
-            Nuevo examen
+            Nuevo exam
           </Button>
         </View>
       )}

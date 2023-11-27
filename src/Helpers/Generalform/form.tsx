@@ -309,6 +309,16 @@ const MyForm = () => {
     K: undefined,
   });
 
+  const assignValue = (objetoDeCampos:any, objetoPadre:any) => {
+    const objetoRemodelado:any = {};
+
+    objetoDeCampos.forEach((field: { name: string | number; }) => {
+        objetoRemodelado[field.name] = objetoPadre[field.name];
+      });
+
+      return objetoRemodelado;
+  }
+
   const handleCalculateResult = async () => {
     //@ts-ignore
     navigation.navigate('ListPatient', { id: Math.random() });
@@ -326,7 +336,6 @@ const MyForm = () => {
     let resultH = encontrarValorMasAlto(handleCalculateHematologico()) || 0;
     let resultHepatico = encontrarValorMasAlto(handleCalculateHepatico()) || 0;
     let resultG = encontrarValorMasAlto(handleCalculateGastroIntestinal()) || 0;
-    console.log('resultCardio', resultCardio);
 
     let ResultSuma =
       (resultadoRenal as number) +
@@ -372,8 +381,17 @@ const MyForm = () => {
       renalValue: resultadoRenal as number,
       neurologicoValue: neurologico.EscalaGlasgow as number,
       respiratorioValue: resultRespiratorio,
-    };
+      ...assignValue(fields, cardioData),
+    ...assignValue(fieldsRenal, renalData),
+    ...assignValue(fieldsRespiratorio, respiratorio),
+    ...assignValue(fieldsHematologico, hematologico),
+    ...assignValue(fieldsHepatico, hepatico),
+    ...assignValue(fieldsNeurologico, neurologico),
+    ...assignValue(fieldsUterino, uterino),
+    ...assignValue(fieldsGastroIntestinal, gastroIntestinal),
 
+
+    };
     await fetchCreateDatoClinico(datoClinico);
   };
 
