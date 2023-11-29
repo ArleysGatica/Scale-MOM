@@ -321,7 +321,7 @@ const MyForm = () => {
 
   const handleCalculate = async () => {
     // //@ts-ignore
-    // navigation.navigate('ListPatient', { id: Math.random() });
+    navigation.navigate('ListPatient' as never);
 
     if (
       handleCalculateRenal().creatinina === false ||
