@@ -62,7 +62,7 @@ export const CardHistorico = ({ datoClinico }: IProps) => {
         </Text>
 
         <View style={{ flex: 1, flexDirection: 'row', gap: 18 }}>
-          <Text style={{ fontSize: 16, width: 'auto' }}>
+          <Text style={{ fontSize: 16, width: 50}}>
             {datoClinico.pacienteId.username}
           </Text>
           <Text style={{ fontSize: 16 }}>
@@ -79,7 +79,7 @@ export const CardHistorico = ({ datoClinico }: IProps) => {
           <Text style={{ fontSize: 16, width: 50 }}>
             {datoClinico.doctorId.username}
           </Text>
-          <Text style={{ fontSize: 16 }}>
+          <Text style={{ fontSize: 16, width: 50 }}>
             {datoClinico.doctorId.idMinsa}
           </Text>
         </View>

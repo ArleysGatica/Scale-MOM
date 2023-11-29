@@ -18,12 +18,12 @@ interface IParams {
 }
 
 interface PieChartData extends RNChartPieChartData {
-    key: number;
-    amount: number;
-    name?: string;
-    svg: {
-        fill: string;
-    };
+  key: number;
+  amount: number;
+  name?: string;
+  svg: {
+    fill: string;
+  };
 }
 
 const Historico = () => {
@@ -44,7 +44,7 @@ const Historico = () => {
   const downloadExcelFile = async () => {
     try {
       const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY_WRITE_ONLY);
-      
+
       if (status !== 'granted') {
         console.error('Permiso de escritura en la biblioteca de medios no concedido.');
         return;
@@ -52,34 +52,34 @@ const Historico = () => {
 
       const dataMatrix = datosClinicos.map((datoClinico) => {
         // Excluir el campo específico (respiratorioValue en este caso)
-        const { pacienteId, doctorId , ...restoDatosClinico } = datoClinico;
-        return Object.values({pacienteId:pacienteId.username, doctorId:doctorId.username, ...restoDatosClinico, });
+        const { pacienteId, doctorId, ...restoDatosClinico } = datoClinico;
+        return Object.values({ pacienteId: pacienteId.username, doctorId: doctorId.username, ...restoDatosClinico, });
       });
 
       dataMatrix.unshift(Object.keys(datosClinicos[0]).filter(key => key !== 'RespiratorioValue'));
 
       console.log(dataMatrix);
-      
+
 
       const data = [
         { Nombre: 'John', Edad: 30, Ciudad: 'New York' },
         { Nombre: 'Jane', Edad: 25, Ciudad: 'Los Angeles' },
         // ... más datos
       ];
-  
+
       const wb = XLSX.utils.book_new();
       const ws = XLSX.utils.aoa_to_sheet(dataMatrix);
       XLSX.utils.book_append_sheet(wb, ws, 'Sheet1', true);
-  
+
       const excelBuffer = XLSX.write(wb, { type: 'base64' });
-  
-        const filePath = `${FileSystem.documentDirectory}example3.xlsx`;
-  
-        // Se escribe el archivo en el sistema de archivos
-        FileSystem.writeAsStringAsync(filePath, excelBuffer, { encoding: FileSystem.EncodingType.Base64 }).then(() => {
-            Sharing.shareAsync(filePath)
-        });
-     
+
+      const filePath = `${FileSystem.documentDirectory}example3.xlsx`;
+
+      // Se escribe el archivo en el sistema de archivos
+      FileSystem.writeAsStringAsync(filePath, excelBuffer, { encoding: FileSystem.EncodingType.Base64 }).then(() => {
+        Sharing.shareAsync(filePath)
+      });
+
     } catch (error) {
       console.error('Error al escribir o descargar el archivo XLSX:', error);
     }
@@ -96,7 +96,7 @@ const Historico = () => {
 
       setDatosClinicos(datoClinicoResult.datosClinicos);
 
-      datoClinicoResult.datosClinicos.map((datoClinico:IDatosClinicoIndex) => {
+      datoClinicoResult.datosClinicos.map((datoClinico: IDatosClinicoIndex) => {
         if (datoClinico.escalaClinicaString === 'MML') leveCount++;
         if (datoClinico.escalaClinicaString === 'MMM') medioCount++;
         if (datoClinico.escalaClinicaString === 'MMS') severoCount++;
@@ -132,7 +132,8 @@ const Historico = () => {
     { key: 2, amount: medio, name: 'MMM', svg: { fill: '#FFFF00' } },
     { key: 3, amount: severo, name: 'MMS', svg: { fill: '#FFA500' } },
     { key: 4, amount: extremo, name: 'MME', svg: { fill: '#FF0000' } },
-];
+  ];
+
   const toFormPatient = () => {
     //@ts-ignore
     navigation.navigate('MyForm', { id: user.id });
@@ -160,21 +161,32 @@ const Historico = () => {
         </Text>
       </View>
       {user.userType === 0 && (
-        <View style={styles.boxButtonAction}>
+        <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', flexDirection: 'column' }}>
+          <View style={styles.boxButtonAction}>
             <Button style={styles.btnCreate} onPress={downloadExcelFile}>
-                Generar y Descargar Excel
+              Generar y Descargar Excel
             </Button>
-          <Button
-            icon="archive-arrow-up-outline"
-            style={styles.btnCreate}
-            onPress={toFormPatient}>
-            Nuevo exam
-          </Button>
+            <Button
+              icon="archive-arrow-up-outline"
+              style={styles.btnCreate}
+              onPress={toFormPatient}>
+              Nuevo examen
+            </Button>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', width: '100%', height: 50, }}>
+            {data.map((item, index) => (
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', width: '25%', borderRadius: 10, }}>
+                <View style={{ width: 20, height: 20, backgroundColor: item.svg.fill, borderRadius: 10, }}></View>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: 'center', backgroundColor: 'white', }}>{item.name}</Text>
+              </View>
+            ))}
+          </View>
         </View>
+
       )}
-      <View style={{ flex: 1, paddingTop: 16}}>
+      <View style={{ flex: 1, paddingTop: 16 }}>
         <ScrollView
-        style={{flex:1}}
+          style={{ flex: 1 }}
           contentContainerStyle={{
             justifyContent: 'center',
             alignItems: 'center',
@@ -185,9 +197,11 @@ const Historico = () => {
           ))}
         </ScrollView>
       </View>
-        <View style={{ flex: 1, paddingTop: 16, paddingBottom: 16}}>
+      <Text
+        style={{ fontSize: 25, fontWeight: 'bold', textAlign: 'center', backgroundColor: 'white', }}>Grafica de datos</Text>
+      <View style={{ flex: 1, paddingTop: 20, paddingBottom: 10, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
         <BarChartExample data={data} />
-        </View>
+      </View>
     </>
   );
 };
@@ -219,12 +233,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flexDirection: 'row',
     columnGap: 12,
-    paddingLeft: '30%',
+    paddingLeft: '11%',
     paddingBottom: 16,
     paddingTop: 16,
   },
   btnCreate: {
-    color: '#fff' ,
+    color: '#fff',
     padding: 6,
     flexDirection: 'row',
     alignItems: 'center',
