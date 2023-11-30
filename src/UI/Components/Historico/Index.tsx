@@ -49,7 +49,9 @@ const Historico = () => {
         return Object.values({ pacienteId: pacienteId.username, doctorId: doctorId.username, ...restoDatosClinico, });
       });
 
-      dataMatrix.unshift(Object.keys(datosClinicos[0]).filter(key => key !== 'RespiratorioValue'));
+      const header = ['Paciente', 'Doctor'].concat(Object.keys(datosClinicos[0]).filter(key => key !== 'pacienteId' && key !== 'doctorId'));
+
+      dataMatrix.unshift(header);
 
       console.log(dataMatrix);
 
