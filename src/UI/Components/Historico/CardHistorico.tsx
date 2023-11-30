@@ -10,19 +10,28 @@ interface IProps {
 
 export const CardHistorico = ({ datoClinico }: IProps) => {
 
-  const [datetime, setDatetime] = useState<Date>(new Date());
-  const [time, setTime] = useState(() => moment(datetime).format('LTS'));
+    const [fecha, setFecha] = useState("");
+    const [hora, setHora] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log(new Date());
+        
 
-        const fechaHoraMoment = moment('2023-11-21');
-        setDatetime(fechaHoraMoment.toDate());
-        const savedTime = await AsyncStorage.getItem('savedTime');
-        if (savedTime) {
-          setTime(savedTime);
-        }
+        let fechaDate = new Date(datoClinico.fechaRegistro)
+
+        fechaDate.setDate(fechaDate.getDate() + 1)
+
+        console.log(datoClinico.fechaRegistro);
+        
+
+        const fechaHoraMoment = moment(fechaDate);
+
+        console.log(fechaHoraMoment.format('YYYY-MM-DD'));
+        
+        setFecha(fechaHoraMoment.format('YYYY-MM-DD'))// Obtiene '1990-01-01'
+        setHora(fechaHoraMoment.format('HH:mm:ss'))
       } catch (error) {
         console.error('Error al procesar la fecha:', error);
       }
@@ -101,7 +110,7 @@ export const CardHistorico = ({ datoClinico }: IProps) => {
         <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
           Fecha
         </Text>
-        <Text> {moment(datetime).format('YYYY-MM-DD ')} {time}</Text>
+        <Text> {fecha} {hora}</Text>
       </View>
     </View>
   </View>);
