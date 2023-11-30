@@ -49,7 +49,7 @@ export function Login({ navigation }: LoginFormProps) {
             <View style={style.Container}>
                 <Image source={require('../../../Assets/LogoappLogo.png')}
                     style={style.Logo} />
-                <Text style={style.txtSegund}>Login</Text>
+                <Text style={style.txtSegund}>Iniciar Sesión</Text>
             </View>
             <View style={{ width: '100%', alignItems: 'center' }}>
                 <Text style={style.txtForgot}>Nombre</Text>
