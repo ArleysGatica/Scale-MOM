@@ -36,25 +36,12 @@ const Historico = () => {
   const [datosClinicos, setDatosClinicos] = useState<Array<IDatosClinicoIndex>>([]);
   const [user, setUser] = useState<IPatient | IDoctor>({});
 
-  const [leve, setLeve] = useState(0);
-  const [medio, setMedio] = useState(0)
-  const [severo, setSevero] = useState(0);
-  const [extremo, setExtremo] = useState(0);
+  const [graficData, setGraficData] = useState<PieChartData[]>([]);
 
   const navigation = useNavigation();
 
   const downloadExcelFile = async () => {
     try {
-      //con esta ami no me funciona que ati si te sirve
-      const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY_WRITE_ONLY);
-
-      //con esta ami me funciona, pero no descarga toda la info de todas las variables(Campos)
-      // const { status } = await MediaLibrary.requestPermissionsAsync();
-
-      if (status !== 'granted') {
-        console.error('Permiso de escritura en la biblioteca de medios no concedido.');
-        return;
-      }
 
       const dataMatrix = datosClinicos.map((datoClinico) => {
         // Excluir el campo específico (respiratorioValue en este caso)
@@ -93,6 +80,8 @@ const Historico = () => {
       let severoCount = 0;
       let extremoCount = 0;
 
+      let dataGraficCopy: PieChartData[] = [];
+
       setDatosClinicos(datoClinicoResult.datosClinicos);
 
       datoClinicoResult.datosClinicos.map((datoClinico: IDatosClinicoIndex) => {
@@ -102,10 +91,12 @@ const Historico = () => {
         if (datoClinico.escalaClinicaString === 'MME') extremoCount++;
       });
 
-      setLeve(leveCount);
-      setMedio(medioCount);
-      setSevero(severoCount);
-      setExtremo(extremoCount);
+      if (leveCount > 0) dataGraficCopy.push({ key: 1, amount: leveCount, name: 'MML', svg: { fill: '#00FF00' } });
+      if (medioCount > 0) dataGraficCopy.push({ key: 2, amount: medioCount, name: 'MMM', svg: { fill: '#FFFF00' } });
+      if (severoCount > 0) dataGraficCopy.push({ key: 3, amount: severoCount, name: 'MMS', svg: { fill: '#FFA500' } });
+      if (extremoCount > 0) dataGraficCopy.push({ key: 4, amount: extremoCount, name: 'MME', svg: { fill: '#FF0000' } });
+
+      setGraficData(dataGraficCopy);
 
       delete datoClinicoResult.datosClinicos;
 
@@ -117,7 +108,8 @@ const Historico = () => {
 
   useEffect(() => {
     const requestMediaLibraryPermission = async () => {
-      const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      console.log(status);
       if (status !== 'granted') {
         console.error('Permiso de la biblioteca de medios no concedido.');
       }
@@ -126,17 +118,17 @@ const Historico = () => {
     requestMediaLibraryPermission();
   }, []);
 
-  const data: PieChartData[] = [
-    { key: 1, amount: leve, name: 'MML', svg: { fill: '#00FF00' } },
-    { key: 2, amount: medio, name: 'MMM', svg: { fill: '#FFFF00' } },
-    { key: 3, amount: severo, name: 'MMS', svg: { fill: '#FFA500' } },
-    { key: 4, amount: extremo, name: 'MME', svg: { fill: '#FF0000' } },
-  ];
-
   const toFormPatient = () => {
     //@ts-ignore
     navigation.navigate('MyForm', { id: user.id });
   };
+
+  const data: PieChartData[] = [
+    { key: 1, amount: 0, name: 'MML', svg: { fill: '#00FF00' } },
+    { key: 2, amount: 0, name: 'MMM', svg: { fill: '#FFFF00' } },
+    { key: 3, amount: 0, name: 'MMS', svg: { fill: '#FFA500' } },
+    { key: 4, amount: 0, name: 'MME', svg: { fill: '#FF0000' } },
+  ];
 
   return (
     <>
@@ -163,7 +155,7 @@ const Historico = () => {
         <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', flexDirection: 'column' }}>
           <View style={styles.boxButtonAction}>
             <Button style={styles.btnCreate} onPress={downloadExcelFile}>
-              Generar y Descargar Excel
+              Enviar excel
             </Button>
             <Button
               icon="archive-arrow-up-outline"
@@ -199,7 +191,7 @@ const Historico = () => {
       <Text
         style={{ fontSize: 25, fontWeight: 'bold', textAlign: 'center', backgroundColor: 'white', }}>Grafica de datos</Text>
       <View style={{ flex: 1, paddingTop: 20, paddingBottom: 10, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
-        <BarChartExample data={data} />
+        <BarChartExample data={graficData} />
       </View>
     </>
   );
