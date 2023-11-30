@@ -7,11 +7,13 @@ import { IDatosClinicoIndex, IDoctor, IPatient } from '../../../types/types';
 import { CardHistorico } from './CardHistorico';
 import { PieChartData as RNChartPieChartData } from 'react-native-svg-charts';
 import { BarChartExample } from '../../../../grafic';
-import XLSX from 'xlsx';
-import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
-import * as MediaLibrary from 'expo-media-library';
+
 import * as Permissions from 'expo-permissions';
+
+import * as MediaLibrary from 'expo-media-library';
+import * as Sharing from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
+import * as XLSX from 'xlsx';
 
 interface IParams {
   userId: string;
@@ -43,7 +45,11 @@ const Historico = () => {
 
   const downloadExcelFile = async () => {
     try {
+      //con esta ami no me funciona que ati si te sirve
       const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY_WRITE_ONLY);
+
+      //con esta ami me funciona, pero no descarga toda la info de todas las variables(Campos)
+      // const { status } = await MediaLibrary.requestPermissionsAsync();
 
       if (status !== 'granted') {
         console.error('Permiso de escritura en la biblioteca de medios no concedido.');
@@ -60,20 +66,13 @@ const Historico = () => {
 
       console.log(dataMatrix);
 
-
-      const data = [
-        { Nombre: 'John', Edad: 30, Ciudad: 'New York' },
-        { Nombre: 'Jane', Edad: 25, Ciudad: 'Los Angeles' },
-        // ... más datos
-      ];
-
       const wb = XLSX.utils.book_new();
       const ws = XLSX.utils.aoa_to_sheet(dataMatrix);
       XLSX.utils.book_append_sheet(wb, ws, 'Sheet1', true);
 
       const excelBuffer = XLSX.write(wb, { type: 'base64' });
 
-      const filePath = `${FileSystem.documentDirectory}example3.xlsx`;
+      const filePath = `${FileSystem.documentDirectory}${user?.username}.xlsx`;
 
       // Se escribe el archivo en el sistema de archivos
       FileSystem.writeAsStringAsync(filePath, excelBuffer, { encoding: FileSystem.EncodingType.Base64 }).then(() => {
