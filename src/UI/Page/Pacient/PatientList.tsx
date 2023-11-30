@@ -10,6 +10,8 @@ const ListPatient = () => {
 
   const [listPatient, setListPatient] = React.useState<Array<any>>([]);
   const [searchQuery, setSearchQuery] = React.useState('');
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const itemsPerPage = 4;
 
   const route = useRoute();
 
@@ -23,9 +25,32 @@ const ListPatient = () => {
     })
   }, [id]);
 
-  const filteredPatients = listPatient.filter((patient) =>
-    patient.username.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const filteredPatients = listPatient
+    .slice(startIndex, endIndex)
+    .filter((patient) =>
+      patient.username.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+  React.useEffect(() => {
+    fetchGetPatient().then((response) => {
+      setListPatient(response.pacientes);
+    });
+  }, [currentPage, itemsPerPage, id]);
+
+  const goToNextPage = () => {
+    const totalPages = Math.ceil(listPatient.length / itemsPerPage);
+
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const goToPrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
 
   return (
     <LayoutDrawer>
@@ -44,7 +69,7 @@ const ListPatient = () => {
           onChangeText={(text) => setSearchQuery(text)}
         />
       </View>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', maxHeight: "70%", rowGap: 20 }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', maxHeight: "70%", rowGap: 10 }}>
         {
           filteredPatients.map((patient) => (
             //@ts-ignore 
@@ -64,6 +89,24 @@ const ListPatient = () => {
           ))
         }
       </View>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 10 }}>
+        <Button
+          style={{ borderColor: '#17C2EC', borderWidth: 1, borderRadius: 4, backgroundColor: '#17C2EC' }}
+          onPress={goToPrevPage} disabled={currentPage === 1}>
+          Página Anterior
+        </Button>
+        <Text
+          style={{ fontSize: 20, fontWeight: 'bold', marginHorizontal: 5 }}
+        >
+          {`Página ${currentPage}`}
+        </Text>
+        <Button
+          style={{ borderColor: '#17C2EC', borderWidth: 1, borderRadius: 4, backgroundColor: '#17C2EC' }}
+          onPress={goToNextPage}>
+          Página Siguiente
+        </Button>
+      </View>
+
       <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
         <Button
           icon="account-check"
