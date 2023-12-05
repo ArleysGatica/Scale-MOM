@@ -168,7 +168,7 @@ const Historico = () => {
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', width: '100%', height: 50, }}>
             {data.map((item, index) => (
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', width: '25%', borderRadius: 10, }}>
+              <View key={index} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', width: '25%', borderRadius: 10, }}>
                 <View style={{ width: 20, height: 20, backgroundColor: item.svg.fill, borderRadius: 10, }}></View>
                 <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: 'center', backgroundColor: 'white', }}>{item.name}</Text>
               </View>
