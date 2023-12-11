@@ -191,7 +191,7 @@ const Historico = () => {
         </ScrollView>
       </View>
       <Text
-        style={{ fontSize: 25, fontWeight: 'bold', textAlign: 'center', backgroundColor: 'white', }}>Grafica de datos</Text>
+        style={{ fontSize: 25, fontWeight: 'bold', textAlign: 'center', backgroundColor: 'white', }}>Gráfica de datos</Text>
       <View style={{ flex: 1, paddingTop: 20, paddingBottom: 10, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
         <BarChartExample data={graficData} />
       </View>

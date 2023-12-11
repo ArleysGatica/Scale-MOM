@@ -40,11 +40,9 @@ export const HepaticoForm = ({
               height: 80,
               justifyContent: 'center',
               flexWrap: 'wrap',
-              gap: 10,
               columnGap: 10,
-              rowGap: 10,
             }}>
-            <Text style={{width: 66, textAlign: 'center', fontSize: 15}}>
+            <Text style={{width: 95, textAlign: 'center', fontSize: 15}}>
               {field.name}
             </Text>
             <TextInput

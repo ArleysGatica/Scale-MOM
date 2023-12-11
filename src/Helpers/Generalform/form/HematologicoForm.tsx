@@ -44,7 +44,7 @@ export const HematologicoForm = ({
               columnGap: 10,
               rowGap: 10,
             }}>
-            <Text style={{width: 66, textAlign: 'center', fontSize: 15}}>
+            <Text style={{width: 74, textAlign: 'center', fontSize: 15}}>
               {field.name}
             </Text>
             <TextInput

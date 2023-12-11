@@ -70,7 +70,7 @@ const fieldsRenal = [
     medida: 'mg/dL',
   },
   {
-    name: 'TasadefiltracionGlomerular',
+    name: 'Filtrado Glomerular:',
     label: 'Filtrado Glomerular:',
     min: 15,
     max: 110,
@@ -86,7 +86,7 @@ const fieldsRenal = [
   { name: 'Orina', label: 'Orina:', min: 100, max: 2000, medida: 'mL' },
   { name: 'horas', label: 'horas:', min: 1, max: 24, medida: 'Hrs' },
   { name: 'Peso', label: 'Peso:', min: 40, max: 150, medida: 'KG' },
-  { name: 'edad', label: 'edad:', min: 15, max: 100, medida: 'Años' },
+  { name: 'Edad', label: 'edad:', min: 15, max: 100, medida: 'Años' },
 ];
 
 const fieldsRespiratorio = [
@@ -143,14 +143,14 @@ const fieldsHepatico = [
   },
   { name: 'LDH', label: 'LDH:', min: 300, max: 900, medida: 'U/L' },
   {
-    name: 'BilirrubinasTotales',
+    name: 'Bilirrubinas',
     label: 'BilirrubinasTotales:',
     min: 0.09,
     max: 3.7,
     medida: 'mg/dL',
   },
   {
-    name: 'PresionColoidosmotica',
+    name: 'P.Coloidosmotica',
     label: 'PresiónColoidosmótica:',
     min: 15,
     max: 22,
