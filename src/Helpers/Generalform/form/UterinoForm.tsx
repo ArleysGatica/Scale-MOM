@@ -1,7 +1,7 @@
 import React from 'react';
 import {ICardioVascular, IUterino} from '../../../types/types';
 import {View, StyleSheet, ScrollView} from 'react-native';
-import {Text, TextInput} from 'react-native-paper';
+import { Text, TextInput, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 
 interface IFieldsUterino {
@@ -24,7 +24,21 @@ export const UterinoForm = ({
   BloodsOptions,
   uterino
 }: Iprops) => {
-  return (
+
+    const theme = {
+        ...DefaultTheme,
+        colors: {
+            ...DefaultTheme.colors,
+            text: 'blue',
+            primary: '#17C2EC',
+            underlineColor: 'transparent',
+            background: '#ffffff',
+
+        },
+    };
+
+    return (
+        <PaperProvider theme={theme}> 
     <ScrollView
       contentContainerStyle={styles.scrollViewContent}
       keyboardShouldPersistTaps="handled">
@@ -57,7 +71,8 @@ export const UterinoForm = ({
           ))}
         </Picker>
       </View>
-    </ScrollView>
+         </ScrollView>
+        </PaperProvider>
   );
 };
 

@@ -26,7 +26,8 @@ export const CardioVacularForm = ({ fields, handleInputChange, cardioData }: Ipr
       text: 'blue',
       primary: '#17C2EC',
       underlineColor: 'transparent',
-      background: '#ffffff',
+        background: '#ffffff',
+      
 
     },
   };

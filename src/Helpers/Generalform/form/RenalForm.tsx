@@ -1,7 +1,7 @@
 import React from 'react';
 import {ICardioVascular, IRenal} from '../../../types/types';
 import {View, StyleSheet, ScrollView} from 'react-native';
-import {Text, TextInput} from 'react-native-paper';
+import { Text, TextInput, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 interface IFields {
   name: string;
@@ -22,7 +22,21 @@ export const RenalForm = ({
   handleInputChangeRenal,
   renalData,
 }: Iprops) => {
-  return (
+
+    const theme = {
+        ...DefaultTheme,
+        colors: {
+            ...DefaultTheme.colors,
+            text: 'blue',
+            primary: '#17C2EC',
+            underlineColor: 'transparent',
+            background: '#ffffff',
+
+        },
+    };
+
+    return (
+    <PaperProvider theme={theme}> 
     <ScrollView
       contentContainerStyle={styles.scrollViewContent}
       keyboardShouldPersistTaps="handled">
@@ -48,16 +62,16 @@ export const RenalForm = ({
               {field.name}
             </Text>
             <TextInput
-              style={{
-                width: 200,
-                height: 50,
-                marginBottom: 10,
-                backgroundColor: 'rgb(255, 255, 255)',
-                borderColor: 'rgba(0, 0, 0, 0.29)',
-                borderRadius: 4,
-                borderWidth: 1,
-                color: 'black',
-              }}
+                    style={{
+                        width: 200,
+                        height: 50,
+                        marginBottom: 10,
+                        backgroundColor: 'rgb(255, 255, 255)',
+                        borderColor: '#17C2EC',
+                        borderRadius: 4,
+                        borderWidth: 1,
+                        color: 'black',
+                    }}
               keyboardType="numeric"
               onChangeText={text => handleInputChangeRenal(field.name, text)}
               value={renalData[field.name as keyof IRenal]?.toString() || ''}
@@ -69,7 +83,8 @@ export const RenalForm = ({
           </View>
         );
       })}
-    </ScrollView>
+        </ScrollView>
+    </PaperProvider>
   );
 };
 

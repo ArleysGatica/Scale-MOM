@@ -1,7 +1,7 @@
 import React from 'react';
 import {ICardioVascular, IGastroIntestital} from '../../../types/types';
 import {View, StyleSheet, ScrollView} from 'react-native';
-import {Text, TextInput} from 'react-native-paper';
+import { Text, TextInput, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import {Picker} from '@react-native-picker/picker';
 
 interface IFields {
@@ -39,8 +39,22 @@ export const GastroIntestinalForm = ({
   ToleranciaVíaOralOptions,
   handleInputChangeGastroIntestinal,
 }: Iprops) => {
-  return (
-    <ScrollView
+
+    const theme = {
+        ...DefaultTheme,
+        colors: {
+            ...DefaultTheme.colors,
+            text: 'blue',
+            primary: '#17C2EC',
+            underlineColor: 'transparent',
+            background: '#ffffff',
+
+        },
+    };
+
+    return (
+    <PaperProvider theme={theme}> 
+     <ScrollView
       contentContainerStyle={styles.scrollViewContent}
       keyboardShouldPersistTaps="handled">
       <View style={styles.inner}>
@@ -80,16 +94,16 @@ export const GastroIntestinalForm = ({
                   {field.label}
                 </Text>
                 <TextInput
-                  style={{
-                    width: 200,
-                    height: 50,
-                    marginBottom: 10,
-                    backgroundColor: 'rgb(255, 255, 255)',
-                    borderColor: 'rgba(0, 0, 0, 0.29)',
-                    borderRadius: 4,
-                    borderWidth: 1,
-                    color: 'black',
-                  }}
+                                style={{
+                                    width: 200,
+                                    height: 50,
+                                    marginBottom: 10,
+                                    backgroundColor: 'rgb(255, 255, 255)',
+                                    borderColor: '#17C2EC',
+                                    borderRadius: 4,
+                                    borderWidth: 1,
+                                    color: 'black',
+                                }}
                   keyboardType="numeric"
                   onChangeText={text =>
                     handleInputChangeGastroIntestinal(field.name, text)
@@ -109,7 +123,8 @@ export const GastroIntestinalForm = ({
           </View>
         );
       })}
-    </ScrollView>
+        </ScrollView> 
+    </PaperProvider>
   );
 };
 
