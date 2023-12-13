@@ -66,10 +66,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  header: {
-    fontSize: 24,
-    marginBottom: 10,
-  },
+    header: {
+        fontSize: 40,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        paddingBottom: 25,
+        marginBottom: 10,
+    },  
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',

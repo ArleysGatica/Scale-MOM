@@ -37,7 +37,7 @@ export const CardioVacularForm = ({ fields, handleInputChange, cardioData }: Ipr
         contentContainerStyle={styles.scrollViewContent}
         keyboardShouldPersistTaps="handled">
         <View style={styles.inner}>
-          <Text style={styles.header}>CardioVascular</Text>
+         <Text style={styles.header}>Cardiovascular</Text>
         </View>
         {fields.map((field, index) => {
           return (
@@ -93,7 +93,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    fontSize: 24,
+      fontSize: 40,
+      fontWeight: 'bold',
+      textAlign: 'center',
+        paddingBottom: 25,
     marginBottom: 10,
   },
   inputContainer: {

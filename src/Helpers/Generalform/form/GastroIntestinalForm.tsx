@@ -44,7 +44,7 @@ export const GastroIntestinalForm = ({
       contentContainerStyle={styles.scrollViewContent}
       keyboardShouldPersistTaps="handled">
       <View style={styles.inner}>
-        <Text style={styles.header}>GastroIntestinal</Text>
+        <Text style={styles.header}>Gastrointestinal</Text>
       </View>
       {fieldsGastroIntestinal.map(field => {
         return (
@@ -54,7 +54,7 @@ export const GastroIntestinalForm = ({
               flexDirection: 'row',
               alignItems: 'center',
               width: '100%',
-              height: 80,
+              height: 70,
               justifyContent: 'center',
               flexWrap: 'wrap',
               gap: 10,
@@ -118,10 +118,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  header: {
-    fontSize: 24,
-    marginBottom: 10,
-  },
+    header: {
+        fontSize: 40,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        paddingBottom: 25,
+        marginBottom: 10,
+    },  
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
