@@ -84,9 +84,9 @@ const fieldsRenal = [
     medida: 'mmol/L',
   },
   { name: 'Orina', label: 'Orina:', min: 100, max: 2000, medida: 'mL' },
-  { name: 'horas', label: 'horas:', min: 1, max: 24, medida: 'Hrs' },
+  { name: 'Horas', label: 'horas:', min: 1, max: 24, medida: 'Hrs' },
   { name: 'Peso', label: 'Peso:', min: 40, max: 150, medida: 'KG' },
-  { name: 'Edad', label: 'edad:', min: 15, max: 100, medida: 'Años' },
+  { name: 'Edad', label: 'edad:', min: 12, max: 60, medida: 'Años' },
 ];
 
 const fieldsRespiratorio = [

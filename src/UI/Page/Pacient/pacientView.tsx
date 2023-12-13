@@ -24,10 +24,10 @@ const Pacient = () => {
     const objData: { name: keyof IPatient, label: string, type: string }[] = [
         { name: 'username', label: 'Nombre', type: 'text' },
         { name: 'dni', label: 'Cedula', type: 'text' },
-        { name: 'nameEncargado', label: 'Nombre Encargado', type: 'number' },
-        { name: 'telefonoEncargado', label: 'Telefono Encargado', type: 'number' },
-        { name: 'telefono', label: 'Telefono', type: 'number' },
+        { name: 'telefono', label: 'Telefono Paciente', type: 'number' },
         { name: 'edad', label: 'Edad', type: 'number' },
+        { name: 'nameEncargado', label: 'Nombre Encargado', type: 'number' },
+        { name: 'telefonoEncargado', label: 'Telefono Encargado', type: 'number' },      
     ];
     
     useEffect(() => {
