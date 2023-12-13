@@ -37,10 +37,10 @@ const NavigationView = ({ closeDrawer, id, name, image, }: NavigationViewProps &
     };
 
     const data: DataProps[] = [
-        { id: "1", name: "Home", image: require('../../../Assets/home.png') },
-        // { id: "2", name: "Profile", image: require('../../../Assets/avatar.png') },
-        { id: "3", name: "Historial", image: require('../../../Assets/historial.png') },
-        { id: "4", name: "Analitica", image: require('../../../Assets/estadisticas.png') },
+        // { id: "1", name: "Home", image: require('../../../Assets/home.png') },
+        // // { id: "2", name: "Profile", image: require('../../../Assets/avatar.png') },
+        // { id: "3", name: "Historial", image: require('../../../Assets/historial.png') },
+        // { id: "4", name: "Analitica", image: require('../../../Assets/estadisticas.png') },
         { id: "5", name: "Log Out", image: require('../../../Assets/Out.png') },
     ];
 

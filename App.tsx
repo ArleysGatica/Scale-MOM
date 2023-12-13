@@ -19,6 +19,9 @@ import ListPatient from './src/UI/Page/Pacient/PatientList';
 import Pacient from './src/UI/Page/Pacient/pacientView';
 import ListDoctor from './src/UI/Page/Doctor/doctorList';
 import DoctorProfile from './src/UI/Page/Doctor/doctorView';
+import App22 from './App22';
+import Historico from './src/UI/Components/Historico/Index';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -28,7 +31,8 @@ const screenOptions = {
 
 function AppStack() {
     return (
-        <Stack.Navigator screenOptions={screenOptions} initialRouteName="Welcome">
+        <Stack.Navigator screenOptions={screenOptions} initialRouteName="Login">
+            <Stack.Screen options={{ headerShown: false }} name="App22" component={App22} />
             <Stack.Screen options={{ headerShown: false }} name="RegisterPatient" component={RegisterPatient} />
             <Stack.Screen options={{ headerShown: false }} name="MyComponent" component={MyComponent} />
             <Stack.Screen options={{ headerShown: false }} name="ListPatient" component={ListPatient} />
@@ -42,6 +46,7 @@ function AppStack() {
             <Stack.Screen options={{ headerShown: false }} name="Login" component={Login} />
             <Stack.Screen options={{ headerShown: false }} name="MyForm" component={MyForm} />
             <Stack.Screen options={{ headerShown: false }} name="DoctorCreationForm" component={DoctorCreationForm} />
+            <Stack.Screen options={{ headerShown: false }} name="Historico" component={Historico} />
         </Stack.Navigator>
     )
 }

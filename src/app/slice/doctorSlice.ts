@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchDoctorById, fetchCreateDoctor, fetchDeleteDoctor } from "../../services";
-import { IGeneralState, IDoctor } from "../../types/types";
+import { IDoctorSlice, IDoctor } from "../../types/types";
 
-const initialState: IGeneralState = {
+const initialState: IDoctorSlice = {
     adduserUse: false,
     userUse: [],
     dataGeneral: [],
     status: "idle",
+    currentDoctor:{},
 };
 
 export const fetchDoctorByIdAsync = createAsyncThunk("doctors/id", async (id: string) => {
@@ -34,6 +35,13 @@ export const doctorsSlice = createSlice({
 
         RemoveDoctor: (state, { payload }: PayloadAction<Array<IDoctor>>) => {
             state.userUse = payload;
+        },
+        
+        EditDoctor: (state, { payload }: PayloadAction<Array<IDoctor>>) => {
+            state.userUse = payload;
+        },
+        setCurrentDoctor: (state, { payload }: PayloadAction<IDoctor>) => {
+            state.currentDoctor = payload;
         }
     },
     extraReducers: (builder) => {
@@ -59,5 +67,5 @@ export const doctorsSlice = createSlice({
 
 });
 
-export const { AddingDoctor, RemoveDoctor } = doctorsSlice.actions;
+export const { AddingDoctor, RemoveDoctor, setCurrentDoctor } = doctorsSlice.actions;
 export const DrReducer = doctorsSlice.reducer;

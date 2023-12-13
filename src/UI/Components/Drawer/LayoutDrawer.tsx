@@ -1,14 +1,19 @@
 import { useRef } from "react";
 import { DrawerLayoutAndroid, View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import NavigationView from "./Nave";
+import { useNavigation } from "@react-navigation/native";
 
 interface IProps {
     children: React.ReactNode;
 }
 
 export const LayoutDrawer = ({ children }:IProps) => {
-
+    const navigation = useNavigation();
     const drawer = useRef<DrawerLayoutAndroid>(null);
+    const toWelcome = () => {
+        //@ts-ignore
+        navigation.navigate('Welcome' as never);
+    }
 
     return (
 
@@ -25,9 +30,9 @@ export const LayoutDrawer = ({ children }:IProps) => {
             <View style={styles.headerContainer}>
                 <TouchableOpacity
                     style={styles.menuButton}
-                    onPress={() => drawer.current?.openDrawer()}
+                    onPress={toWelcome} 
                 >
-                    <Text style={styles.menuText}>☰</Text>
+                    <Text style={styles.menuText}>Salir</Text>
                 </TouchableOpacity>
                 <Text style={styles.title}>Home</Text>
             </View>
@@ -55,12 +60,14 @@ const styles = StyleSheet.create({
     menuText: {
         fontSize: 24,
         color: 'Black',
+        width: 100,
     },
     title: {
         fontSize: 18,
         fontWeight: 'bold',
         color: '#000',
-        marginLeft: 10,
+        marginLeft: 55,
+        paddingTop: 10,
     },
 
     container: {

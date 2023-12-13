@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, Image, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighlight, Alert, ActivityIndicator, Pressable, ScrollView, Text } from 'react-native';
-import { Appbar, Button, Card } from 'react-native-paper';
+import { View,  StyleSheet, Text } from 'react-native';
+import { Button, Card } from 'react-native-paper';
 import { fetchDeleteDoctor, getUserById } from '../../../services';
 import { useEffect, useState } from 'react';
 import { LayoutDrawer } from '../../Components/Drawer/LayoutDrawer';
@@ -42,7 +42,6 @@ const DoctorProfile = () => {
         navigation.navigate('DoctorCreationForm', { id: id });
     }
 
-
     const toDeleteDoctor = async () => {
         await fetchDeleteDoctor(id);
         //@ts-ignore
@@ -50,6 +49,10 @@ const DoctorProfile = () => {
 
     }
 
+    const toHistory = () => {
+        //@ts-ignore
+        navigation.navigate('Historico', { userId: id });
+    }
 
     return (
         <LayoutDrawer>
@@ -60,30 +63,42 @@ const DoctorProfile = () => {
             </View>
             <View style={styles.boxButtonAction}>
                 <Button
-                    icon="account-check"
+                    icon="account-edit"
                     mode="contained"
-                    style={{ width: 120, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                    style={{ width: 150, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#17C2EC' }}
                     onPress={toEditDoctor}
                 >
                     Editar
                 </Button>
                 <Button
-                    icon="account-check"
+                    icon="history"
                     mode="contained"
-                    style={{ width: 100, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                    style={{ width: 150, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#17C2EC' }}
+                    onPress={toHistory}
+                >
+                    Historial
+                </Button>
+                <Button
+                    icon="delete"
+                    mode="contained"
+                    style={{ width: 150, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#17C2EC' }}
                     onPress={toDeleteDoctor}
                 >
                     Borrar
                 </Button>
             </View>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', maxHeight: "70%", width: '100%' }}>
+            <View style={styles.containerCard}>
                 {
                     objData.map((item, index) => (
                         <Card.Title
                             key={index}
-                            style={{ width: '50%', marginBottom: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', paddingLeft:30 }}
+                            style={{ width: '50%', height: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', }}
+                
                             title={item.label}
+                            titleStyle={{ fontSize: 18, fontWeight: 'bold', width: '100%', justifyContent: 'center', alignItems: 'center', paddingLeft: 35 }}
+                            
                             subtitle={doctor[item.name]?.toString()}
+                            subtitleStyle={{ fontSize: 15, fontWeight: 'normal', width: '100%', justifyContent: 'center', alignItems: 'center', paddingLeft: 35}}
                         />
                     ))
                 }
@@ -94,6 +109,14 @@ const DoctorProfile = () => {
 }
 
 const styles = StyleSheet.create({
+    containerCard: {
+        flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', maxHeight: "30%", width: '80%', borderRadius: 18,
+        borderColor: '#17C2EC',
+        borderWidth: 1,
+        marginTop: 50,
+        flexDirection: 'row',
+    },
+
     box: {
         width: '100%',
         height: 90,
@@ -117,8 +140,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         backgroundColor: 'white',
-        flexDirection: 'row',
-        columnGap: 12,
+        gap: 12,
         paddingLeft: 8,
         paddingTop: 16,
     },

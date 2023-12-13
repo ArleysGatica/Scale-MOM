@@ -4,6 +4,7 @@ import { View, Image, TouchableOpacity, SafeAreaView, StyleSheet, TouchableHighl
 import { Appbar, Avatar, Button, Card, IconButton } from 'react-native-paper';
 import { fetchDeletePatient, getUserById } from '../../../services';
 import { IPatient } from '../../../types/types';
+import moment from 'moment';
 
 interface IParams {
     id: string;
@@ -23,12 +24,12 @@ const Pacient = () => {
     const objData: { name: keyof IPatient, label: string, type: string }[] = [
         { name: 'username', label: 'Nombre', type: 'text' },
         { name: 'dni', label: 'Cedula', type: 'text' },
-        { name: 'nameEncargado', label: 'Nombre Encargado', type: 'number' },
-        { name: 'telefonoEncargado', label: 'Telefono Encargado', type: 'number' },
-        { name: 'telefono', label: 'Telefono', type: 'number' },
+        { name: 'telefono', label: 'Telefono Paciente', type: 'number' },
         { name: 'edad', label: 'Edad', type: 'number' },
+        { name: 'nameEncargado', label: 'Nombre Encargado', type: 'number' },
+        { name: 'telefonoEncargado', label: 'Telefono Encargado', type: 'number' },      
     ];
-
+    
     useEffect(() => {
         if (id) {
             getUserById(id).then((response) => {
@@ -47,7 +48,7 @@ const Pacient = () => {
 
     const toFormPatient = () => {
         //@ts-ignore
-        navigation.navigate('MyForm', { id: id });
+        navigation.navigate('Historico', { userId: id });
     }
 
     const toDeletePatient = async () => {
@@ -58,8 +59,8 @@ const Pacient = () => {
 
     return (
         <>
-            <Appbar.Header>
-                <Appbar.BackAction onPress={() => { }} />
+            <Appbar.Header style={{ marginRight: 330 }}>
+                <Appbar.BackAction onPress={() => navigation.navigate('ListPatient' as never)} style={{ backgroundColor: '#17C2EC' }} />
             </Appbar.Header>
             <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
                 <Text style={{ fontSize: 25, fontWeight: 'bold' }}>
@@ -68,49 +69,83 @@ const Pacient = () => {
             </View>
             <View style={styles.boxButtonAction}>
                 <Button
-                    icon="account-check"
+                    icon="account-edit"
                     mode="contained"
-                    style={{ width: 120, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                    style={{ width: 120, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#17C2EC' }}
                     onPress={toEditPatient}
                 >
                     Editar
                 </Button>
 
                 <Button
-                    icon="account-check"
+                    icon="history"
                     mode="contained"
-                    style={{ width: 150, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                    style={{ width: 150, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#17C2EC' }}
                     onPress={toFormPatient}
                 >
-                    Expediente
+                    Historial
                 </Button>
                 <Button
-                    icon="account-check"
+                    icon="delete"
                     mode="contained"
-                    style={{ width: 100, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                    style={{ width: 100, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#17C2EC' }}
                     onPress={toDeletePatient}
                 >
                     Borrar
                 </Button>
             </View>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', maxHeight: "70%" }}>
-                {
-                    objData.map((item, index) => (
-                        <Card.Title
-                            key={index}
-                            style={{ width: '90%', marginBottom: 10 }}
-                            title={item.label}
-                            subtitle={patient[item.name]?.toString()}
+            <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', height: '80%', width: '100%' }}>
+                <Text style={{ fontSize: 25, fontWeight: 'bold', textAlign: 'center', paddingBottom: 25 }}>
+                    Informacion del paciente
+                </Text>
+                <View style={{
+                    flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', maxHeight: "75%", borderColor: '#17C2EC', borderRadius: 4, borderWidth: 1, width: '75%'
+                }}>
+                    {
+                        objData.map((item, index) => (
+                            <Card.Title
+                                key={index}
+                                style={{ width: '90%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}
+                                title={item.label}
+                                titleStyle={{ fontSize: 20, fontWeight: 'bold', width: '100%', justifyContent: 'center', alignItems: 'center', paddingTop: 5 }}
+                                subtitle={patient[item.name]?.toString()}
+                                subtitleStyle={{ fontSize: 15, width: '100%', justifyContent: 'center', alignItems: 'center' }}
+                            />
+                        ))
+                    }
+                    {
+                        resultado && <Card.Title
+                            style={{
+                                width: '90%',
+                                marginBottom: 10,
+                                flex: 1, padding: 10,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                            title="Resultado"
+                            titleStyle={{
+                                fontSize: 20,
+                                fontWeight: 'bold',
+                                width: '100%',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                paddingTop: 5
+                            }}
+                            subtitle={resultado}
+                            subtitleStyle={{
+                                width: '100%',
+                                height: 'auto',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: 'rgba(23, 194, 236, 0.10)',
+                                borderRadius: 18,
+                                borderColor: '#17C2EC',
+                                borderWidth: 1,
+                                padding: 10,
+                            }}
                         />
-                    ))
-                }
-                {
-                    resultado && <Card.Title
-                        style={{ width: '90%', marginBottom: 10 }}
-                        title="Resultado"
-                        subtitle={resultado}
-                    />
-                }
+                    }
+                </View>
             </View>
         </>
     )
