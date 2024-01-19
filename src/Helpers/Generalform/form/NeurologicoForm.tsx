@@ -16,7 +16,7 @@ export const NeurologicoForm = ({selectedValue, GlasgowOptions, setSelectedValue
       contentContainerStyle={styles.scrollViewContent}
       keyboardShouldPersistTaps="handled">
       <View style={styles.inner}>
-          <Text style={styles.header}>Neurologico</Text>
+              <Text style={styles.header}>Neurológico</Text>
         </View>
         <View style={styles.containerDrop}>
           <Text style={styles.label}> Escala de Glasgow</Text>

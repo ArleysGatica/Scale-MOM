@@ -41,7 +41,7 @@ export const HepaticoForm = ({
       contentContainerStyle={styles.scrollViewContent}
       keyboardShouldPersistTaps="handled">
       <View style={styles.inner}>
-        <Text style={styles.header}>Hepatico</Text>
+                    <Text style={styles.header}>Hepático</Text>
       </View>
       {fieldsHepatico.map((field, index) => {
         return (

@@ -149,7 +149,7 @@ const Historico = () => {
         }}>
         <Text style={{ fontSize: 25, fontWeight: 'bold', textAlign: 'center' }}>
           {user.userType === 0
-            ? `Datos clinicos de ${user?.username}`
+                      ? `Datos clínicos de ${user?.username}`
             : 'Historial de examenes realizados'}
         </Text>
       </View>

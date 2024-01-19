@@ -23,11 +23,11 @@ const Pacient = () => {
 
     const objData: { name: keyof IPatient, label: string, type: string }[] = [
         { name: 'username', label: 'Nombre', type: 'text' },
-        { name: 'dni', label: 'Cedula', type: 'text' },
-        { name: 'telefono', label: 'Telefono Paciente', type: 'number' },
+        { name: 'dni', label: 'Cédula', type: 'text' },
+        { name: 'telefono', label: 'Teléfono Paciente', type: 'number' },
         { name: 'edad', label: 'Edad', type: 'number' },
         { name: 'nameEncargado', label: 'Nombre Encargado', type: 'number' },
-        { name: 'telefonoEncargado', label: 'Telefono Encargado', type: 'number' },      
+        { name: 'telefonoEncargado', label: 'Teléfono Encargado', type: 'number' },      
     ];
     
     useEffect(() => {
@@ -96,7 +96,7 @@ const Pacient = () => {
             </View>
             <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', height: '80%', width: '100%' }}>
                 <Text style={{ fontSize: 25, fontWeight: 'bold', textAlign: 'center', paddingBottom: 25 }}>
-                    Informacion del paciente
+                    información del paciente
                 </Text>
                 <View style={{
                     flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', maxHeight: "75%", borderColor: '#17C2EC', borderRadius: 4, borderWidth: 1, width: '75%'
