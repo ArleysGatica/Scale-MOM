@@ -41,7 +41,7 @@ export const HematologicoForm = ({
       contentContainerStyle={styles.scrollViewContent}
       keyboardShouldPersistTaps="handled">
       <View style={styles.inner}>
-        <Text style={styles.header}>Hematologico</Text>
+                    <Text style={styles.header}>Hematológico</Text>
       </View>
       {fieldsHematologico.map((field, index) => {
         return (

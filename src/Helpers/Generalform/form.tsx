@@ -56,8 +56,8 @@ const fieldsRenal = [
     medida: 'mg/dL',
   },
   {
-    name: 'AcidoUrico',
-    label: 'Acido Urico:',
+      name: 'Ácido úrico',
+      label: 'Ácido úrico:',
     min: 5.8,
     max: 10,
     medida: 'mg/dL',
